@@ -17,6 +17,7 @@ model User {
   preferences String?        @db.Text // Store JSON string for AI context
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
+  preferenceList Preference[]
 }
 
 model JournalEntry {
@@ -28,4 +29,11 @@ model JournalEntry {
   emotion   String?  // happy, stress, etc.
   riskLevel String?  // low, medium, high
   createdAt DateTime @default(now())
+}
+
+model Preference {
+  id     Int    @id @default(autoincrement())
+  issue  String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
