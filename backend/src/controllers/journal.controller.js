@@ -1,5 +1,5 @@
 import prisma from "../config/db.js";
-import { getJournalInsights } from "../services/ai.service.js";
+import { analyzeSentiment, detectCrisis, formatForUI } from "../services/ai.service.js";
 
 export const createEntry = async (req, res, next) => {
   try {
@@ -8,26 +8,37 @@ export const createEntry = async (req, res, next) => {
 
     if (!content) return res.status(400).json({ message: "Content is required" });
 
-    // Single AI call for all insights
+    // 1. Fetch user preferences
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    const insights = await getJournalInsights(content, user.preferences || "None");
 
+    // 2. Analyze sentiment
+    const sentimentResult = await analyzeSentiment(content, user.preferences || "None");
+
+    // 3. Detect crisis
+    const crisisResult = await detectCrisis(content);
+
+    // 4. Format feedback for UI
+    const uiFeedback = await formatForUI(sentimentResult);
+
+    // 5. Store entry in DB
     const entry = await prisma.journalEntry.create({
       data: {
         content,
         userId,
-        sentiment: JSON.stringify(insights.sentiment),
-        emotion: insights.emotion,
-        riskLevel: insights.risk.level
+        sentiment: JSON.stringify(sentimentResult),
+        emotion: sentimentResult.emotion,
+        riskLevel: crisisResult.risk
       }
     });
 
     res.status(201).json({
       message: "Entry recorded",
       entry,
-      insights,
-      crisisAlert: insights.risk.level === "high"
+      insights: sentimentResult,
+      uiFeedback,
+      crisisAlert: crisisResult.risk === "high"
     });
+
   } catch (error) {
     next(error);
   }
@@ -35,8 +46,9 @@ export const createEntry = async (req, res, next) => {
 
 export const getEntries = async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const entries = await prisma.journalEntry.findMany({
-      where: { userId: req.user.id },
+      where: { userId },
       orderBy: { createdAt: "desc" }
     });
     res.json(entries);
@@ -47,14 +59,19 @@ export const getEntries = async (req, res, next) => {
 
 export const getMoodSummary = async (req, res, next) => {
   try {
+    const userId = req.user.id;
+
+    // Get last 10 entries
     const lastEntries = await prisma.journalEntry.findMany({
-      where: { userId: req.user.id },
-      take: 7,
+      where: { userId },
+      take: 10,
       orderBy: { createdAt: "desc" }
     });
 
+    const emotions = lastEntries.map(e => e.emotion).filter(Boolean);
+
     res.json({
-      recentEmotions: lastEntries.map(e => e.emotion).filter(Boolean),
+      recentEmotions: emotions,
       lastEntry: lastEntries[0]
     });
   } catch (error) {

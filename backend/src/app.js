@@ -1,12 +1,12 @@
-import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
 
-import authRoutes from "./routes/auth.route.js";
-import journalRoutes from "./routes/journal.route.js";
-import chatbotRoutes from "./routes/chatbot.route.js";
-import userRoutes from "./routes/user.route.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
+import authRoutes from "./routes/auth.route.js";
+import chatbotRoutes from "./routes/chatbot.route.js";
+import journalRoutes from "./routes/journal.route.js";
+import userRoutes from "./routes/user.route.js"; // keep this
 
 const app = express();
 
@@ -19,13 +19,13 @@ app.use(cors({
 
 app.use(cookieParser());
 
-//api
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/journal", journalRoutes);
 app.use("/api/chat", chatbotRoutes);
-app.use("/api/user", userRoutes);
+app.use("/api/user", userRoutes); // keep this
 
-// Health route (check for dummy server response)
+// Health route
 app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
 });
