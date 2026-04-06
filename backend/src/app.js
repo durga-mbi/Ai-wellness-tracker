@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -17,8 +18,11 @@ app.use(cors({
 
 app.use(cookieParser());
 
+//api
 app.use("/api/auth", authRoutes);
-// Health route
+app.use("/api/user", userRoutes)
+
+// Health route(check for dummy server response)
 app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
 });
