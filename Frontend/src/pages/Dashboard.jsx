@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router';
 import { 
@@ -14,13 +14,39 @@ import {
   HiOutlineClock,
   HiOutlineBeaker,
   HiBars3,
-  HiXMark
+  HiXMark,
+  HiChatBubbleLeftRight,
+  HiSparkles
 } from "react-icons/hi2";
+import api from '../utils/api';
+import JournalModal from '../components/JournalModal';
+import ChatbotModal from '../components/ChatbotModal';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isJournalOpen, setIsJournalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [moodSummary, setMoodSummary] = useState(null);
+  const [recentEntries, setRecentEntries] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const [summaryRes, entriesRes] = await Promise.all([
+        api.get("/journal/summary"),
+        api.get("/journal")
+      ]);
+      setMoodSummary(summaryRes.data);
+      setRecentEntries(entriesRes.data.slice(0, 3));
+    } catch (error) {
+      console.error("Failed to fetch dashboard data", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -31,13 +57,24 @@ const Dashboard = () => {
 
   const stats = [
     { label: 'Daily Steps', value: '8,432', icon: <HiArrowRightOnRectangle className="rotate-90 w-6 h-6" />, color: 'bg-blue-50 text-blue-600', trend: '+12%' },
-    { label: 'Sleep', value: '7h 20m', icon: <HiOutlineMoon className="w-6 h-6" />, color: 'bg-indigo-50 text-indigo-600', trend: '-2%' },
+    { label: 'Current Mood', value: moodSummary?.lastEntry?.emotion || 'Stable', icon: <HiSparkles className="w-6 h-6" />, color: 'bg-indigo-50 text-indigo-600', trend: 'Live' },
     { label: 'Calories', value: '1,240', icon: <HiFire className="w-6 h-6" />, color: 'bg-orange-50 text-orange-600', trend: '+5%' },
-    { label: 'Water', value: '1.8L', icon: <HiOutlineBeaker className="w-6 h-6" />, color: 'bg-cyan-50 text-cyan-600', trend: '+18%' },
+    { label: 'Insights', value: moodSummary?.recentEmotions?.length || '0', icon: <HiChartBar className="w-6 h-6" />, color: 'bg-teal-50 text-teal-600', trend: 'New' },
   ];
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex font-sans overflow-x-hidden">
+      {/* Modals */}
+      <JournalModal 
+        isOpen={isJournalOpen} 
+        onClose={() => setIsJournalOpen(false)} 
+        onEntryCreated={fetchData} 
+      />
+      <ChatbotModal 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+      />
+
       {/* Mobile Backdrop Overlay */}
       {isSidebarOpen && (
         <div 
@@ -69,8 +106,13 @@ const Dashboard = () => {
 
         <nav className="flex-1 space-y-2">
           <NavItem icon={<HiHome />} label="Dashboard" active />
-          <NavItem icon={<HiChartBar />} label="Analytics" />
-          <NavItem icon={<HiCalendar />} label="Schedule" />
+          <button onClick={() => setIsJournalOpen(true)} className="w-full">
+            <NavItem icon={<HiSparkles />} label="Journal Entry" />
+          </button>
+          <button onClick={() => setIsChatOpen(true)} className="w-full">
+            <NavItem icon={<HiChatBubbleLeftRight />} label="AI Chat" />
+          </button>
+          <NavItem icon={<HiChartBar />} label="History" />
           <NavItem icon={<HiCog6Tooth />} label="Settings" />
         </nav>
 
@@ -119,16 +161,28 @@ const Dashboard = () => {
         <main className="flex-1 p-6 lg:p-12 max-w-[1600px] mx-auto w-full animate-in fade-in duration-700">
           <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
             <div>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Overview</h1>
+              <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Hello, {user?.name || user?.email?.split('@')[0]}</h1>
               <p className="text-slate-400 font-semibold flex items-center gap-2">
                 <HiOutlineClock className="w-5 h-5" />
-                Last updated: Just now
+                {moodSummary?.lastEntry ? `Last journal: ${new Date(moodSummary.lastEntry.createdAt).toLocaleTimeString()}` : 'Start your first journal today!'}
               </p>
             </div>
-            <button className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-indigo-100 w-full md:w-auto">
-              <HiPlus className="w-5 h-5" />
-              New Entry
-            </button>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setIsChatOpen(true)}
+                className="bg-white text-slate-900 px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-slate-50 transition-all border border-slate-100 shadow-sm"
+              >
+                <HiChatBubbleLeftRight className="w-5 h-5 text-indigo-600" />
+                Talk to AI
+              </button>
+              <button 
+                onClick={() => setIsJournalOpen(true)}
+                className="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-indigo-100"
+              >
+                <HiPlus className="w-5 h-5" />
+                New Journal
+              </button>
+            </div>
           </header>
 
           {/* Stats Grid */}
@@ -139,94 +193,88 @@ const Dashboard = () => {
                   <div className={`w-14 h-14 ${stat.color} rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
                     {stat.icon}
                   </div>
-                  <span className={`text-xs font-black px-3 py-1 rounded-full ${stat.trend.startsWith('+') ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                  <span className={`text-xs font-black px-3 py-1 rounded-full ${stat.trend.startsWith('+') ? 'bg-green-50 text-green-600' : 'bg-slate-50 text-slate-600'}`}>
                     {stat.trend}
                   </span>
                 </div>
                 <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                <h3 className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</h3>
+                <h3 className="text-3xl font-black text-slate-900 tracking-tight capitalize">{stat.value}</h3>
               </div>
             ))}
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-12">
-            {/* Main Chart Card */}
-            <div className="xl:col-span-2 bg-white p-6 md:p-10 rounded-[3rem] border border-white shadow-[0_20px_50px_rgba(0,0,0,0.03)] overflow-x-auto">
-              <div className="flex items-center justify-between mb-10 min-w-[400px]">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Activity Trends</h3>
-                <div className="flex bg-slate-50 p-1 rounded-xl">
-                  <button className="px-4 py-2 text-xs font-bold text-indigo-600 bg-white rounded-lg shadow-sm">Week</button>
-                  <button className="px-4 py-2 text-xs font-bold text-slate-400">Month</button>
+            {/* AI Insights Card */}
+            <div className="xl:col-span-2 bg-indigo-600 p-10 rounded-[3rem] text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
+              <div className="absolute top-[-20%] right-[-20%] w-64 h-64 rounded-full bg-white/10 blur-3xl group-hover:scale-125 transition-transform duration-1000"></div>
+              <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+                <div className="text-6xl md:text-8xl">
+                  {moodSummary?.lastEntry ? JSON.parse(moodSummary.lastEntry.sentiment).uiFeedback?.emoji || '✨' : '✨'}
                 </div>
-              </div>
-              <div className="h-[300px] flex items-end justify-between gap-4 p-4 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 min-w-[500px]">
-                {[40, 75, 45, 95, 65, 85, 55].map((h, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-4 group cursor-pointer">
-                    <div className="relative w-full">
-                      <div 
-                        className="w-full bg-indigo-100 group-hover:bg-indigo-600 rounded-2xl transition-all duration-500" 
-                        style={{ height: `${h}%`, minHeight: '20px' }}
-                      ></div>
-                    </div>
-                    <span className="text-[10px] font-black text-slate-300 uppercase tracking-tighter group-hover:text-indigo-600 transition-colors">
-                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}
-                    </span>
-                  </div>
-                ))}
+                <div>
+                  <h3 className="text-3xl font-black mb-4 tracking-tight">AI Insights</h3>
+                  <p className="text-indigo-100 text-lg font-medium mb-8 leading-relaxed max-w-lg">
+                    {moodSummary?.lastEntry 
+                      ? JSON.parse(moodSummary.lastEntry.sentiment).insight 
+                      : "You haven't logged any thoughts today. Tell me how you're feeling to get personalized insights!"}
+                  </p>
+                  <button 
+                    onClick={() => setIsJournalOpen(true)}
+                    className="bg-white text-indigo-600 px-8 py-4 rounded-2xl font-black hover:scale-105 active:scale-95 transition-all shadow-xl"
+                  >
+                    Start Journaling
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Right Column */}
-            <div className="space-y-10">
-              <div className="bg-indigo-600 rounded-[3rem] p-10 text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
-                <div className="absolute top-[-20%] right-[-20%] w-40 h-40 rounded-full bg-white/10 blur-2xl group-hover:scale-150 transition-transform duration-1000"></div>
-                <h3 className="text-2xl font-black mb-3 tracking-tight">Weekly Goal</h3>
-                <p className="text-indigo-100 font-medium mb-8 leading-relaxed">Impressive! You're almost at your weekly fitness milestone.</p>
-                <div className="space-y-3">
-                  <div className="w-full h-4 bg-white/20 rounded-full overflow-hidden p-1">
-                    <div className="h-full bg-white rounded-full transition-all duration-1000" style={{ width: '85%' }}></div>
-                  </div>
-                  <div className="flex justify-between items-center text-xs font-black uppercase tracking-widest">
-                    <span>Progress</span>
-                    <span>85%</span>
-                  </div>
-                </div>
+            {/* Recent Activity */}
+            <div className="bg-white p-10 rounded-[3rem] border border-white shadow-[0_20px_50px_rgba(0,0,0,0.03)]">
+              <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Recent Journals</h3>
+              <div className="space-y-8">
+                {recentEntries.length > 0 ? recentEntries.map((entry, i) => (
+                  <ActivityItem 
+                    key={i}
+                    icon={entry.emotion === 'happy' ? '😊' : '📝'} 
+                    title={entry.emotion || 'Journal'} 
+                    desc={entry.content} 
+                    time={new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 
+                  />
+                )) : (
+                  <p className="text-slate-400 font-bold text-center py-10">No entries yet.</p>
+                )}
               </div>
-
-              <div className="bg-white p-10 rounded-[3rem] border border-white shadow-[0_20px_50px_rgba(0,0,0,0.03)]">
-                <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Timeline</h3>
-                <div className="space-y-8">
-                  <ActivityItem icon="🏃‍♂️" title="Morning Run" desc="5.2 km in 28m" time="08:30 AM" />
-                  <ActivityItem icon="🥗" title="Healthy Meal" desc="Salad & Grilled Chicken" time="01:15 PM" />
-                  <ActivityItem icon="💧" title="Hydration" desc="Consumed 500ml water" time="03:45 PM" />
-                </div>
-                <button className="w-full mt-10 py-4 text-xs font-black text-indigo-600 bg-indigo-50/50 rounded-2xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2 group">
-                  View Full Log
-                  <HiChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
+              <button className="w-full mt-10 py-4 text-xs font-black text-indigo-600 bg-indigo-50/50 rounded-2xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2 group">
+                View Full History
+                <HiChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
         </main>
       </div>
+
+      {/* Floating Chat Button (Mobile) */}
+      <button 
+        onClick={() => setIsChatOpen(true)}
+        className="lg:hidden fixed bottom-8 right-8 w-16 h-16 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center z-40 hover:scale-110 active:scale-95 transition-all"
+      >
+        <HiChatBubbleLeftRight className="w-8 h-8" />
+      </button>
     </div>
   );
 };
 
 const NavItem = ({ icon, label, active = false }) => (
-  <a 
-    href="#" 
-    className={`flex items-center gap-4 p-4 rounded-2xl font-bold transition-all duration-300 group ${
+  <div className={`flex items-center gap-4 p-4 rounded-2xl font-bold transition-all duration-300 group ${
       active 
         ? 'bg-indigo-50 text-indigo-700 shadow-sm' 
         : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
-    }`}
-  >
+    }`}>
     <span className={`text-xl transition-transform group-hover:scale-110 ${active ? 'text-indigo-600' : 'text-slate-300'}`}>
       {icon}
     </span>
     <span className="text-sm">{label}</span>
-  </a>
+  </div>
 );
 
 const ActivityItem = ({ icon, title, desc, time }) => (
@@ -236,7 +284,7 @@ const ActivityItem = ({ icon, title, desc, time }) => (
     </div>
     <div className="flex-1 min-w-0">
       <div className="flex items-center justify-between gap-2 mb-0.5">
-        <p className="text-sm font-black text-slate-900 truncate">{title}</p>
+        <p className="text-sm font-black text-slate-900 truncate capitalize">{title}</p>
         <span className="text-[10px] font-black text-slate-300 uppercase tracking-tighter">{time}</span>
       </div>
       <p className="text-xs font-medium text-slate-400 truncate">{desc}</p>
