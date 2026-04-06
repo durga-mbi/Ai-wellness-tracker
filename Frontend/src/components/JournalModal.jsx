@@ -93,9 +93,9 @@ const JournalModal = ({ isOpen, onClose, onEntryCreated }) => {
                   className="space-y-8"
                 >
                   <div className="flex items-center gap-6 p-8 bg-indigo-50/50 rounded-[2rem] border border-indigo-100/50">
-                    <span className="text-6xl">{result.uiFeedback.emoji}</span>
+                    <span className="text-6xl">{result.insights.ui.emoji}</span>
                     <div>
-                      <h3 className="text-2xl font-black text-indigo-900 mb-1">{result.uiFeedback.title}</h3>
+                      <h3 className="text-2xl font-black text-indigo-900 mb-1">{result.insights.ui.title}</h3>
                       <p className="text-indigo-700/70 font-bold tracking-tight">{result.insights.insight}</p>
                     </div>
                   </div>

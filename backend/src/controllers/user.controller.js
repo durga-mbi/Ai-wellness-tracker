@@ -1,8 +1,7 @@
 import prisma from "../config/db.js";
 
-//save the preference
 export const savePreferences = async (req, res, next) => {
-    try {
+  try {
         const userId = req.user.id;
         const { issues } = req.body;
 
@@ -33,9 +32,8 @@ export const savePreferences = async (req, res, next) => {
     }
 };
 
-// get the preference
 export const getPreference = async (req, res, next) => {
-    try {
+  try {
         const userId = req.user.id;
         const prefs = await prisma.preference.findMany({
             where: { userId }
