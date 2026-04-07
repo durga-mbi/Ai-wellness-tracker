@@ -94,6 +94,29 @@ OUTPUT (STRICT JSON):
 export const getChatbotResponse = async (userMessage, context = {}) => {
   const { preferences = "None", moodSummary = "Stable", lastEmotion = "Neutral" } = context;
 
+  // Normalize user message
+  const msg = userMessage.trim().toLowerCase();
+
+  // Fixed response: Name
+  if (
+    msg === "what is your name?" ||
+    msg === "who are you?" ||
+    msg.includes("your name")
+  ) {
+    return "I am your wellness assistant 😊";
+  }
+
+  // Fixed response: Creator / Author
+  if (
+    msg === "who is your creator?" ||
+    msg === "who made you?" ||
+    msg.includes("your creator") ||
+    msg.includes("who made u")
+  ) {
+    return "I was created by the IT team of MINDBRAIN INNOVATION 💡";
+  }
+
+  // AI prompt for everything else
   const prompt = `
 SYSTEM ROLE:
 You are a calm, empathetic mental wellness companion for students.

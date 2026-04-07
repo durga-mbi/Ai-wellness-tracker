@@ -18,6 +18,7 @@ model User {
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]
+  userHabits     UserHabit[]
 }
 
 model JournalEntry {
@@ -36,4 +37,20 @@ model Preference {
   issue  String
   userId Int
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+// user habits
+model UserHabit {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sleep     Float?   // in hours
+  water     Float?   // in liters
+  exercise  Float?   // in minutes
+  date      DateTime @default(now()) // The day for this habit
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, date]) // optional, for faster queries by user & date
 }

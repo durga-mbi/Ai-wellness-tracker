@@ -7,6 +7,8 @@ import authRoutes from "./routes/auth.route.js";
 import chatbotRoutes from "./routes/chatbot.route.js";
 import journalRoutes from "./routes/journal.route.js";
 import userRoutes from "./routes/user.route.js"; // keep this
+import userHabitsRoute from "./routes/userhabits.route.js";
+import dashboardRoute from "./routes/dashboard.route.js";
 
 const app = express();
 
@@ -24,6 +26,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/journal", journalRoutes);
 app.use("/api/chat", chatbotRoutes);
 app.use("/api/user", userRoutes); // keep this
+app.use("/api/user-habits", userHabitsRoute);
+app.use("/api/dashboard", dashboardRoute);
 
 // Health route
 app.get("/api/health", (req, res) => {
