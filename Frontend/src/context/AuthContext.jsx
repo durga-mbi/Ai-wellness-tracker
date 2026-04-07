@@ -40,11 +40,38 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       await api.post("/auth/signup", userData);
+      await fetchUser();
       return { success: true };
     } catch (err) {
       return {
         success: false,
         message: err.response?.data?.message || "Signup failed"
+      };
+    }
+  };
+
+  const guestLogin = async () => {
+    try {
+      await api.post("/auth/guest-login");
+      await fetchUser();
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || "Guest login failed"
+      };
+    }
+  };
+
+  const updateAuthProfile = async (profileData) => {
+    try {
+      const { data } = await api.put("/user/profile", profileData);
+      setUser(data.user);
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || "Profile update failed"
       };
     }
   };
@@ -59,7 +86,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register, guestLogin, updateAuthProfile }}>
       {!loading && children}
     </AuthContext.Provider>
   );

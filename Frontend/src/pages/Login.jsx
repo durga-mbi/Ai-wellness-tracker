@@ -9,7 +9,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, guestLogin } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,7 +20,7 @@ const Login = () => {
     const result = await login(email, password);
     
     if (result.success) {
-      navigate("/");
+      navigate("/dashboard");
     } else {
       setError(result.message);
     }
@@ -110,6 +110,19 @@ const Login = () => {
                   <HiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
+            </button>
+
+            <button
+              type="button"
+              onClick={async () => {
+                const res = await guestLogin();
+                if (res.success) {
+                    navigate("/dashboard");
+                }
+              }}
+              className="w-full py-4 text-slate-500 font-bold hover:text-indigo-600 transition-colors bg-slate-50/50 rounded-2xl hover:bg-slate-50"
+            >
+              Continue as Guest
             </button>
           </form>
 

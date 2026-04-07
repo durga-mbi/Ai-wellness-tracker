@@ -44,3 +44,27 @@ export const getPreference = async (req, res, next) => {
         next(err);
     }
 }
+export const updateProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { name, ageGroup, university, preferences } = req.body;
+
+        const user = await prisma.user.update({
+            where: { id: userId },
+            data: { 
+                name, 
+                ageGroup, 
+                university,
+                preferences: preferences ? JSON.stringify(preferences) : undefined
+            }
+        });
+
+        res.json({
+            message: "Profile updated successfully",
+            user
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};

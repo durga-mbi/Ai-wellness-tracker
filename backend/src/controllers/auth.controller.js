@@ -24,9 +24,20 @@ export const signup = async (req, res, next) => {
             data: { email, mobile, password: hashed }
         });
 
+        const token = generateToken({ id: user.id });
+
+        // store in cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // true in production (HTTPS)
+            sameSite: "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
         res.status(201).json({
-            message: "User created",
-            userId: user.id
+            message: "User created and logged in",
+            userId: user.id,
+            user
         });
 
     } catch (err) {
@@ -73,6 +84,35 @@ export const login = async (req, res, next) => {
     }
 };
 
+
+// guest login
+export const guestLogin = async (req, res, next) => {
+    try {
+        const user = await prisma.user.create({
+            data: { 
+                name: "Guest User",
+                isAnonymous: true 
+            }
+        });
+
+        const token = generateToken({ id: user.id });
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 24 * 60 * 60 * 1000 // 1 day for guests
+        });
+
+        res.json({
+            message: "Guest login success",
+            user
+        });
+
+    } catch (err) {
+        next(err);
+    }
+};
 
 // get login user current
 export const getMe = (req, res) => {

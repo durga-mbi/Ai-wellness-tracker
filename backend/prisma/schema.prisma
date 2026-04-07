@@ -11,9 +11,12 @@ datasource db {
 model User {
   id          Int            @id @default(autoincrement())
   name        String?
-  email       String         @unique
-  mobile      String         @unique
-  password    String
+  email       String?        @unique // nullable for guest account
+  mobile      String?        @unique // nullable for guest account
+  password    String?        // nullable for guest account
+  ageGroup    String?        // e.g., "18-24"
+  university  String?        // user's university
+  isAnonymous Boolean        @default(false)
   preferences String?        @db.Text // Store JSON string for AI context
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]

@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `ageGroup` VARCHAR(191) NULL,
+    ADD COLUMN `isAnonymous` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `university` VARCHAR(191) NULL,
+    MODIFY `email` VARCHAR(191) NULL,
+    MODIFY `mobile` VARCHAR(191) NULL,
+    MODIFY `password` VARCHAR(191) NULL;

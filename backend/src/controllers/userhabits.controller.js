@@ -64,7 +64,7 @@ export const getHabitByDate = async (req, res, next) => {
         });
 
         if (!habit) {
-            return res.status(404).json({ message: "Habit not found for this date" });
+            return res.json({ sleep: 0, water: 0, exercise: 0 });
         }
 
         res.json(habit);

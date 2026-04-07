@@ -9,8 +9,10 @@ import {
   HiArrowRight, 
   HiXMark 
 } from "react-icons/hi2";
+import { useAuth } from "../context/AuthContext";
 
 const Onboarding = () => {
+  const { guestLogin } = useAuth();
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
 
@@ -136,26 +138,46 @@ const Onboarding = () => {
               {steps[currentStep].subtext}
             </p>
 
-            {currentStep === 3 && (
+                        {currentStep === 3 && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 className="mt-16 flex flex-col items-center gap-4"
               >
-                <button 
-                  onClick={() => navigate("/register")}
-                  className="w-full max-w-sm py-5 bg-indigo-600 text-white font-black rounded-[2rem] shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xl"
-                >
-                  Get Started
-                  <HiArrowRight className="w-6 h-6" />
-                </button>
-                <button 
-                  onClick={() => navigate("/login")}
-                  className="text-slate-500 font-bold hover:text-indigo-600 p-4 transition-colors"
-                >
-                  Continue as Guest
-                </button>
+                {user ? (
+                   <button 
+                    onClick={() => {
+                      navigate("/survey");
+                    }}
+                    className="w-full max-w-sm py-5 bg-indigo-600 text-white font-black rounded-[2rem] shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xl"
+                  >
+                    Continue to Setup
+                    <HiArrowRight className="w-6 h-6" />
+                  </button>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => navigate("/register")}
+                      className="w-full max-w-sm py-5 bg-indigo-600 text-white font-black rounded-[2rem] shadow-2xl shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 text-xl"
+                    >
+                      Create Account
+                      <HiArrowRight className="w-6 h-6" />
+                    </button>
+                    <button 
+                      onClick={async () => {
+                        const res = await guestLogin();
+                        if (res.success) {
+                            localStorage.setItem("showIntro", "true");
+                            navigate("/");
+                        }
+                      }}
+                      className="text-slate-500 font-bold hover:text-indigo-600 p-4 transition-colors"
+                    >
+                      Continue as Guest
+                    </button>
+                  </>
+                )}
               </motion.div>
             )}
           </motion.div>

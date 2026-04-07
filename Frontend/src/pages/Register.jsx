@@ -24,7 +24,8 @@ const Register = () => {
     
     if (result.success) {
       setSuccess(result.message);
-      setTimeout(() => navigate("/login"), 2000);
+      // Navigate straight to the onboarding slider for new residents
+      setTimeout(() => navigate("/onboarding"), 2000);
     } else {
       setError(result.message);
     }
