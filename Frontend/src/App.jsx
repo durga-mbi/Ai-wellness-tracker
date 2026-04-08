@@ -10,6 +10,7 @@ import Settings from "./pages/Settings";
 import JournalEntry from "./pages/JournalEntry";
 import Chat from "./pages/Chat";
 import Community from "./pages/Community";
+import LandingPage from "./pages/LandingPage";
 
 import { LayoutProvider } from "./context/LayoutContext";
 import Layout from "./components/Layout";
@@ -39,7 +40,8 @@ function App() {
       <LayoutProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<RootRoute />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<RootRoute />} />
             
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />

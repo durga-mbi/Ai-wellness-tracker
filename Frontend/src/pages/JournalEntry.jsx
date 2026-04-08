@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  HiPaperAirplane, 
+import {
+  HiPaperAirplane,
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
 import api from "../utils/api";
@@ -57,7 +57,7 @@ const JournalEntry = () => {
                   01
                 </div>
                 <h2 className="text-4xl font-black text-slate-900 mb-10 tracking-tight">How are you truly feeling, {user?.name?.split(' ')[0]}?</h2>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-10">
                   <textarea
                     value={content}
@@ -66,7 +66,7 @@ const JournalEntry = () => {
                     className="w-full h-[50vh] p-4 text-2xl font-medium text-slate-700 bg-transparent border-none outline-none resize-none placeholder:text-slate-200 leading-relaxed"
                     autoFocus
                   />
-                  
+
                   <button
                     type="submit"
                     disabled={isSubmitting || !content.trim()}
@@ -93,7 +93,7 @@ const JournalEntry = () => {
             >
               <div className="bg-indigo-600 p-12 sm:p-20 rounded-[4rem] text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
                 <div className="absolute top-[-20%] right-[-20%] w-96 h-96 rounded-full bg-white/10 blur-3xl"></div>
-                
+
                 <div className="relative z-10 flex flex-col md:flex-row gap-12 items-center">
                   <div className="text-9xl animate-bounce duration-[3s]">{result.uiFeedback.emoji}</div>
                   <div className="flex-1 text-center md:text-left">
