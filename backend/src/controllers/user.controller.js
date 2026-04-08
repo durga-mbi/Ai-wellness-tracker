@@ -68,3 +68,18 @@ export const updateProfile = async (req, res, next) => {
         next(err);
     }
 };
+
+export const getMoodSummary = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const moodSummary = await prisma.journalEntry.groupBy({
+      by: ["emotion"],
+      where: { userId },
+      _count: { emotion: true },
+    });
+
+    res.json(moodSummary);
+  } catch (err) {
+    next(err);
+  }
+};

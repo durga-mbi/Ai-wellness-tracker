@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import { HiEnvelope, HiLockClosed, HiArrowRight, HiEye, HiEyeSlash } from "react-icons/hi2";
+import { motion } from "framer-motion";
+import { HiEnvelope, HiLockClosed, HiEye, HiEyeSlash } from "react-icons/hi2";
+import logo from "../assets/logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -28,114 +30,127 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[#f8fafc]">
-      {/* Decorative background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-50/50 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-teal-50/50 blur-3xl animate-pulse delay-700"></div>
+    <div className="min-h-screen flex items-center justify-center p-6 bg-[#050505] text-white selection:bg-white/10 overflow-hidden relative">
+      {/* Cinematic Background Atmosphere */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[50vw] h-[50vw] bg-amber-500/10 blur-[120px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] bg-orange-500/5 blur-[100px] rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('https://grain-y.com/images/grain-dark.png')]"></div>
       </div>
 
-      <div className="w-full max-w-[480px] z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-indigo-600 text-white shadow-xl shadow-indigo-200 mb-6 group hover:scale-110 transition-transform duration-300">
-            <HiArrowRight className="w-7 h-7 -rotate-45" />
-          </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">Welcome Back</h1>
-          <p className="text-slate-500 font-medium">Continue your wellness journey today.</p>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+        className="w-full max-w-[460px] z-10"
+      >
+        <div className="text-center mb-12">
+          <motion.img 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 1.2 }}
+            src={logo} 
+            alt="Serenity Logo" 
+            className="w-24 h-24 mx-auto mb-10 drop-shadow-2xl" 
+          />
+          <h1 className="text-4xl lg:text-5xl font-black italic tracking-tighter mb-4 uppercase">Return to Center</h1>
+          <p className="text-white/30 text-[10px] uppercase font-black tracking-[0.4em] italic mb-2">Recall your presence</p>
         </div>
 
-        <div className="bg-white/70 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-white">
+        <div className="bg-white/[0.03] border border-white/10 backdrop-blur-3xl p-10 lg:p-14 rounded-[40px] shadow-2xl relative group">
+          <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent rounded-[40px] pointer-events-none"></div>
+          
           {error && (
-            <div className="bg-red-50/80 border border-red-100 text-red-600 p-4 rounded-2xl text-sm font-semibold mb-8 flex items-center gap-3 animate-in shake duration-500">
-              <span className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-xs">!</span>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl text-[10px] font-black uppercase tracking-widest mb-10 flex items-center gap-3 italic"
+            >
+              <span className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-[10px] not-italic">!</span>
               {error}
-            </div>
+            </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+          <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
+            <div className="space-y-4">
+              <label className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30 ml-2">Digital Signature</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-white/20 group-focus-within:text-white transition-colors">
                   <HiEnvelope className="w-5 h-5" />
                 </div>
                 <input
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="EMAIL ADDRESS"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-300 font-medium placeholder:text-slate-400"
+                  className="w-full pl-14 pr-6 py-6 bg-white/[0.02] border border-white/5 rounded-3xl outline-none focus:bg-white/[0.05] focus:border-white/20 transition-all duration-500 text-[11px] font-black tracking-[0.2em] placeholder:text-white/10 uppercase"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center ml-1">
-                <label className="text-sm font-bold text-slate-700">Password</label>
-                <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700 transition-colors">Forgot Password?</button>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center ml-2">
+                <label className="text-[9px] font-black uppercase tracking-[0.5em] text-white/30">Secret Phrase</label>
+                <button type="button" className="text-[8px] font-black tracking-[0.3em] text-white/20 hover:text-white transition-colors uppercase italic underline underline-offset-4 decoration-white/10">Forgotten?</button>
               </div>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-white/20 group-focus-within:text-white transition-colors">
                   <HiLockClosed className="w-5 h-5" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="PASSWORD"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-300 font-medium placeholder:text-slate-400"
+                  className="w-full pl-14 pr-16 py-6 bg-white/[0.02] border border-white/5 rounded-3xl outline-none focus:bg-white/[0.05] focus:border-white/20 transition-all duration-500 text-[11px] font-black tracking-[0.2em] placeholder:text-white/10 uppercase"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-indigo-500 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-6 flex items-center text-white/10 hover:text-white transition-colors"
                 >
                   {showPassword ? <HiEyeSlash className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70"
-            >
-              {isSubmitting ? (
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  Sign In
-                  <HiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </>
-              )}
-            </button>
+            <div className="pt-4 flex flex-col gap-6">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative w-full py-7 bg-white text-black font-black text-[10px] uppercase tracking-[0.5em] rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+              >
+                <span className="relative z-10">
+                  {isSubmitting ? "Synchronizing..." : "Recall Presence"}
+                </span>
+                <div className="absolute inset-0 bg-indigo-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+              </button>
 
-            <button
-              type="button"
-              onClick={async () => {
-                const res = await guestLogin();
-                if (res.success) {
-                    navigate("/dashboard");
-                }
-              }}
-              className="w-full py-4 text-slate-500 font-bold hover:text-indigo-600 transition-colors bg-slate-50/50 rounded-2xl hover:bg-slate-50"
-            >
-              Continue as Guest
-            </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const res = await guestLogin();
+                  if (res.success) navigate("/dashboard");
+                }}
+                className="w-full py-6 text-[9px] font-black uppercase tracking-[0.4em] text-white/20 hover:text-white hover:bg-white/[0.03] rounded-full border border-white/5 transition-all"
+              >
+                Journey as Guest
+              </button>
+            </div>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-50 text-center">
-            <p className="text-slate-500 font-medium">
-              New here?{" "}
-              <Link to="/register" className="text-indigo-600 font-bold hover:underline underline-offset-4 decoration-2">
-                Create an Account
+          <div className="mt-12 pt-10 border-t border-white/5 text-center">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 italic">
+              New to the Sanctuary?{" "}
+              <Link to="/register" className="text-white hover:underline underline-offset-8 decoration-white/20 ml-2 not-italic">
+                Begin Healing
               </Link>
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
