@@ -6,97 +6,134 @@ import {
   HiChatBubbleLeftRight,
   HiCog6Tooth,
   HiQuestionMarkCircle,
-  HiSparkles
+  HiSparkles,
+  HiArrowLeftOnRectangle,
+  HiChevronLeft,
+  HiUser,
+  HiXMark
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+import logo from "../assets/logo.png";
 
-const Sidebar = ({ isOpen, onClose }) => {
-  const { user } = useAuth();
+const Sidebar = ({ isOpen, onToggle }) => {
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const navItems = [
     { label: 'Dashboard', icon: <HiHome />, to: '/dashboard' },
-    { label: 'Journal Entry', icon: <HiPencilSquare />, to: '/journal' },
-    { label: 'Community Wall', icon: <HiSparkles />, to: '/community' },
-    { label: 'AI Chat', icon: <HiChatBubbleLeftRight />, to: '/chat' },
-    { label: 'Settings', icon: <HiCog6Tooth />, to: '/settings' },
-  ];
-
-  const bottomItems = [
-    { label: 'Support', icon: <HiQuestionMarkCircle />, to: '/support' },
+    { label: 'Journal', icon: <HiPencilSquare />, to: '/journal' },
+    { label: 'Social', icon: <HiSparkles />, to: '/community' },
+    { label: 'Talk to AI', icon: <HiChatBubbleLeftRight />, to: '/chat' },
+    { label: 'Profile', icon: <HiUser />, to: '/settings' },
   ];
 
   return (
     <>
       {/* Mobile Backdrop */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 lg:hidden"
-          onClick={onClose}
-        ></div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-2xl z-40 lg:hidden"
+            onClick={onToggle}
+          ></motion.div>
+        )}
+      </AnimatePresence>
 
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-[#09090b] border-r border-white/5 flex flex-col shrink-0
-        transition-all duration-500 ease-in-out lg:relative lg:translate-x-0
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 w-[280px] bg-white/[0.02] border-r border-white/5 flex flex-col shrink-0
+        transition-all duration-700 ease-[0.76, 0, 0.24, 1] lg:relative backdrop-blur-3xl
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:-ml-[280px]'}
       `}>
-        {/* Header/Logo */}
-        <div className="p-8 pb-12">
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-2xl font-black text-white tracking-tight text-glow">Wellness AI</h1>
-            <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_10px_#6366f1]"></div>
+        {/* Desktop Collapse Ritual Button - Hidden on Mobile */}
+        <button 
+          onClick={onToggle}
+          className={`
+            absolute -right-4 top-12 w-8 h-8 bg-white text-black rounded-full items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-50 group hover:bg-amber-400
+            hidden lg:flex
+            ${!isOpen ? 'translate-x-full opacity-0 pointer-events-none' : ''}
+          `}
+        >
+          <HiChevronLeft className="w-5 h-5" />
+        </button>
+
+        {/* Mobile Close Button - Visible only in Sidebar on Mobile */}
+        <button 
+          onClick={onToggle}
+          className="lg:hidden absolute top-6 right-6 p-2 text-white/40 hover:text-white transition-colors"
+        >
+          <HiXMark className="w-6 h-6" />
+        </button>
+
+        {/* Internal Scrollable Sanctuary */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar flex flex-col">
+          {/* Branding Beacon - Compressed for Mobile */}
+          <div className="p-8 lg:p-10 pt-12 lg:pt-16 pb-10 lg:pb-14 text-center">
+            <Link to="/" className="inline-block group">
+              <motion.img 
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                src={logo} 
+                alt="Serenity" 
+                className="w-16 lg:w-20 h-16 lg:h-20 mx-auto drop-shadow-[0_0_30px_rgba(245,158,11,0.2)] mb-4 lg:mb-6" 
+              />
+              <h1 className="text-lg lg:text-xl font-black italic tracking-tighter uppercase text-white tracking-[0.2em]">Serenity</h1>
+              <p className="text-[8px] lg:text-[9px] font-black text-white/20 uppercase tracking-[0.4em] mt-1 lg:mt-2 italic">The Sanctuary</p>
+            </Link>
           </div>
-          <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">The Sanctuary</p>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 space-y-1.5">
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              onClick={onClose}
-              className={`
-                group w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all duration-300
-                ${location.pathname === item.to 
-                  ? "bg-white/5 text-white sanctuary-glass shadow-inner overflow-hidden" 
-                  : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
-                }
-              `}
-            >
-              <span className={`text-xl transition-transform group-hover:scale-110 ${location.pathname === item.to ? 'text-indigo-400' : ''}`}>
-                {item.icon}
-              </span>
-              <span className="text-[13px] tracking-tight">{item.label}</span>
-              {location.pathname === item.to && (
-                <div className="ml-auto w-1 h-4 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]"></div>
-              )}
-            </Link>
-          ))}
-        </nav>
+          {/* Navigation Ritual - Tighter for Mobile */}
+          <nav className="flex-1 px-4 lg:px-5 space-y-1 lg:space-y-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                onClick={() => { if(window.innerWidth <= 1024) onToggle(); }}
+                className={`
+                  group relative flex items-center gap-4 lg:gap-5 px-6 lg:px-8 py-4 lg:py-5 rounded-[20px] lg:rounded-[24px] transition-all duration-500
+                  ${location.pathname === item.to 
+                    ? "bg-white/[0.04] text-white shadow-2xl border border-white/10" 
+                    : "text-white/30 hover:text-white hover:bg-white/[0.02]"
+                  }
+                `}
+              >
+                <span className={`text-lg lg:text-xl transition-all duration-500 ${location.pathname === item.to ? 'text-amber-400 scale-110' : 'group-hover:scale-110'}`}>
+                  {item.icon}
+                </span>
+                <span className="text-[11px] lg:text-[12px] font-black tracking-widest uppercase italic">{item.label}</span>
+                
+                {location.pathname === item.to && (
+                  <motion.div 
+                    layoutId="sidebar-active"
+                    className="absolute right-6 w-1 h-5 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.6)]"
+                  />
+                )}
+              </Link>
+            ))}
+          </nav>
 
-        {/* "Breathe Now" Floating Button */}
-        <div className="px-6 py-8">
-          <button className="w-full sanctuary-gradient py-5 rounded-[2rem] text-white font-black text-[11px] uppercase tracking-widest shadow-2xl shadow-indigo-950/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 group overflow-hidden relative">
-            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            Breathe Now
-          </button>
-        </div>
-
-        {/* Bottom Menu */}
-        <div className="px-4 py-8 border-t border-white/5 space-y-1">
-          {bottomItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              onClick={onClose}
-              className="flex items-center gap-4 px-6 py-3 rounded-xl text-[13px] font-bold text-slate-500 hover:text-slate-300 transition-colors"
-            >
-              <span className="text-lg">{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {/* Support & Logout Ritual - Compressed for Mobile */}
+          <div className="p-4 lg:p-6 pt-6 lg:pt-10 border-t border-white/5 space-y-1 lg:space-y-2">
+              <Link
+                to="/support"
+                onClick={() => { if(window.innerWidth <= 1024) onToggle(); }}
+                className="flex items-center gap-4 lg:gap-5 px-6 lg:px-8 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-[10px] lg:text-[11px] font-black uppercase tracking-widest text-white/20 hover:text-white transition-all italic hover:bg-white/[0.02]"
+              >
+                <HiQuestionMarkCircle className="text-xl" />
+                <span>Guidance</span>
+              </Link>
+              
+              <button
+                onClick={() => logout()}
+                className="w-full flex items-center gap-4 lg:gap-5 px-6 lg:px-8 py-3 lg:py-4 rounded-xl lg:rounded-2xl text-[10px] lg:text-[11px] font-black uppercase tracking-widest text-red-500/40 hover:text-red-500 transition-all italic hover:bg-red-500/5 group"
+              >
+                <HiArrowLeftOnRectangle className="text-xl transition-transform group-hover:-translate-x-1" />
+                <span>Logout</span>
+              </button>
+          </div>
         </div>
       </aside>
     </>
