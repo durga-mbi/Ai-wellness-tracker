@@ -6,6 +6,7 @@ import {
   HiChatBubbleLeftRight,
   HiCog6Tooth,
   HiQuestionMarkCircle,
+  HiSparkles
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
 
@@ -16,6 +17,7 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navItems = [
     { label: 'Dashboard', icon: <HiHome />, to: '/dashboard' },
     { label: 'Journal Entry', icon: <HiPencilSquare />, to: '/journal' },
+    { label: 'Community Wall', icon: <HiSparkles />, to: '/community' },
     { label: 'AI Chat', icon: <HiChatBubbleLeftRight />, to: '/chat' },
     { label: 'Settings', icon: <HiCog6Tooth />, to: '/settings' },
   ];

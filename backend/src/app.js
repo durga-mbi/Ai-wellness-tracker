@@ -9,6 +9,7 @@ import journalRoutes from "./routes/journal.route.js";
 import userRoutes from "./routes/user.route.js"; // keep this
 import userHabitsRoute from "./routes/userhabits.route.js";
 import dashboardRoute from "./routes/dashboard.route.js";
+import forumRoutes from "./routes/forum.route.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/chat", chatbotRoutes);
 app.use("/api/user", userRoutes); // keep this
 app.use("/api/user-habits", userHabitsRoute);
 app.use("/api/dashboard", dashboardRoute);
+app.use("/api/forum", forumRoutes);
 
 // Health route
 app.get("/api/health", (req, res) => {

@@ -9,6 +9,7 @@ import OnboardingSurvey from "./pages/OnboardingSurvey";
 import Settings from "./pages/Settings";
 import JournalEntry from "./pages/JournalEntry";
 import Chat from "./pages/Chat";
+import Community from "./pages/Community";
 
 import { LayoutProvider } from "./context/LayoutContext";
 import Layout from "./components/Layout";
@@ -54,6 +55,7 @@ function App() {
               <Route path="/journal" element={<JournalEntry />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/community" element={<Community />} />
             </Route>
             
             <Route path="*" element={<Navigate to="/" replace />} />
