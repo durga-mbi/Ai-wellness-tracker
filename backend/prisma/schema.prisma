@@ -69,3 +69,18 @@ model UserHabit {
 
   @@index([userId, date]) // optional, for faster queries by user & date
 }
+
+
+//crises detection model
+model CrisisLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     // optional, no relation
+  source    String   // "journal" | "chat" | "forum"
+  message   String   @db.Text
+  riskLevel String   // LOW | MEDIUM | HIGH
+  alertSent Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([riskLevel])
+}

@@ -1,5 +1,6 @@
 import prisma from "../config/db.js";
 
+//create the preferences
 export const savePreferences = async (req, res, next) => {
   try {
         const userId = req.user.id;
@@ -32,6 +33,7 @@ export const savePreferences = async (req, res, next) => {
     }
 };
 
+//get the preferences
 export const getPreference = async (req, res, next) => {
   try {
         const userId = req.user.id;
@@ -44,6 +46,8 @@ export const getPreference = async (req, res, next) => {
         next(err);
     }
 }
+
+// update the profile
 export const updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -69,6 +73,7 @@ export const updateProfile = async (req, res, next) => {
     }
 };
 
+// get the moodd summery
 export const getMoodSummary = async (req, res, next) => {
   try {
     const userId = req.user.id;
