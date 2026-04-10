@@ -1,41 +1,24 @@
-//some keywords for crisis releted
+import { detectCrisis as detectCrisisAI } from '../services/ai.service.js';
 
-const HIGH_RISK_KEYWORDS = [
-  "suicide",
-  "kill myself",
-  "end my life",
-  "self harm",
-  "want to die",
-  "no reason to live",
-  "hurt myself"
-];
+export const detectCrisis = async (text) => {
+  try {
+    const aiResult = await detectCrisisAI(text);
+    
+    // Normalize implementation to match expected controller format
+    // AI returns: { risk: "low" | "medium" | "high", reason: "...", trigger_words: [] }
+    // Controller expects: { riskLevel: "HIGH" | "MEDIUM" | "LOW", trigger: boolean }
+    
+    const riskLevel = aiResult.risk.toUpperCase();
+    const trigger = riskLevel === "HIGH";
 
-const MEDIUM_RISK_KEYWORDS = [
-  "depressed",
-  "hopeless",
-  "worthless",
-  "tired of life",
-  "giving up"
-];
-
-export const detectCrisis = (text) => {
-  const lowerText = text.toLowerCase();
-
-  const isHighRisk = HIGH_RISK_KEYWORDS.some(word =>
-    lowerText.includes(word)
-  );
-
-  if (isHighRisk) {
-    return { riskLevel: "HIGH", trigger: true };
+    return { 
+        riskLevel, 
+        trigger,
+        reason: aiResult.reason,
+        aiDetected: true
+    };
+  } catch (error) {
+    console.error("Crisis AI Detection failed, falling back to safe response", error);
+    return { riskLevel: "LOW", trigger: false };
   }
-
-  const isMediumRisk = MEDIUM_RISK_KEYWORDS.some(word =>
-    lowerText.includes(word)
-  );
-
-  if (isMediumRisk) {
-    return { riskLevel: "MEDIUM", trigger: false };
-  }
-
-  return { riskLevel: "LOW", trigger: false };
 };

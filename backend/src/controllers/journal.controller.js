@@ -1,6 +1,6 @@
 import prisma from "../config/db.js";
-import { analyzeSentiment, detectCrisis as analyzeAICrisis, formatForUI } from "../services/ai.service.js";
-import { detectCrisis as detectKeywordCrisis } from "../utils/crisisDetector.js";
+import { analyzeSentiment, formatForUI } from "../services/ai.service.js";
+import { detectCrisis } from "../utils/crisisDetector.js";
 import { HELPLINES } from "../utils/helplines.js";
 
 export const createEntry = async (req, res, next) => {
@@ -16,11 +16,9 @@ export const createEntry = async (req, res, next) => {
     // 2. Analyze sentiment
     const sentimentResult = await analyzeSentiment(content, user.preferences || "None");
 
-    // 3. Detect crisis (AI + Keywords)
-    const aiCrisis = await analyzeAICrisis(content);
-    const keywordCrisis = detectKeywordCrisis(content);
-    
-    const isHighRisk = aiCrisis.risk === "high" || keywordCrisis.riskLevel === "HIGH";
+    // 3. Detect crisis (AI-Driven)
+    const crisisResult = await detectCrisis(content);
+    const isHighRisk = crisisResult.trigger;
 
     // 4. Format feedback for UI
     const uiFeedback = await formatForUI(sentimentResult);
@@ -32,7 +30,7 @@ export const createEntry = async (req, res, next) => {
         userId,
         sentiment: JSON.stringify(sentimentResult),
         emotion: sentimentResult.emotion,
-        riskLevel: isHighRisk ? "high" : (keywordCrisis.riskLevel === "MEDIUM" ? "medium" : "low")
+        riskLevel: isHighRisk ? "high" : (crisisResult.riskLevel === "MEDIUM" ? "medium" : "low")
       }
     });
 

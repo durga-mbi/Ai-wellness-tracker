@@ -17,7 +17,7 @@ export const analyzeMessage = async (req, res, next) => {
         }
 
         // Detect crisis
-        const { riskLevel, trigger } = detectCrisis(message);
+        const { riskLevel, trigger } = await detectCrisis(message);
 
         // Save log in DB
         await prisma.crisisLog.create({
@@ -29,6 +29,7 @@ export const analyzeMessage = async (req, res, next) => {
                 alertSent: trigger
             }
         });
+
 
         // HIGH RISK → Trigger popup
         if (trigger) {

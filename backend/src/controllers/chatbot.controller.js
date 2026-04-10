@@ -29,7 +29,7 @@ export const chat = async (req, res, next) => {
     const aiResponse = await getChatbotResponse(message, context);
 
     // Crisis detection
-    const { riskLevel, trigger } = detectCrisis(message);
+    const { riskLevel, trigger } = await detectCrisis(message);
 
     res.json({
       response: aiResponse,

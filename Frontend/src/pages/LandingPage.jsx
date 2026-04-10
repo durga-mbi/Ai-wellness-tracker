@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { HiBars3, HiXMark, HiChevronRight, HiOutlineArrowSmallRight } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../assets/logo.png";
-import heroImg from "../assets/sanctuary-hero.png";
 
 const LandingPage = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,14 +22,16 @@ const LandingPage = () => {
 
     return (
         <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
-            {/* Logo-Focused Header */}
-            <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 h-20 flex items-center">
+            {/* Typographic Header */}
+            <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 h-24 flex items-center">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4 group">
-                            <img src={logo} alt="Wellness Hub" className="h-12 w-auto object-contain transition-transform group-hover:scale-105" />
-                            <div className="hidden sm:flex flex-col">
-                               <span className="text-lg font-black tracking-tighter uppercase italic leading-none">Wellness Hub</span>
+                            <div className="w-12 h-12 bg-black flex items-center justify-center rounded-xl rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+                                <span className="text-white text-2xl font-black italic">W.</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-xl font-black tracking-tighter uppercase italic leading-none">Wellness Hub</span>
                                <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mt-0.5">Your Daily Peace</span>
                             </div>
                         </div>
@@ -42,7 +42,7 @@ const LandingPage = () => {
                                     {item.name}
                                 </a>
                             ))}
-                            <Link to="/login" className="px-8 py-3 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl">
+                            <Link to="/login" className="px-10 py-3.5 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl">
                                 Site Login
                             </Link>
                         </div>
@@ -61,7 +61,7 @@ const LandingPage = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="absolute top-20 left-0 w-full bg-white border-b border-gray-100 md:hidden overflow-hidden"
+                            className="absolute top-24 left-0 w-full bg-white border-b border-gray-100 md:hidden overflow-hidden"
                         >
                             <div className="px-6 py-10 space-y-6">
                                 {navigation.map((item) => (
@@ -78,65 +78,49 @@ const LandingPage = () => {
                 </AnimatePresence>
             </nav>
 
-            {/* Simple Hero Section */}
-            <header className="relative pt-48 pb-24 px-6 lg:px-12">
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-                    <div className="space-y-10">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-full border border-gray-100 text-[9px] font-bold uppercase tracking-[0.3em] text-black"
-                        >
-                            Simple Wellness for Students
-                        </motion.div>
+        <header className="relative pt-60 pb-32 px-6 lg:px-12">
+            <div className="max-w-5xl mx-auto text-center space-y-12">
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center gap-3 px-5 py-2.5 bg-gray-50 rounded-full border border-gray-100 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-400"
+                >
+                    Proactive Mental Health for Students
+                </motion.div>
 
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-6xl md:text-8xl lg:text-[100px] font-black text-black tracking-tighter leading-[0.8] uppercase italic"
-                        >
-                            Track. <br /> Talk. <br /> Thrive.
-                        </motion.h1>
+                <motion.h1
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1, duration: 0.8 }}
+                    className="text-7xl md:text-9xl lg:text-[140px] font-black text-black tracking-tighter leading-[0.75] uppercase italic"
+                >
+                    Track. <br /> Talk. <br /> Thrive.
+                </motion.h1>
 
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-xl text-gray-400 max-w-md font-medium leading-[1.4] italic"
-                        >
-                            Wellness Hub helps you manage your daily habits, moods, and mental health in one simple place. Track your sleep, write your journals, and chat with AI guides.
-                        </motion.p>
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto font-medium leading-[1.4] italic"
+                >
+                    Managed wellness for the modern student. Track habits, record reflections with AI insights, and find your calm in a busy world—all through a distraction-free interface.
+                </motion.p>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 }}
-                            className="flex flex-col sm:flex-row items-center gap-4"
-                        >
-                            <Link to="/register" className="w-full sm:w-auto px-12 py-5 bg-black text-white rounded-2xl text-xs font-black uppercase tracking-[0.3em] hover:bg-gray-800 transition-all shadow-2xl">
-                                Join Today
-                            </Link>
-                            <Link to="/login" className="w-full sm:w-auto px-12 py-5 bg-white text-black border-2 border-black rounded-2xl text-xs font-black uppercase tracking-[0.3em] hover:bg-gray-50 transition-all">
-                                Log In
-                            </Link>
-                        </motion.div>
-                    </div>
-
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2, duration: 1 }}
-                        className="relative hidden lg:block"
-                    >
-                        <img 
-                            src={heroImg} 
-                            alt="Interface View" 
-                            className="relative z-10 w-full rounded-[60px] shadow-3xl border-4 border-white transform rotate-[-3deg] hover:rotate-0 transition-all duration-700 h-[650px] object-cover"
-                        />
-                    </motion.div>
-                </div>
-            </header>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                >
+                    <Link to="/register" className="w-full sm:w-auto px-16 py-6 bg-black text-white rounded-3xl text-sm font-black uppercase tracking-[0.3em] hover:bg-gray-800 transition-all shadow-3xl shadow-black/10">
+                        Join Today
+                    </Link>
+                    <Link to="/login" className="w-full sm:w-auto px-16 py-6 bg-white text-black border-2 border-black rounded-3xl text-sm font-black uppercase tracking-[0.3em] hover:bg-gray-50 transition-all">
+                        Log In
+                    </Link>
+                </motion.div>
+            </div>
+        </header>
 
             {/* Infinite Feature Marquee */}
             <section className="py-12 bg-black overflow-hidden border-y border-black">
@@ -217,7 +201,7 @@ const LandingPage = () => {
                       Grow with others. Share your wins, ask for help, and join a community that cares about mental health just as much as you do.
                    </p>
                    <div className="flex justify-center pt-8">
-                      <Link to="/register" className="px-16 py-6 bg-black text-white rounded-3xl text-xs font-black uppercase tracking-[0.4em] shadow-3xl hover:-translate-y-1 transition-all">
+                      <Link to="/register" className="px-16 py-6 bg-black text-white rounded-3xl text-sm font-black uppercase tracking-[0.4em] shadow-3xl hover:-translate-y-1 transition-all">
                          Join the Community
                       </Link>
                    </div>
@@ -228,7 +212,9 @@ const LandingPage = () => {
             <footer className="py-20 px-6 lg:px-12 bg-white border-t border-gray-100">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
                     <div className="flex items-center gap-6">
-                        <img src={logo} alt="Logo" className="h-10 w-auto grayscale" />
+                        <div className="w-8 h-8 bg-black flex items-center justify-center rounded-lg grayscale">
+                            <span className="text-white text-[10px] font-black italic">W.</span>
+                        </div>
                         <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em] italic">Wellness Hub © 2026</span>
                     </div>
 
