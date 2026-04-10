@@ -41,7 +41,7 @@ export const getAllHabits = async (req, res, next) => {
         const { userId } = req.params;
 
         const habits = await prisma.userHabit.findMany({
-            where: { userId: parseInt(userId) },
+            where: { userId: userId },
             orderBy: { date: "desc" },
         });
 
@@ -60,7 +60,7 @@ export const getHabitByDate = async (req, res, next) => {
         habitDate.setHours(0, 0, 0, 0);
 
         const habit = await prisma.userHabit.findFirst({
-            where: { userId: parseInt(userId), date: habitDate },
+            where: { userId: userId, date: habitDate },
         });
 
         if (!habit) {

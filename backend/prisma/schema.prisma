@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 //user model login/signup
 model User {
-  id          Int            @id @default(autoincrement())
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
   name        String?
   email       String?        @unique // nullable for guest account
   mobile      String?        @unique // nullable for guest account
@@ -17,7 +17,7 @@ model User {
   ageGroup    String?        // e.g., "18-24"
   university  String?        // user's university
   isAnonymous Boolean        @default(false)
-  preferences String?        @db.Text // Store JSON string for AI context
+  preferences String?        // JSON string for AI context
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]
@@ -27,9 +27,9 @@ model User {
 }
 
 model ForumPost {
-  id          Int        @id @default(autoincrement())
-  content     String     @db.Text
-  userId      Int
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  content     String
+  userId      String     @db.ObjectId
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   isAnonymous Boolean    @default(true)
   likesCount  Int        @default(0) // Cache for performance
@@ -39,9 +39,9 @@ model ForumPost {
 }
 
 model PostLike {
-  id        Int       @id @default(autoincrement())
-  postId    Int
-  userId    Int
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String    @db.ObjectId
+  userId    String    @db.ObjectId
   post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
@@ -50,28 +50,28 @@ model PostLike {
 }
 
 model JournalEntry {
-  id        Int      @id @default(autoincrement())
-  content   String   @db.Text
-  userId    Int
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
-  sentiment String?  @db.Text // JSON result from AI
+  sentiment String?  // JSON result from AI
   emotion   String?  // happy, stress, etc.
   riskLevel String?  // low, medium, high
   createdAt DateTime @default(now())
 }
 
 model Preference {
-  id     Int    @id @default(autoincrement())
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
   issue  String
-  userId Int
+  userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 
 // user habits
 model UserHabit {
-  id        Int      @id @default(autoincrement())
-  userId    Int
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   sleep     Float?   // in hours
   water     Float?   // in liters
@@ -86,10 +86,10 @@ model UserHabit {
 
 //crises detection model
 model CrisisLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int?     // optional, no relation
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId // Optional, can still be an ObjectID if provided
   source    String   // "journal" | "chat" | "forum"
-  message   String   @db.Text
+  message   String
   riskLevel String   // LOW | MEDIUM | HIGH
   alertSent Boolean  @default(false)
   createdAt DateTime @default(now())

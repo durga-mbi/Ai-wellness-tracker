@@ -81,7 +81,7 @@ export const getPosts = async (req, res) => {
 
 export const likePost = async (req, res) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = req.params.id;
     const userId = req.user.id;
 
     const post = await prisma.forumPost.findUnique({ where: { id: postId } });
@@ -139,7 +139,7 @@ export const likePost = async (req, res) => {
 
 export const reportPost = async (req, res) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = req.params.id;
     const post = await prisma.forumPost.findUnique({ where: { id: postId } });
     
     if (!post) return res.status(404).json({ message: "Post not found" });

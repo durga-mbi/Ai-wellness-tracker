@@ -69,7 +69,7 @@ export const getUserCrises = async (req, res, next) => {
 
     const crises = await prisma.crisisLog.findMany({
       where: {
-        userId: Number(userId)
+        userId: userId
       },
       orderBy: {
         createdAt: "desc"

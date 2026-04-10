@@ -7,7 +7,7 @@ export const getDashboardData = async (req, res, next) => {
 
         if (!userId) return res.status(400).json({ message: "userId is required" });
 
-        const uid = parseInt(userId);
+        const uid = userId;
 
         // 1. Core Summary Stats
         const totalEntries = await prisma.journalEntry.count({ where: { userId: uid } });
