@@ -13,11 +13,9 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Sidebar = ({ isOpen, onToggle }) => {
+const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
-  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
 
   const navigation = [
     { name: "Dashboard", icon: <HiOutlineHome />, path: "/dashboard" },
@@ -58,14 +56,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
     closed: { opacity: 0, x: -10 }
   };
 
-  const handleLogoutClick = () => {
-    setShowLogoutConfirm(true);
-  };
-
-  const confirmLogout = () => {
-    logout();
-    setShowLogoutConfirm(false);
-  };
 
   return (
     <>
@@ -78,51 +68,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
             className="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 lg:hidden"
             onClick={onToggle}
           />
-        )}
-      </AnimatePresence>
-
-      {/* Logout Confirmation Modal */}
-      <AnimatePresence>
-        {showLogoutConfirm && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/20 backdrop-blur-md"
-              onClick={() => setShowLogoutConfirm(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white p-10 rounded-[40px] shadow-2xl border border-gray-100 max-w-sm w-full text-center space-y-8"
-            >
-              <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto text-3xl">
-                <HiOutlineArrowRightOnRectangle />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black italic uppercase tracking-tighter text-black">Terminate Session?</h3>
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
-                  Are you sure you want to exit the current intelligence portal? Unsaved changes may be lost.
-                </p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={confirmLogout}
-                  className="w-full py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl"
-                >
-                  Confirm Logout
-                </button>
-                <button
-                  onClick={() => setShowLogoutConfirm(false)}
-                  className="w-full py-4 bg-white text-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-50 transition-all"
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-          </div>
         )}
       </AnimatePresence>
 
@@ -204,7 +149,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* Sidebar Footer */}
         <div className="p-3 border-t border-gray-50 flex-shrink-0">
           <button
-            onClick={handleLogoutClick}
+            onClick={onLogoutClick}
             className={`
                w-full flex items-center transition-all duration-300 rounded-lg group
                ${isOpen ? "px-4 py-2.5" : "px-0 justify-center py-2.5"}

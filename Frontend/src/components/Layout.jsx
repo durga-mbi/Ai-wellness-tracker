@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import { useLayout } from "../context/LayoutContext";
+import { useAuth } from "../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { HiOutlineArrowRightOnRectangle } from "react-icons/hi2";
 
 const Layout = ({ children, ...props }) => {
   const { layoutProps } = useLayout();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   // Start sidebar closed on mobile, open on desktop
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,6 +30,16 @@ const Layout = ({ children, ...props }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    logout();
+    setShowLogoutConfirm(false);
+    navigate("/login");
+  };
+
   // Sync with layoutProps or manual overrides
   const headerProps = { ...layoutProps, ...props };
 
@@ -39,6 +54,7 @@ const Layout = ({ children, ...props }) => {
       <Sidebar
         isOpen={isSidebarOpen}
         onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+        onLogoutClick={handleLogoutClick}
       />
 
       <motion.div 
@@ -51,6 +67,7 @@ const Layout = ({ children, ...props }) => {
         <Topbar
           isSidebarOpen={isSidebarOpen}
           onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          onLogoutClick={handleLogoutClick}
           {...headerProps}
         />
 
@@ -71,6 +88,51 @@ const Layout = ({ children, ...props }) => {
           </div>
         </main>
       </motion.div>
+
+      {/* Logout Confirmation Modal - Elevated Ritual */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/10 backdrop-blur-md"
+              onClick={() => setShowLogoutConfirm(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white p-10 rounded-[40px] shadow-2xl border border-gray-100 max-w-sm w-full text-center space-y-8"
+            >
+              <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <HiOutlineArrowRightOnRectangle />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-black italic uppercase tracking-tighter text-black">Terminate Session?</h3>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
+                  Are you sure you want to exit the current intelligence portal? Your neural state will be synchronized.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={confirmLogout}
+                  className="w-full py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl"
+                >
+                  Confirm Logout
+                </button>
+                <button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="w-full py-4 bg-white text-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-100 transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

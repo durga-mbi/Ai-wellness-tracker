@@ -6,7 +6,7 @@ import { generateToken } from "../utils/token.js";
 // signup
 export const signup = async (req, res, next) => {
     try {
-        const { email, mobile, password } = req.body;
+        const { name, email, mobile, password } = req.body;
 
         const existingUser = await prisma.user.findFirst({
             where: {
@@ -21,7 +21,12 @@ export const signup = async (req, res, next) => {
         const hashed = await hashPassword(password);
 
         const user = await prisma.user.create({
-            data: { email, mobile, password: hashed }
+            data: { 
+                name,
+                email, 
+                mobile, 
+                password: hashed 
+            }
         });
 
         const token = generateToken({ id: user.id });
