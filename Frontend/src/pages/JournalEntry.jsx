@@ -10,6 +10,7 @@ import api from "../utils/api";
 import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
+import CrisisModal from "../components/CrisisModal";
 
 const JournalEntry = () => {
   const { updateLayout } = useLayout();
@@ -17,6 +18,8 @@ const JournalEntry = () => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState(null);
+  const [isCrisisOpen, setIsCrisisOpen] = useState(false);
+  const [helplines, setHelplines] = useState([]);
 
   useEffect(() => {
     updateLayout({
@@ -35,6 +38,12 @@ const JournalEntry = () => {
     try {
       const response = await api.post("/journal", { content });
       setResult(response.data);
+      
+      if (response.data.crisisAlert) {
+        setHelplines(response.data.helplines);
+        setIsCrisisOpen(true);
+      }
+
       updateLayout({
         title: "Reflection Complete",
         subtitle: "Personal Insights",
@@ -163,6 +172,12 @@ const JournalEntry = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CrisisModal 
+        isOpen={isCrisisOpen} 
+        onClose={() => setIsCrisisOpen(false)} 
+        helplines={helplines} 
+      />
     </div>
   );
 };

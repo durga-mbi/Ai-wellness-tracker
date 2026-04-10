@@ -1,5 +1,7 @@
 import prisma from "../config/db.js";
 import { getChatbotResponse } from "../services/ai.service.js";
+import { detectCrisis } from "../utils/crisisDetector.js";
+import { HELPLINES } from "../utils/helplines.js";
 
 export const chat = async (req, res, next) => {
   try {
@@ -26,8 +28,13 @@ export const chat = async (req, res, next) => {
 
     const aiResponse = await getChatbotResponse(message, context);
 
+    // Crisis detection
+    const { riskLevel, trigger } = detectCrisis(message);
+
     res.json({
-      response: aiResponse
+      response: aiResponse,
+      crisisAlert: trigger,
+      helplines: trigger ? HELPLINES : []
     });
 
   } catch (error) {

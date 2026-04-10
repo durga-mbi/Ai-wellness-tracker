@@ -4,6 +4,7 @@ import api from "../utils/api";
 import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
+import CrisisModal from "../components/CrisisModal";
 
 const Chat = () => {
   const { updateLayout } = useLayout();
@@ -13,6 +14,8 @@ const Chat = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCrisisOpen, setIsCrisisOpen] = useState(false);
+  const [helplines, setHelplines] = useState([]);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -44,6 +47,11 @@ const Chat = () => {
     try {
       const response = await api.post("/chat", { message: userMessage });
       setMessages(prev => [...prev, { role: "ai", text: response.data.response }]);
+      
+      if (response.data.crisisAlert) {
+        setHelplines(response.data.helplines);
+        setIsCrisisOpen(true);
+      }
     } catch (error) {
       setMessages(prev => [...prev, { role: "ai", text: "The connection to the sanctuary has flickered. Let us try once more." }]);
     } finally {
@@ -139,6 +147,12 @@ const Chat = () => {
           </div>
         </form>
       </section>
+
+      <CrisisModal 
+        isOpen={isCrisisOpen} 
+        onClose={() => setIsCrisisOpen(false)} 
+        helplines={helplines} 
+      />
     </div>
   );
 };
