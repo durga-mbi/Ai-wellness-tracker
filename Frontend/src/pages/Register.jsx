@@ -52,11 +52,11 @@ const Register = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             src={logo} 
-            alt="Serenity Logo" 
-            className="w-14 h-14 mx-auto mb-6 grayscale brightness-0 opacity-80" 
+            alt="Wellness Hub Logo" 
+            className="w-20 h-20 mx-auto mb-6 transition-transform hover:scale-105" 
           />
-          <h1 className="text-2xl font-bold tracking-tight mb-1">Begin Healing</h1>
-          <p className="text-gray-300 text-[9px] uppercase font-bold tracking-[0.2em]">Join the global sanctuary</p>
+          <h1 className="text-3xl font-black tracking-tighter mb-1 uppercase italic">Join Hub</h1>
+          <p className="text-gray-300 text-[9px] uppercase font-bold tracking-[0.2em]">Start your daily journey</p>
         </div>
 
         <div className="bg-white border border-gray-100 p-8 rounded-[32px] shadow-xl relative">
@@ -84,14 +84,14 @@ const Register = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Presence Name</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Full Name</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
                   <HiUser className="w-4 h-4" />
                 </div>
                 <input
                   type="text"
-                  placeholder="FULL NAME"
+                  placeholder="EX: JOHN DOE"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
@@ -102,14 +102,14 @@ const Register = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Signature</label>
+                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Email</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
                     <HiEnvelope className="w-4 h-4" />
                   </div>
                   <input
                     type="email"
-                    placeholder="EMAIL"
+                    placeholder="EMAIL@HUB.COM"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
@@ -119,14 +119,14 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Device</label>
+                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Mobile</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
                     <HiPhone className="w-4 h-4" />
                   </div>
                   <input
                     type="tel"
-                    placeholder="MOBILE"
+                    placeholder="PHONE"
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value)}
                     className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
@@ -137,7 +137,7 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Secret Phrase</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
                   <HiLockClosed className="w-4 h-4" />
@@ -158,15 +158,15 @@ const Register = () => {
               disabled={isSubmitting}
               className="w-full py-3.5 bg-black text-white font-bold text-[10px] uppercase tracking-widest rounded-full hover:bg-gray-800 transition-all shadow-md mt-4"
             >
-              {isSubmitting ? "Initiating..." : "Begin Your Journey"}
+              {isSubmitting ? "Wait..." : "Join Hub"}
             </button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-50 text-center">
             <p className="text-[9px] font-bold uppercase tracking-widest text-gray-300">
-              Established presence?{" "}
+              Already have an account?{" "}
               <Link to="/login" className="text-black hover:underline underline-offset-4 decoration-gray-100 ml-1">
-                Recall Presence
+                Log In
               </Link>
             </p>
           </div>

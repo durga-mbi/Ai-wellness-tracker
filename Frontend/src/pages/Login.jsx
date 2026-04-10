@@ -48,11 +48,11 @@ const Login = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             src={logo} 
-            alt="Serenity Logo" 
-            className="w-14 h-14 mx-auto mb-6 grayscale brightness-0 opacity-80" 
+            alt="Wellness Hub Logo" 
+            className="w-20 h-20 mx-auto mb-6 transition-transform hover:scale-105" 
           />
-          <h1 className="text-2xl font-bold tracking-tight mb-1">Return to Center</h1>
-          <p className="text-gray-300 text-[9px] uppercase font-bold tracking-[0.2em]">Recall your presence</p>
+          <h1 className="text-3xl font-black tracking-tighter mb-1 uppercase italic">Member Login</h1>
+          <p className="text-gray-300 text-[9px] uppercase font-bold tracking-[0.2em]">Access your daily hub</p>
         </div>
 
         <div className="bg-white border border-gray-100 p-8 lg:p-10 rounded-[32px] shadow-xl relative">
@@ -118,7 +118,7 @@ const Login = () => {
                 disabled={isSubmitting}
                 className="w-full py-3.5 bg-black text-white font-bold text-[10px] uppercase tracking-widest rounded-full hover:bg-gray-800 transition-all shadow-md"
               >
-                {isSubmitting ? "Synchronizing..." : "Recall Presence"}
+                {isSubmitting ? "Logging In..." : "Log In"}
               </button>
 
               <button
@@ -129,16 +129,16 @@ const Login = () => {
                 }}
                 className="w-full py-3 text-[9px] font-bold uppercase tracking-widest text-gray-300 hover:text-black hover:bg-gray-50 rounded-full border border-gray-100 transition-all"
               >
-                Journey as Guest
+                Explore as Guest
               </button>
             </div>
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-50 text-center">
             <p className="text-[9px] font-bold uppercase tracking-widest text-gray-300">
-              New to the Sanctuary?{" "}
+              New here?{" "}
               <Link to="/register" className="text-black hover:underline underline-offset-4 decoration-gray-100 ml-1">
-                Begin Healing
+                Create Account
               </Link>
             </p>
           </div>

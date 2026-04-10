@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { 
   HiOutlineHome, 
   HiOutlineBookOpen, 
@@ -10,9 +10,11 @@ import {
   HiOutlineArrowRightOnRectangle
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
+import logo from "../assets/logo.png";
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { logout } = useAuth();
 
   const navigation = [
@@ -36,17 +38,21 @@ const Sidebar = ({ isOpen, onToggle }) => {
       <aside 
         className={`
           fixed lg:relative z-50 h-screen transition-all duration-500 ease-[0.22, 1, 0.36, 1]
-          ${isOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full lg:translate-x-0 lg:w-20"}
+          \${isOpen ? "w-64 translate-x-0" : "w-0 -translate-x-full lg:translate-x-0 lg:w-20"}
           bg-white border-r border-gray-100 flex flex-col overflow-hidden
         `}
       >
         {/* Sidebar Header */}
-        <div className="h-14 flex items-center px-6 border-b border-gray-100 flex-shrink-0">
+        <div className="h-14 flex items-center px-6 border-b border-gray-100 flex-shrink-0 cursor-pointer" onClick={() => navigate('/')}>
           <div className="flex items-center gap-3">
-            <div className={`w-6 h-6 bg-black rounded-full flex-shrink-0 transition-transform ${!isOpen && "scale-75"}`}></div>
+            <img 
+               src={logo} 
+               alt="Logo" 
+               className={`w-7 h-7 object-contain transition-transform \${!isOpen && "scale-110"}`} 
+            />
             {isOpen && (
-              <span className="font-bold text-xs uppercase tracking-widest text-black whitespace-nowrap">
-                Wellness App
+              <span className="font-black text-[11px] uppercase tracking-tighter text-black whitespace-nowrap italic">
+                Wellness Hub
               </span>
             )}
           </div>
