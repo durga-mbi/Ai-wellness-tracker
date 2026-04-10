@@ -7,7 +7,8 @@ import {
   HiOutlineUserGroup,
   HiOutlineSquare2Stack,
   HiOutlineCog6Tooth,
-  HiOutlineArrowRightOnRectangle
+  HiOutlineArrowRightOnRectangle,
+  HiOutlineSparkles
 } from "react-icons/hi2";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
@@ -23,6 +24,7 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
     { name: "Chat", icon: <HiOutlineChatBubbleBottomCenterText />, path: "/chat" },
     { name: "Community", icon: <HiOutlineUserGroup />, path: "/community" },
     { name: "History", icon: <HiOutlineSquare2Stack />, path: "/calendar" },
+    { name: "Mindfulness", icon: <HiOutlineSparkles />, path: "/mindfulness" },
     { name: "Settings", icon: <HiOutlineCog6Tooth />, path: "/settings" }
   ];
 

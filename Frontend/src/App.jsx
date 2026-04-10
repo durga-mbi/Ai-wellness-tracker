@@ -22,6 +22,7 @@ import Settings from "./pages/Settings";
 import Onboarding from "./pages/Onboarding";
 import OnboardingSurvey from "./pages/OnboardingSurvey";
 import MoodCalendar from "./pages/MoodCalendar";
+import Mindfulness from "./pages/Mindfulness";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
               <Route path="/chat" element={<Chat />} />
               <Route path="/community" element={<Community />} />
               <Route path="/calendar" element={<MoodCalendar />} />
+              <Route path="/mindfulness" element={<Mindfulness />} />
             </Route>
             
             {/* Error Page */}
