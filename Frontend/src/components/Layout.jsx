@@ -29,12 +29,11 @@ const Layout = ({ children, ...props }) => {
   const headerProps = { ...layoutProps, ...props };
 
   return (
-    <div className="h-screen bg-[#050505] text-white flex font-sans overflow-hidden selection:bg-amber-500/10 relative">
-      {/* Persistent Cinematic Atmosphere */}
+    <div className="h-screen bg-white text-black flex font-sans overflow-hidden selection:bg-gray-100 relative">
+      {/* Light Aesthetic Atmosphere */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 right-1/4 w-[60vw] h-[60vw] bg-amber-500/10 blur-[140px] rounded-full animate-pulse opacity-40"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-[50vw] h-[50vw] bg-orange-500/5 blur-[120px] rounded-full animate-pulse delay-1000 opacity-40"></div>
-        <div className="absolute inset-0 opacity-[0.02] mix-blend-overlay bg-[url('https://grain-y.com/images/grain-dark.png')]"></div>
+        <div className="absolute top-1/4 right-1/4 w-[60vw] h-[60vw] bg-gray-50 blur-[140px] rounded-full opacity-40"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-[50vw] h-[50vw] bg-gray-50/50 blur-[120px] rounded-full opacity-40"></div>
       </div>
 
       <Sidebar 
@@ -43,26 +42,27 @@ const Layout = ({ children, ...props }) => {
       />
       
       <div className={`
-        flex-1 flex flex-col h-screen relative z-10 transition-all duration-700 ease-[0.76, 0, 0.24, 1]
-        pl-0
+        flex-1 flex flex-col h-screen relative z-10 transition-all duration-500 ease-[0.22, 1, 0.36, 1]
+        pl-0 overflow-hidden
       `}>
         <Topbar 
           isSidebarOpen={isSidebarOpen}
-          onOpenSidebar={() => setIsSidebarOpen(true)} 
+          onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
           {...headerProps}
         />
         
-        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 lg:p-12 custom-scrollbar">
-           <div className="max-w-[1700px] mx-auto w-full">
+        <main className="flex-1 overflow-hidden p-4 md:p-6 lg:p-8">
+           <div className="max-w-[1700px] mx-auto w-full h-full flex flex-col">
              <AnimatePresence mode="wait">
                 <motion.div
-                  key={window.location.pathname}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.7, ease: [0.76, 0, 0.24, 1] }}
+                   className="h-full"
+                   key={window.location.pathname}
+                   initial={{ opacity: 0, scale: 0.99 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   exit={{ opacity: 0, scale: 1.01 }}
+                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {children || <Outlet />}
+                   {children || <Outlet />}
                 </motion.div>
              </AnimatePresence>
            </div>

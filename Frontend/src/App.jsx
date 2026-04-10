@@ -26,12 +26,12 @@ function App() {
       <LayoutProvider>
         <Router>
           <Routes>
-            {/* Public Gates */}
+            {/* Auth Pages */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             
-            {/* Individual Protected Rituals (No Layout) */}
+            {/* User Setup */}
             <Route 
               path="/onboarding" 
               element={
@@ -49,7 +49,7 @@ function App() {
               } 
             />
             
-            {/* Main Sanctuary Layout (Global Sidebar/Topbar) - All Protected */}
+            {/* Main App Layout (Global Sidebar/Topbar) */}
             <Route 
               element={
                 <ProtectedRoute>
@@ -64,7 +64,7 @@ function App() {
               <Route path="/community" element={<Community />} />
             </Route>
             
-            {/* The 3D Error Sanctuary */}
+            {/* Error Page */}
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<Navigate to="/404" replace />} />
           </Routes>
