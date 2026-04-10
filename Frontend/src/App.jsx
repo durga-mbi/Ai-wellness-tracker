@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
+import { SocketProvider } from "./context/SocketContext";
 
 // Components
 import Layout from "./components/Layout";
@@ -26,9 +27,10 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <AuthProvider>
-      <LayoutProvider>
-        <Router>
-          <Routes>
+      <SocketProvider>
+        <LayoutProvider>
+          <Router>
+            <Routes>
             {/* Public & Auth Entry - Accessible to unauthenticated users */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/onboarding" element={<Onboarding />} />
@@ -83,7 +85,8 @@ function App() {
           </Routes>
         </Router>
       </LayoutProvider>
-    </AuthProvider>
+    </SocketProvider>
+  </AuthProvider>
   );
 }
 

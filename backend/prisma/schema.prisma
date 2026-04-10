@@ -23,17 +23,30 @@ model User {
   preferenceList Preference[]
   userHabits     UserHabit[]
   forumPosts     ForumPost[]
+  postLikes      PostLike[]
 }
 
 model ForumPost {
-  id          Int      @id @default(autoincrement())
-  content     String   @db.Text
+  id          Int        @id @default(autoincrement())
+  content     String     @db.Text
   userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isAnonymous Boolean  @default(true)
-  likes       Int      @default(0)
-  reports     Int      @default(0)
-  createdAt   DateTime @default(now())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isAnonymous Boolean    @default(true)
+  likesCount  Int        @default(0) // Cache for performance
+  likes       PostLike[]
+  reports     Int        @default(0)
+  createdAt   DateTime   @default(now())
+}
+
+model PostLike {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@unique([postId, userId])
 }
 
 model JournalEntry {

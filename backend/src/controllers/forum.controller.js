@@ -1,4 +1,5 @@
 import prisma from '../config/db.js';
+import { emitEvent } from '../socket.js';
 
 export const createPost = async (req, res) => {
   try {
@@ -31,6 +32,9 @@ export const createPost = async (req, res) => {
       }
     });
 
+    // Broadcast new post
+    emitEvent('post:new', post);
+
     res.status(201).json(post);
   } catch (error) {
     res.status(500).json({ message: "Server error creating post", error: error.message });
@@ -39,6 +43,7 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
   try {
+    const userId = req.user.id;
     const posts = await prisma.forumPost.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -47,18 +52,25 @@ export const getPosts = async (req, res) => {
             name: true,
             email: true
           }
+        },
+        likes: {
+          where: { userId }
         }
       },
       take: 50
     });
 
-    // Mask non-anonymous user data if isAnonymous is true
+    // Map posts to include isLiked state and mask anonymous data
     const sanitizedPosts = posts.map(post => {
+      const isLiked = post.likes.length > 0;
+      
       if (post.isAnonymous) {
-        const { user, ...rest } = post;
-        return rest;
+        const { user, likes, ...rest } = post;
+        return { ...rest, isLiked };
       }
-      return post;
+      
+      const { likes, ...rest } = post;
+      return { ...rest, isLiked };
     });
 
     res.json(sanitizedPosts);
@@ -70,21 +82,58 @@ export const getPosts = async (req, res) => {
 export const likePost = async (req, res) => {
   try {
     const postId = parseInt(req.params.id);
+    const userId = req.user.id;
+
     const post = await prisma.forumPost.findUnique({ where: { id: postId } });
-    
     if (!post) return res.status(404).json({ message: "Post not found" });
 
-    // In this simplified Prisma schema, we just increment likes
-    const updatedPost = await prisma.forumPost.update({
-      where: { id: postId },
-      data: {
-        likes: { increment: 1 }
+    // Check if liked
+    const existingLike = await prisma.postLike.findUnique({
+      where: {
+        postId_userId: { postId, userId }
       }
     });
 
-    res.json(updatedPost);
+    let updatedPost;
+    if (existingLike) {
+      // Unlike
+      updatedPost = await prisma.$transaction([
+        prisma.postLike.delete({
+          where: { id: existingLike.id }
+        }),
+        prisma.forumPost.update({
+          where: { id: postId },
+          data: { likesCount: { decrement: 1 } }
+        })
+      ]);
+    } else {
+      // Like
+      updatedPost = await prisma.$transaction([
+        prisma.postLike.create({
+          data: { postId, userId }
+        }),
+        prisma.forumPost.update({
+          where: { id: postId },
+          data: { likesCount: { increment: 1 } }
+        })
+      ]);
+    }
+
+    const finalPost = updatedPost[1];
+
+    // Broadcast like update
+    emitEvent('post:like', { 
+        postId, 
+        likes: finalPost.likesCount 
+    });
+
+    res.json({ 
+        postId, 
+        likes: finalPost.likesCount, 
+        isLiked: !existingLike 
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error liking post", error: error.message });
+    res.status(500).json({ message: "Server error toggling like", error: error.message });
   }
 };
 
