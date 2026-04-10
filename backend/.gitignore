@@ -37,3 +37,5 @@ temp/
 
 # Cache
 .cache/
+
+mongodb_data/
