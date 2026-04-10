@@ -9,48 +9,79 @@ export const getDashboardData = async (req, res, next) => {
 
         const uid = parseInt(userId);
 
-        // Latest journal entry
+        // 1. Core Summary Stats
+        const totalEntries = await prisma.journalEntry.count({ where: { userId: uid } });
+        const totalPosts = await prisma.forumPost.count({ where: { userId: uid } });
+        const forumLikes = await prisma.forumPost.aggregate({
+            where: { userId: uid },
+            _sum: { likes: true }
+        });
+
+        // 2. Weekly Journal Score Analysis
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+
+        const weeklyEntries = await prisma.journalEntry.findMany({
+            where: {
+                userId: uid,
+                createdAt: { gte: weekAgo }
+            },
+            select: { sentiment: true }
+        });
+
+        let totalScore = 0;
+        let count = 0;
+        weeklyEntries.forEach(entry => {
+            if (entry.sentiment) {
+                try {
+                    const parsed = JSON.parse(entry.sentiment);
+                    if (typeof parsed.score === 'number') {
+                        totalScore += parsed.score;
+                        count++;
+                    }
+                } catch (e) { /* ignore malformed json */ }
+            }
+        });
+
+        const avgScore = count > 0 ? (totalScore / count) : 0;
+        let scoreResult = "Baseline";
+        if (avgScore > 0.6) scoreResult = "Optimal Wellness";
+        else if (avgScore > 0.2) scoreResult = "Positive Trajectory";
+        else if (avgScore > -0.2) scoreResult = "Moderate Stability";
+        else if (avgScore > -0.6) scoreResult = "Requires Attention";
+        else scoreResult = "High Stress Detected";
+
+        // 3. Wellness Habit History (Last 30 Days to support multi-view)
+        const monthAgo = new Date();
+        monthAgo.setDate(monthAgo.getDate() - 30);
+        monthAgo.setHours(0, 0, 0, 0);
+
+        const habitHistory = await prisma.userHabit.findMany({
+            where: {
+                userId: uid,
+                date: { gte: monthAgo },
+            },
+            orderBy: { date: "asc" },
+        });
+
         const latestJournal = await prisma.journalEntry.findFirst({
             where: { userId: uid },
             orderBy: { createdAt: "desc" },
         });
 
-        // summary
-        const totalEntries = await prisma.journalEntry.count({ where: { userId: uid } });
-
-        const moodSummary = await prisma.journalEntry.groupBy({
-            by: ["emotion"],
-            where: { userId: uid },
-            _count: { emotion: true },
-        });
-
-        const riskSummary = await prisma.journalEntry.groupBy({
-            by: ["riskLevel"],
-            where: { userId: uid },
-            _count: { riskLevel: true },
-        });
-
-        // Quick insights: last 7 days
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        const recentEntries = await prisma.journalEntry.findMany({
-            where: {
-                userId: uid,
-                createdAt: { gte: sevenDaysAgo },
-            },
-            orderBy: { createdAt: "desc" },
-        });
-
         res.json({
-            latestMood: latestJournal ? latestJournal.emotion : null,
-            latestSentiment: latestJournal ? latestJournal.sentiment : null,
+            latestMood: latestJournal ? latestJournal.emotion : "Neutral",
+            latestSentiment: latestJournal ? latestJournal.sentiment : "Ready to listen.",
+            weeklyAnalysis: {
+                avgScore: parseFloat(avgScore.toFixed(2)),
+                result: scoreResult
+            },
             summary: {
                 totalEntries,
-                moodSummary,
-                riskSummary,
+                totalPosts,
+                totalLikes: forumLikes._sum.likes || 0,
             },
-            quickInsights: recentEntries,
+            habitHistory, // Front-end will filter based on Day/Week/Month
         });
 
     } catch (err) {
