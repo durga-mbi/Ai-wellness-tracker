@@ -14,7 +14,7 @@ export const getDashboardData = async (req, res, next) => {
         const totalPosts = await prisma.forumPost.count({ where: { userId: uid } });
         const forumLikes = await prisma.forumPost.aggregate({
             where: { userId: uid },
-            _sum: { likes: true }
+            _sum: { likesCount: true }
         });
 
         // 2. Weekly Journal Score Analysis
@@ -79,7 +79,7 @@ export const getDashboardData = async (req, res, next) => {
             summary: {
                 totalEntries,
                 totalPosts,
-                totalLikes: forumLikes._sum.likes || 0,
+                totalLikes: forumLikes._sum.likesCount || 0,
             },
             habitHistory, // Front-end will filter based on Day/Week/Month
         });
