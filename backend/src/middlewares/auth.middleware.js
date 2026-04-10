@@ -38,8 +38,12 @@ export const protect = async (req, res, next) => {
             where: { id: decoded.id },
             select: {
                 id: true,
+                name: true,
                 email: true,
-                mobile: true
+                mobile: true,
+                ageGroup: true,
+                university: true,
+                isAnonymous: true
             }
         });
 

@@ -23,7 +23,7 @@ const Topbar = ({ title, subtitle, actions, onToggleSidebar, isSidebarOpen }) =>
             {title || "Sanctuary"}
           </h1>
           {subtitle && (
-            <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mt-0.5 italic">
+            <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-0.5 italic">
               {subtitle}
             </p>
           )}
@@ -37,9 +37,9 @@ const Topbar = ({ title, subtitle, actions, onToggleSidebar, isSidebarOpen }) =>
           <div className="flex items-center gap-3 group cursor-pointer">
             <div className="text-right hidden md:block">
               <p className="text-[10px] font-bold text-black uppercase tracking-widest">{user?.name || "Spirit"}</p>
-              <p className="text-[8px] font-bold text-gray-300 uppercase tracking-widest">Ritual Tier I</p>
+              <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">Ritual Tier I</p>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-300 group-hover:text-black transition-all shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-black transition-all shadow-sm">
               <HiOutlineUserCircle className="w-6 h-6" />
             </div>
           </div>

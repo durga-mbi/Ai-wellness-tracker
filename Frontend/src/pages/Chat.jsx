@@ -65,36 +65,36 @@ const Chat = () => {
       <section className="shrink-0">
       </section>
 
-      {/* Messages Canvas - No-Scroll Internal */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 rounded-2xl bg-white border border-gray-100 shadow-sm relative custom-scrollbar min-h-0">
-        <div className="max-w-4xl mx-auto space-y-4 w-full h-full flex flex-col">
-          <AnimatePresence mode="popLayout text-xs">
+      {/* Messages Canvas - Standardized Container */}
+      <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-6 rounded-[32px] bg-white border border-gray-100 shadow-sm relative custom-scrollbar min-h-0 group hover:border-black/5 transition-all">
+        <div className="max-w-4xl mx-auto space-y-8 w-full h-full flex flex-col">
+          <AnimatePresence mode="popLayout">
             {messages.map((msg, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
-                <div className={`flex items-start gap-3 max-w-[85%] md:max-w-[70%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                <div className={`flex items-start gap-4 max-w-[90%] md:max-w-[75%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                   {msg.role === "ai" && (
-                    <div className="w-8 h-8 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-1 shadow-sm">
-                      <HiOutlineCubeTransparent className="text-black text-lg animate-spin-slow" />
+                    <div className="w-10 h-10 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 mt-1 shadow-sm group-hover:bg-white transition-colors">
+                      <HiOutlineCubeTransparent className="text-black text-xl animate-spin-slow" />
                     </div>
                   )}
 
-                  <div className={`space-y-1 ${msg.role === "user" ? "text-right" : "text-left"}`}>
+                  <div className={`space-y-2 ${msg.role === "user" ? "text-right" : "text-left"}`}>
                     <div className={`
-                      px-5 py-3 rounded-xl text-sm font-medium tracking-tight leading-relaxed shadow-sm transition-all
+                      px-6 py-4 rounded-[24px] text-sm font-medium tracking-tight leading-relaxed shadow-sm transition-all italic
                       ${msg.role === "user"
                         ? "bg-black text-white rounded-tr-none"
-                        : "bg-gray-50 text-black rounded-tl-none border border-gray-100"}
+                        : "bg-gray-50 text-black rounded-tl-none border border-gray-100 hover:bg-white"}
                     `}>
                       {msg.text}
                     </div>
-                    <p className="text-[7px] font-bold text-gray-300 uppercase tracking-[0.3em] px-2 italic">
-                      {msg.role === "user" ? "Me" : "AI"}
+                    <p className="text-[8px] font-black text-gray-600 uppercase tracking-[0.4em] px-4 italic">
+                      {msg.role === "user" ? "Subject Identity" : "Intelligence Layer"}
                     </p>
                   </div>
                 </div>
@@ -106,43 +106,43 @@ const Chat = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-start items-center gap-3 pl-1 pb-4"
+              className="flex justify-start items-center gap-4 pl-1 pb-6"
             >
-              <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center border border-gray-100 animate-pulse">
-                <HiOutlineCubeTransparent className="text-gray-200 text-sm animate-spin" />
+              <div className="w-10 h-10 rounded-2xl bg-gray-50 flex items-center justify-center border border-gray-100 animate-pulse">
+                <HiOutlineCubeTransparent className="text-gray-400 text-lg animate-spin" />
               </div>
-              <div className="space-y-1">
-                <div className="h-1 w-24 bg-gray-50 rounded-full overflow-hidden">
-                  <motion.div
-                    animate={{ x: [-96, 96] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="h-full w-10 bg-gray-200"
+              <div className="space-y-2">
+                <div className="h-1.5 w-32 bg-gray-50 rounded-full overflow-hidden">
+                   <motion.div
+                    animate={{ x: [-128, 128] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="h-full w-12 bg-gray-400"
                   />
                 </div>
               </div>
             </motion.div>
           )}
-          <div ref={messagesEndRef} className="h-4 shrink-0" />
+          <div ref={messagesEndRef} className="h-6 shrink-0" />
         </div>
       </div>
 
-      {/* Input Ritual Pylon - Compact */}
-      <section className="shrink-0 relative group">
+      {/* Input Ritual Terminal - Standardized */}
+      <section className="shrink-0 relative group mt-2">
         <form onSubmit={handleSend} className="relative z-10">
-          <div className="relative flex items-center">
+          <div className="relative flex items-center group">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask me anything..."
-              className="w-full pl-6 pr-14 py-3 bg-white border border-gray-100 rounded-xl outline-none focus:border-black transition-all font-bold text-sm text-black placeholder:text-gray-200 italic shadow-sm"
+              placeholder="Ask anything..."
+              className="w-full pl-8 pr-16 py-5 bg-white border border-gray-100 rounded-2xl outline-none focus:border-black transition-all font-black text-md text-black placeholder:text-gray-600 italic shadow-xl"
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="absolute right-2 top-2 bottom-2 aspect-square bg-black text-white rounded-lg flex items-center justify-center hover:bg-gray-800 transition-all shadow-md disabled:opacity-20 group/btn"
+              className="absolute right-3 top-2.5 bottom-2.5 aspect-square bg-black text-white rounded-xl flex items-center justify-center hover:bg-gray-800 transition-all shadow-2xl disabled:opacity-20 group/btn"
             >
-              <HiPaperAirplane className="w-4 h-4 rotate-45 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+              <HiPaperAirplane className="w-5 h-5 rotate-45 transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
             </button>
           </div>
         </form>

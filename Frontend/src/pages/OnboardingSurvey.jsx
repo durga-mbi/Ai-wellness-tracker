@@ -43,25 +43,25 @@ const OnboardingSurvey = () => {
       goals: prev.goals.includes(goal)
         ? prev.goals.filter(g => g !== goal)
         : [...prev.goals, goal]
-    }));
+  }));
   };
 
   const surveySteps = [
     {
-      title: "Tell us about yourself",
-      icon: <HiUserGroup className="w-12 h-12 text-indigo-600" />,
+      title: "Bio-Sync Initialization",
+      icon: <HiUserGroup className="w-14 h-14 text-black" />,
       content: (
-        <div className="space-y-6">
-          <p className="text-slate-500 font-medium">What is your age group?</p>
-          <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-8">
+          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Define your demographic identity for model calibration.</p>
+          <div className="grid grid-cols-2 gap-6">
             {ageGroups.map(age => (
               <button
                 key={age}
                 onClick={() => setFormData({ ...formData, ageGroup: age })}
-                className={`p-4 rounded-2xl font-bold border-2 transition-all ${
+                className={`p-6 rounded-[24px] font-black uppercase tracking-widest border-2 transition-all italic ${
                   formData.ageGroup === age 
-                    ? "border-indigo-600 bg-indigo-50 text-indigo-700" 
-                    : "border-slate-100 hover:border-slate-200 text-slate-500"
+                    ? "border-black bg-black text-white shadow-xl scale-[1.02]" 
+                    : "border-gray-50 hover:border-gray-100 text-gray-500 hover:text-black bg-white"
                 }`}
               >
                 {age}
@@ -72,36 +72,36 @@ const OnboardingSurvey = () => {
       )
     },
     {
-      title: "Where do you study?",
-      icon: <HiAcademicCap className="w-12 h-12 text-teal-600" />,
+      title: "Academic Sanctuary",
+      icon: <HiAcademicCap className="w-14 h-14 text-black" />,
       content: (
-        <div className="space-y-6">
-          <p className="text-slate-500 font-medium">Your University / College</p>
+        <div className="space-y-8">
+          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Locate your primary operational intelligence center.</p>
           <input
             type="text"
-            placeholder="e.g., Stanford University"
+            placeholder="EX: STANFORD UNIVERSITY"
             value={formData.university}
             onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-            className="w-full p-6 rounded-3xl bg-slate-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none transition-all font-bold text-slate-900"
+            className="w-full p-8 rounded-[32px] bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white outline-none transition-all font-black text-black placeholder:text-gray-400 uppercase tracking-widest italic shadow-inner"
           />
         </div>
       )
     },
     {
-      title: "What are your goals?",
-      icon: <HiSparkles className="w-12 h-12 text-orange-600" />,
+      title: "Strategic Objectives",
+      icon: <HiSparkles className="w-14 h-14 text-black" />,
       content: (
-        <div className="space-y-6">
-          <p className="text-slate-500 font-medium">Select all that apply to you</p>
-          <div className="flex flex-wrap gap-3">
+        <div className="space-y-8">
+          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Select targets for well-being optimization protocols.</p>
+          <div className="flex flex-wrap gap-4">
             {wellnessGoals.map(goal => (
               <button
                 key={goal}
                 onClick={() => toggleGoal(goal)}
-                className={`px-6 py-3 rounded-full font-bold border-2 transition-all ${
+                className={`px-8 py-4 rounded-full font-black uppercase tracking-widest border-2 transition-all italic text-sm ${
                   formData.goals.includes(goal)
-                    ? "border-orange-600 bg-orange-50 text-orange-700"
-                    : "border-slate-100 hover:border-slate-200 text-slate-500"
+                    ? "border-black bg-black text-white shadow-xl"
+                    : "border-gray-50 hover:border-gray-100 text-gray-500 hover:text-black bg-white"
                 }`}
               >
                 {goal}
@@ -114,37 +114,41 @@ const OnboardingSurvey = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-6 sm:p-12 font-sans">
-      <div className="max-w-2xl w-full">
-        {/* Progress Bar */}
-        <div className="flex gap-2 mb-12">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 sm:p-14 relative overflow-hidden">
+      {/* Visual Identity Atmosphere */}
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gray-50/50 blur-[150px] rounded-full -translate-y-1/2 opacity-60"></div>
+
+      <div className="max-w-2xl w-full z-10 relative">
+        {/* Synthetic Progress Interface */}
+        <div className="flex gap-4 mb-16 px-4">
           {[0, 1, 2].map(i => (
-            <div key={i} className={`h-1.5 rounded-full flex-1 transition-all duration-500 ${i <= step ? "bg-indigo-600" : "bg-slate-200"}`} />
+            <div key={i} className={`h-1.5 rounded-full flex-1 transition-all duration-700 ${i <= step ? "bg-black" : "bg-gray-100"}`} />
           ))}
         </div>
 
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="bg-white p-10 sm:p-16 rounded-[3rem] shadow-2xl shadow-indigo-100 border border-white"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white p-12 sm:p-20 rounded-[48px] shadow-3xl border border-gray-50 relative group"
           >
-            <div className="mb-10">{surveySteps[step].icon}</div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-4">{surveySteps[step].title}</h1>
+            <div className="mb-14 p-6 bg-gray-50 inline-block rounded-[32px] group-hover:rotate-3 transition-transform duration-500">{surveySteps[step].icon}</div>
+            <h1 className="text-5xl md:text-6xl font-black text-black tracking-tighter mb-6 uppercase italic leading-none">{surveySteps[step].title}</h1>
             
-            <div className="mt-12">
+            <div className="mt-14">
               {surveySteps[step].content}
             </div>
 
             <button
               onClick={handleNext}
               disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : formData.goals.length === 0}
-              className="w-full mt-16 py-5 bg-indigo-600 text-white font-black rounded-3xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 disabled:opacity-50 disabled:grayscale transition-all flex items-center justify-center gap-3 text-lg"
+              className="w-full mt-20 py-6 bg-black text-white font-black rounded-3xl shadow-2xl hover:bg-gray-800 disabled:opacity-40 disabled:grayscale transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn"
             >
-              {step === 2 ? "Complete Setup" : "Continue"}
-              <HiArrowRight className="w-5 h-5" />
+              {step === 2 ? "Finalize Protocols" : "Execute Next"}
+              <HiArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         </AnimatePresence>

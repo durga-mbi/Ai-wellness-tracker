@@ -74,7 +74,7 @@ const NotFound = () => {
              <h2 className="text-4xl md:text-5xl lg:text-7xl font-black italic tracking-tighter uppercase text-black mb-6">
                 Page Not <br/> Found.
              </h2>
-             <p className="text-sm md:text-base lg:text-xl text-gray-400 font-medium italic max-w-md mx-auto leading-relaxed uppercase tracking-widest px-6">
+             <p className="text-sm md:text-base lg:text-xl text-gray-600 font-medium italic max-w-md mx-auto leading-relaxed uppercase tracking-widest px-6">
                 The page you seek does not exist. Let's go back home.
              </p>
           </div>

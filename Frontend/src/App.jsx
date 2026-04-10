@@ -7,6 +7,8 @@ import { LayoutProvider } from "./context/LayoutContext";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import AuthRoute from "./components/AuthRoute";
+
 // Pages
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
@@ -18,6 +20,7 @@ import Community from "./pages/Community";
 import Settings from "./pages/Settings";
 import Onboarding from "./pages/Onboarding";
 import OnboardingSurvey from "./pages/OnboardingSurvey";
+import MoodCalendar from "./pages/MoodCalendar";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -26,20 +29,29 @@ function App() {
       <LayoutProvider>
         <Router>
           <Routes>
-            {/* Auth Pages */}
+            {/* Public & Auth Entry - Accessible to unauthenticated users */}
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/onboarding" element={<Onboarding />} />
             
-            {/* User Setup */}
+            {/* Auth Pages - Guarded against logged-in users */}
             <Route 
-              path="/onboarding" 
+              path="/login" 
               element={
-                <ProtectedRoute>
-                  <Onboarding />
-                </ProtectedRoute>
+                <AuthRoute>
+                  <Login />
+                </AuthRoute>
               } 
             />
+            <Route 
+              path="/register" 
+              element={
+                <AuthRoute>
+                  <Register />
+                </AuthRoute>
+              } 
+            />
+            
+            {/* Survey Ritual - Needs authentication */}
             <Route 
               path="/survey" 
               element={
@@ -62,6 +74,7 @@ function App() {
               <Route path="/settings" element={<Settings />} />
               <Route path="/chat" element={<Chat />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/calendar" element={<MoodCalendar />} />
             </Route>
             
             {/* Error Page */}

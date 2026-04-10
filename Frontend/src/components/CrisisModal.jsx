@@ -28,7 +28,7 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
           {/* Helpline List */}
           <div className="p-8 space-y-6">
             <div className="space-y-4">
-              <span className="text-[9px] font-bold text-gray-300 uppercase tracking-[0.3em] inline-block">Campus Helplines</span>
+              <span className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.3em] inline-block">Campus Helplines</span>
               <div className="grid gap-3">
                 {helplines.length > 0 ? (
                     helplines.map((hp, i) => (
@@ -38,7 +38,7 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
                         className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-black transition-all group active:scale-95"
                     >
                         <div className="flex flex-col">
-                           <span className="text-[10px] font-black italic uppercase tracking-widest text-gray-300 group-hover:text-black transition-colors">{hp.name}</span>
+                           <span className="text-[10px] font-black italic uppercase tracking-widest text-gray-500 group-hover:text-black transition-colors">{hp.name}</span>
                            <span className="text-sm font-black italic uppercase tracking-tighter">{hp.number}</span>
                         </div>
                         <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
@@ -47,18 +47,18 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
                     </a>
                     ))
                 ) : (
-                    <div className="text-center p-4 text-gray-400 italic text-sm">Loading helpline data...</div>
+                    <div className="text-center p-4 text-gray-600 italic text-sm">Loading helpline data...</div>
                 )}
               </div>
             </div>
 
             <div className="space-y-6">
-               <div className="flex items-start gap-4 p-4 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                  <HiOutlineShieldCheck className="w-5 h-5 text-gray-400 mt-1" />
-                  <p className="text-[10px] font-medium text-gray-400 italic leading-relaxed">
-                     This is a strictly private and confidential space. These numbers are here for your immediate safety and support. Please reach out.
-                  </p>
-               </div>
+                <div className="flex items-start gap-4 p-4 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                   <HiOutlineShieldCheck className="w-5 h-5 text-gray-600 mt-1" />
+                   <p className="text-[10px] font-medium text-gray-600 italic leading-relaxed">
+                      This is a strictly private and confidential space. These numbers are here for your immediate safety and support. Please reach out.
+                   </p>
+                </div>
 
                <button
                 onClick={onClose}
@@ -72,7 +72,7 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
           {/* Close Icon Footer */}
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 p-2 text-gray-400 hover:text-black transition-colors"
+            className="absolute top-6 right-6 p-2 text-gray-600 hover:text-black transition-colors"
           >
             <HiXMark className="w-6 h-6" />
           </button>

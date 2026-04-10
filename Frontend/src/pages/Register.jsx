@@ -56,7 +56,7 @@ const Register = () => {
             className="w-20 h-20 mx-auto mb-6 transition-transform hover:scale-105" 
           />
           <h1 className="text-3xl font-black tracking-tighter mb-1 uppercase italic">Join Hub</h1>
-          <p className="text-gray-300 text-[9px] uppercase font-bold tracking-[0.2em]">Start your daily journey</p>
+          <p className="text-gray-500 text-[9px] uppercase font-bold tracking-[0.2em]">Start your daily journey</p>
         </div>
 
         <div className="bg-white border border-gray-100 p-8 rounded-[32px] shadow-xl relative">
@@ -84,9 +84,9 @@ const Register = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Full Name</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-black transition-colors">
                   <HiUser className="w-4 h-4" />
                 </div>
                 <input
@@ -94,7 +94,7 @@ const Register = () => {
                   placeholder="EX: JOHN DOE"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
+                  className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-400 uppercase"
                   required
                 />
               </div>
@@ -102,9 +102,9 @@ const Register = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Email</label>
+                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-500 ml-1">Email</label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-black transition-colors">
                     <HiEnvelope className="w-4 h-4" />
                   </div>
                   <input
@@ -112,16 +112,16 @@ const Register = () => {
                     placeholder="EMAIL@HUB.COM"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
+                    className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-400 uppercase"
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Mobile</label>
+                <label className="text-[9px] font-bold uppercase tracking-widest text-gray-500 ml-1">Mobile</label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-black transition-colors">
                     <HiPhone className="w-4 h-4" />
                   </div>
                   <input
@@ -129,7 +129,7 @@ const Register = () => {
                     placeholder="PHONE"
                     value={mobile}
                     onChange={(e) => setMobile(e.target.value)}
-                    className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
+                    className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-400 uppercase"
                     required
                   />
                 </div>
@@ -137,9 +137,9 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-300 ml-1">Password</label>
+              <label className="text-[9px] font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-300 group-focus-within:text-black transition-colors">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-black transition-colors">
                   <HiLockClosed className="w-4 h-4" />
                 </div>
                 <input
@@ -147,7 +147,7 @@ const Register = () => {
                   placeholder="CHOOSE PASSWORD"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-200 uppercase"
+                  className="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-transparent rounded-xl outline-none focus:bg-white focus:border-gray-200 transition-all text-[10px] font-bold tracking-widest placeholder:text-gray-400 uppercase"
                   required
                 />
               </div>
@@ -163,9 +163,9 @@ const Register = () => {
           </form>
 
           <div className="mt-8 pt-6 border-t border-gray-50 text-center">
-            <p className="text-[9px] font-bold uppercase tracking-widest text-gray-300">
+            <p className="text-[9px] font-bold uppercase tracking-widest text-gray-500">
               Already have an account?{" "}
-              <Link to="/login" className="text-black hover:underline underline-offset-4 decoration-gray-100 ml-1">
+              <Link to="/login" className="text-black hover:underline underline-offset-4 decoration-gray-300 ml-1">
                 Log In
               </Link>
             </p>
