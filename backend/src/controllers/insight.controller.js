@@ -1,4 +1,8 @@
 import prisma from "../config/db.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 /**
  * Fetch mood data for a specific month/year
@@ -72,6 +76,114 @@ export const getMoodHeatmap = async (req, res, next) => {
             month: parseInt(month),
             year: parseInt(year),
             data: result
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getCorrelationInsights = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        
+        // 1. Fetch journals and habits for the last 30 days
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const [journals, habits] = await Promise.all([
+            prisma.journalEntry.findMany({
+                where: { userId, createdAt: { gte: thirtyDaysAgo } },
+                select: { createdAt: true, sentiment: true }
+            }),
+            prisma.userHabit.findMany({
+                where: { userId, date: { gte: thirtyDaysAgo } },
+                select: { date: true, sleep: true, exercise: true, water: true }
+            })
+        ]);
+
+        if (journals.length < 3 || habits.length < 3) {
+            return res.json({
+                success: true,
+                insight: "We're still gathering your data patterns. Keep journaling and tracking habits for 3 more days to unlock neural correlations! 🧠✨",
+                correlationValue: null
+            });
+        }
+
+        // 2. Aggregate data by day
+        const dailyData = {};
+        
+        journals.forEach(j => {
+            const date = j.createdAt.toISOString().split('T')[0];
+            let score = 0;
+            try {
+                const sentiment = JSON.parse(j.sentiment || "{}");
+                score = sentiment.score || 0;
+            } catch (e) { score = 0; }
+            if (!dailyData[date]) dailyData[date] = { score: 0, count: 0, habits: null };
+            dailyData[date].score += score;
+            dailyData[date].count += 1;
+        });
+
+        habits.forEach(h => {
+            const date = h.date.toISOString().split('T')[0];
+            if (!dailyData[date]) dailyData[date] = { score: null, count: 0, habits: h };
+            else dailyData[date].habits = h;
+        });
+
+        const correlationSummary = Object.entries(dailyData)
+            .filter(([_, data]) => data.score !== null && data.habits !== null)
+            .map(([date, data]) => ({
+                date,
+                avgMood: data.score / data.count,
+                sleep: data.habits.sleep,
+                exercise: data.habits.exercise,
+                water: data.habits.water
+            }));
+
+        if (correlationSummary.length < 3) {
+            return res.json({
+                success: true,
+                insight: "Patterns emerging! Continue logging your habits alongside your journal to see how they impact your mood. 📈🧘‍♂️",
+                correlationValue: null
+            });
+        }
+
+        // 3. Simple statistical check to provide context to Gemini
+        const highSleepMood = correlationSummary.filter(d => d.sleep >= 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep >= 7).length || 1);
+        const lowSleepMood = correlationSummary.filter(d => d.sleep < 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep < 7).length || 1);
+        
+        const sleepImpact = highSleepMood > lowSleepMood 
+            ? Math.round(((highSleepMood - lowSleepMood) / (Math.abs(lowSleepMood) || 1)) * 100)
+            : 0;
+
+        // 4. Use Gemini to generate the high-fidelity insight
+        const prompt = `
+            SYSTEM ROLE: Behavioral Analytics Engine.
+            CONTEXT:
+            User has ${correlationSummary.length} days of overlapping habit and mood data.
+            KEY FINDINGS:
+            - Users who sleep >= 7h have a ${sleepImpact}% higher mood score than those who don't.
+            - RAW DATA SUMMARY (Last 30 Days): ${JSON.stringify(correlationSummary)}
+            
+            TASK:
+            Generate a single, impactful, student-friendly insight (max 15 words).
+            It must sound encouraging and data-driven. 
+            Example: "You're 30% happier on days you hit 7 hours of sleep!"
+            Avoid medical advice.
+            
+            OUTPUT:
+            Plain text only.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const insight = result.response.text().trim();
+
+        res.json({
+            success: true,
+            insight,
+            correlationValue: sleepImpact,
+            summary: correlationSummary.slice(-7) // Return last 7 active days for FE visualization if needed
         });
 
     } catch (error) {

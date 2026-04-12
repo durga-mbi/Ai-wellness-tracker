@@ -12,6 +12,7 @@ import dashboardRoute from "./routes/dashboard.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import crisisRoutes from "./routes/crisis.route.js";
 import mindfulnessRoutes from "./routes/mindfulness.route.js";
+import analyticsRoutes from "./routes/analytics.route.js";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/dashboard", dashboardRoute);
 app.use("/api/forum", forumRoutes);
 app.use("/api/crisis", crisisRoutes);
 app.use("/api/mindfulness", mindfulnessRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Health route
 app.get("/api/health", (req, res) => {

@@ -58,7 +58,7 @@ const AnimatedHealthScore = ({ score }) => {
           className="opacity-20"
         />
       </svg>
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -83,7 +83,7 @@ const Counter = ({ value }) => {
     const end = parseFloat(value.toFixed(1));
     const duration = 2000;
     const increment = end / (duration / 16);
-    
+
     const timer = setInterval(() => {
       start += increment;
       if (start >= end) {
@@ -104,12 +104,15 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { updateLayout } = useLayout();
   const navigate = useNavigate();
+  const [correlationData, setCorrelationData] = useState(null);
+  const [insightLoading, setInsightLoading] = useState(true);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("Week"); // Day, Week, Month
 
   useEffect(() => {
     fetchDashboardData();
+    fetchCorrelationInsights();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -120,6 +123,17 @@ const Dashboard = () => {
       console.error("Dashboard data fetch failed", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCorrelationInsights = async () => {
+    try {
+      const response = await api.get("/analytics/correlations");
+      setCorrelationData(response.data);
+    } catch (error) {
+      console.error("Correlation insights fetch failed", error);
+    } finally {
+      setInsightLoading(false);
     }
   };
 
@@ -201,11 +215,36 @@ const Dashboard = () => {
             "Resulting in <span className="text-black font-black uppercase text-xs">{data?.weeklyAnalysis?.result}</span> based on this week's 7-stage reflection cycle. Maintain current hydration metrics to stabilize resonance."
           </p>
 
+          <AnimatePresence>
+            {!insightLoading && correlationData?.insight && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="relative mt-4 p-4 bg-black rounded-2xl border border-gray-800 shadow-2xl group overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-2 opacity-20 text-white">
+                  <HiFire className="text-2xl animate-pulse" />
+                </div>
+                <div className="flex items-center gap-3 relative z-10">
+                  <div className="flex flex-col">
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest italic leading-none mb-1 flex items-center gap-1">
+                      Neural Correlation Insight <HiOutlineBolt className="text-yellow-400" />
+                    </span>
+                    <p className="text-[13px] font-black text-white italic leading-tight tracking-tight">
+                      "{correlationData.insight}"
+                    </p>
+                  </div>
+                </div>
+                <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-white/5 rounded-full blur-xl group-hover:bg-white/10 transition-colors"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="flex gap-4 pt-2 justify-center lg:justify-start">
-            <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            {/* <div className="flex items-center gap-3 px-4 py-2 bg-white rounded-2xl border border-gray-100 shadow-sm">
               <div className={`w-2 h-2 rounded-full ${getScoreColor(data?.weeklyAnalysis?.avgScore)} animate-pulse`}></div>
               <span className="text-[9px] font-black text-black uppercase tracking-widest italic leading-none">Live Status: {data?.weeklyAnalysis?.result?.split(' ')[0]} Verified</span>
-            </div>
+            </div> */}
           </div>
         </div>
 
