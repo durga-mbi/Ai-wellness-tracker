@@ -5,7 +5,7 @@ let io;
 export const initSocket = (server) => {
     io = new Server(server, {
         cors: {
-            origin: true,
+            origin: "https://ai-wellness-tracker-pi.vercel.app",
             credentials: true,
             methods: ["GET", "POST"]
         }

@@ -12,9 +12,7 @@ export const SocketProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState([]);
 
     useEffect(() => {
-        const socketUrl = import.meta.env.VITE_API_URL 
-            ? import.meta.env.VITE_API_URL.split('/api')[0] 
-            : "http://localhost:4000";
+        const socketUrl = "https://ai-wellness-tracker.onrender.com";
 
         const newSocket = io(socketUrl, {
             withCredentials: true
