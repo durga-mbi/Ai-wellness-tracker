@@ -24,7 +24,7 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
+        <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-[#f59e0b] overflow-x-hidden">
             {/* Typographic Header */}
             <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 h-24 flex items-center">
                 <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
@@ -202,7 +202,7 @@ const LandingPage = () => {
                        <p className="text-xl text-gray-600 font-medium italic leading-relaxed">
                           Write your heart out. Our smart AI gives you honest, helpful insights into your mood and sentiment, helping you find quiet and peace in a busy day.
                        </p>
-                       <Link to="/register" className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] group">
+                       <Link to="/journal" className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] group">
                           Try for Free <HiOutlineArrowSmallRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                        </Link>
                    </div>

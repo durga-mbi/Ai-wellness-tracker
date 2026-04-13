@@ -124,7 +124,7 @@ const Mindfulness = () => {
                                     opacity: isActive ? (breathState === "Inhale" ? 1 : 0.6) : 0.4
                                 }}
                                 transition={{ duration: 4, ease: "easeInOut" }}
-                                className="w-48 h-48 md:w-64 md:h-64 rounded-full bg-black flex items-center justify-center border-[8px] border-gray-100 shadow-[0_0_80px_rgba(0,0,0,0.05)]"
+                                className="w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full bg-black flex items-center justify-center border-[8px] border-gray-100 shadow-[0_0_80px_rgba(0,0,0,0.05)] relative"
                             >
                                 <div className="text-center">
                                     <motion.h2
@@ -248,7 +248,7 @@ const Mindfulness = () => {
             </div>
 
             {/* Resource Library Card Grid */}
-            <div className="space-y-8 pt-10">
+            {/* <div className="space-y-8 pt-10">
                 <div className="flex items-center justify-between">
                     <h2 className="text-3xl font-black italic uppercase tracking-tighter">Curated <span className="text-gray-300">Resources</span></h2>
                     <div className="h-px bg-gray-100 flex-1 mx-10 hidden md:block"></div>
@@ -277,7 +277,7 @@ const Mindfulness = () => {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
