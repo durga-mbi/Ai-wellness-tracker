@@ -80,7 +80,11 @@ const Counter = ({ value }) => {
 
    useEffect(() => {
       let start = 0;
-      const end = parseFloat(value.toFixed(1));
+      const end = parseFloat((value || 0).toFixed(1));
+      if (isNaN(end)) {
+         setDisplayValue(0);
+         return;
+      }
       const duration = 2000;
       const increment = end / (duration / 16);
 
@@ -171,7 +175,8 @@ const Dashboard = () => {
    const habitChartData = getFilteredHabitData();
 
    // Normalize score from -1..1 to 0..10
-   const normalizedScore = (data?.weeklyAnalysis?.avgScore + 1) * 5;
+   const avgScore = data?.weeklyAnalysis?.avgScore ?? 0;
+   const normalizedScore = (avgScore + 1) * 5;
    const scorePercentage = (normalizedScore * 10).toFixed(0);
 
    const stats = [

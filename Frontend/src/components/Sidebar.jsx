@@ -111,6 +111,11 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
               <Link
                 key={item.name}
                 to={item.path}
+                onClick={() => {
+                  if (window.innerWidth <= 1024) {
+                    onToggle();
+                  }
+                }}
                 className={`
                   flex items-center group transition-all duration-300 rounded-lg relative
                   ${isOpen ? "px-4 py-2.5" : "px-0 justify-center py-2.5"}
