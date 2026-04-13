@@ -37,9 +37,13 @@ app.use("/api/crisis", crisisRoutes);
 app.use("/api/mindfulness", mindfulnessRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-// Health route
+// Health route (High-Availability Alias)
+app.get("/health", (req, res) => {
+    res.json({ status: "ok", mode: "standard" });
+});
+
 app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+    res.json({ status: "ok", mode: "api" });
 });
 
 app.use(errorHandler);

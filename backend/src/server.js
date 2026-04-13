@@ -11,10 +11,6 @@ const httpServer = createServer(app);
 // Initialize Socket.io
 initSocket(httpServer);
 
-app.get("/health", (req, res) => {
-    res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
-
 httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
