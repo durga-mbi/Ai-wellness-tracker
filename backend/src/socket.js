@@ -5,7 +5,16 @@ let io;
 export const initSocket = (server) => {
     io = new Server(server, {
         cors: {
-            origin: ["http://localhost:5173", "https://ai-wellness-tracker-pi.vercel.app"],
+            origin: (origin, callback) => {
+                if (!origin || 
+                    origin.includes("localhost:5173") || 
+                    origin.includes("https://ai-wellness-tracker-pi.vercel.app") ||
+                    origin.endsWith(".vercel.app")) {
+                    callback(null, true);
+                } else {
+                    callback(new Error("Not allowed by CORS"));
+                }
+            },
             credentials: true,
             methods: ["GET", "POST"]
         }
