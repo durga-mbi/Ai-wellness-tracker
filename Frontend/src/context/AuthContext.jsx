@@ -27,7 +27,8 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setLoading(true);
-      await api.post("/auth/login", { email, password });
+      const { data } = await api.post("/auth/login", { email, password });
+      if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
@@ -42,7 +43,8 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setLoading(true);
-      await api.post("/auth/signup", userData);
+      const { data } = await api.post("/auth/signup", userData);
+      if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
@@ -57,7 +59,8 @@ export const AuthProvider = ({ children }) => {
   const guestLogin = async () => {
     try {
       setLoading(true);
-      await api.post("/auth/guest-login");
+      const { data } = await api.post("/auth/guest-login");
+      if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
@@ -85,6 +88,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await api.post("/auth/logout");
+      localStorage.removeItem("token");
       setUser(null);
     } catch (err) {
       console.error("Logout failed", err);

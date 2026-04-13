@@ -42,7 +42,8 @@ export const signup = async (req, res, next) => {
         res.status(201).json({
             message: "User created and logged in",
             userId: user.id,
-            user
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
@@ -81,7 +82,9 @@ export const login = async (req, res, next) => {
         });
 
         res.json({
-            message: "Login success"
+            message: "Login success",
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
@@ -111,7 +114,8 @@ export const guestLogin = async (req, res, next) => {
 
         res.json({
             message: "Guest login success",
-            user
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
