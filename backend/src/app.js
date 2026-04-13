@@ -18,9 +18,16 @@ const app = express();
 
 app.use(express.json());
 
+const ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://ai-wellness-tracker-pi.vercel.app"
+];
+
 app.use(cors({
-    origin: ["http://localhost:5173", "https://ai-wellness-tracker-pi.vercel.app"],
-    credentials: true
+    origin: ALLOWED_ORIGINS,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
 }));
 
 app.use(cookieParser());
