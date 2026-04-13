@@ -39,7 +39,7 @@ app.use("/api/analytics", analyticsRoutes);
 
 // Health route (High-Availability Alias)
 app.get("/health", (req, res) => {
-    res.json({ status: "ok", mode: "standard" });
+    res.json({ status: "ok", mode: "For the testing purpose" });
 });
 
 app.get("/api/health", (req, res) => {
