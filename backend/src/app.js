@@ -16,6 +16,8 @@ import analyticsRoutes from "./routes/analytics.route.js";
 
 const app = express();
 
+app.set("trust proxy", 1); // Trust the first proxy (Render/Vercel)
+
 app.use(express.json());
 
 const ALLOWED_ORIGINS = [
