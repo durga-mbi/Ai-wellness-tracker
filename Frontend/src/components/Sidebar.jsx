@@ -14,6 +14,19 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 
+// ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
+const C = {
+  bg:       "#fefee5",
+  surface:  "#f4f6d2",
+  card:     "#ffffff",
+  primary:  "#506b4a",
+  priCont:  "#ccebc2",
+  onPri:    "#ffffff",
+  text:     "#373a1c",
+  textMut:  "#636745",
+  outline:  "#b9bc94",
+};
+
 const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,22 +43,22 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
 
   const sidebarVariants = {
     open: { 
-      width: 288, 
+      width: 260, 
       x: 0,
       transition: { 
         type: "spring", 
-        stiffness: 300, 
+        stiffness: 250, 
         damping: 30,
         staggerChildren: 0.05,
-        delayChildren: 0.2
+        delayChildren: 0.1
       } 
     },
     closed: { 
-      width: window.innerWidth > 1024 ? 80 : 0, 
-      x: window.innerWidth > 1024 ? 0 : -288,
+      width: window.innerWidth > 1024 ? 88 : 0, 
+      x: window.innerWidth > 1024 ? 0 : -260,
       transition: { 
         type: "spring", 
-        stiffness: 300, 
+        stiffness: 250, 
         damping: 30,
         staggerChildren: 0.05,
         staggerDirection: -1
@@ -58,7 +71,6 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
     closed: { opacity: 0, x: -10 }
   };
 
-
   return (
     <>
       <AnimatePresence>
@@ -67,7 +79,7 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40 lg:hidden"
             onClick={onToggle}
           />
         )}
@@ -77,34 +89,56 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
         initial={false}
         animate={isOpen ? "open" : "closed"}
         variants={sidebarVariants}
-        className="fixed lg:relative z-50 h-screen bg-white border-r border-gray-100 flex flex-col overflow-hidden shadow-2xl lg:shadow-none"
+        className="fixed lg:relative z-50 h-screen flex flex-col overflow-hidden shadow-xl lg:shadow-none transition-colors border-r"
+        style={{ 
+          background: `rgba(254, 254, 229, 0.9)`, // C.bg with alpha
+          backdropFilter: "blur(12px)",
+          borderColor: `${C.outline}25`,
+        }}
       >
-        {/* Sidebar Header */}
-        <div className="h-14 flex items-center px-6 border-b border-gray-100 flex-shrink-0 cursor-pointer" onClick={() => navigate('/')}>
+        {/* Sidebar Header - Brand */}
+        <div 
+          className="h-20 flex items-center px-6 flex-shrink-0 cursor-pointer" 
+          onClick={() => navigate('/')}
+        >
           <div className="flex items-center gap-3">
-            <motion.img
-              src={logo}
-              alt="Logo"
-              animate={{ scale: isOpen ? 1 : 1.1 }}
-              className="w-7 h-7 object-contain"
-            />
+            <motion.div
+              animate={{ rotate: isOpen ? 0 : 360 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
+              className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm"
+              style={{ background: C.priCont }}
+            >
+              <img
+                src={logo}
+                alt="Logo"
+                className="w-6 h-6 object-contain"
+              />
+            </motion.div>
             <AnimatePresence>
               {isOpen && (
-                <motion.span
+                <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className="font-black text-[11px] uppercase tracking-tighter text-black whitespace-nowrap italic"
+                  className="flex flex-col"
                 >
-                  Wellness Hub
-                </motion.span>
+                  <span
+                    className="font-bold text-sm tracking-tight"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+                  >
+                    The Sanctuary
+                  </span>
+                  <span className="text-[10px] font-medium opacity-60" style={{ color: C.textMut }}>
+                    Find your calm
+                  </span>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto custom-scrollbar">
           {navigation.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -117,14 +151,16 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
                   }
                 }}
                 className={`
-                  flex items-center group transition-all duration-300 rounded-lg relative
-                  ${isOpen ? "px-4 py-2.5" : "px-0 justify-center py-2.5"}
-                  ${isActive
-                    ? "bg-gray-50 text-black shadow-sm"
-                    : "text-gray-300 hover:bg-gray-50 hover:text-black"}
+                  flex items-center group transition-all duration-300 rounded-2xl relative
+                  ${isOpen ? "px-4 py-3" : "px-0 justify-center py-3.5"}
                 `}
+                style={{
+                  background: isActive ? `${C.primary}10` : "transparent",
+                  color: isActive ? C.primary : C.textMut
+                }}
               >
-                <span className={`text-xl flex-shrink-0 transition-colors ${isActive ? "text-black" : "group-hover:text-black"}`}>
+                <span className={`text-xl flex-shrink-0 transition-all ${isActive ? "scale-110" : "group-hover:scale-110 group-hover:text-primary"}`}
+                      style={{ color: isActive ? C.primary : "inherit" }}>
                   {item.icon}
                 </span>
                 
@@ -134,18 +170,19 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
-                      className="ml-3 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap"
+                      className="ml-4 text-sm font-semibold whitespace-nowrap"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
                     >
                       {item.name}
                     </motion.span>
                   )}
                 </AnimatePresence>
 
-                {/* Active Indicator Tooltip for collapsed mode */}
-                {!isOpen && isActive && (
+                {isActive && (
                   <motion.div 
-                    layoutId="active-indicator"
-                    className="absolute left-1 w-1 h-6 bg-black rounded-full" 
+                    layoutId="active-pill"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-6 rounded-l-full"
+                    style={{ background: C.primary }}
                   />
                 )}
               </Link>
@@ -154,25 +191,26 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-gray-50 flex-shrink-0">
+        <div className="p-4 border-t" style={{ borderColor: `${C.outline}20` }}>
           <button
             onClick={onLogoutClick}
             className={`
-               w-full flex items-center transition-all duration-300 rounded-lg group
-               ${isOpen ? "px-4 py-2.5" : "px-0 justify-center py-2.5"}
-               text-gray-300 hover:bg-red-50 hover:text-red-500
+               w-full flex items-center transition-all duration-300 rounded-2xl group
+               ${isOpen ? "px-4 py-3" : "px-0 justify-center py-3.5"}
+               hover:bg-red-50 hover:text-red-600
              `}
+             style={{ color: C.textMut }}
           >
-            <HiOutlineArrowRightOnRectangle className="text-xl flex-shrink-0" />
+            <HiOutlineArrowRightOnRectangle className="text-xl flex-shrink-0 group-hover:rotate-12 transition-transform" />
             <AnimatePresence>
               {isOpen && (
                 <motion.span
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className="ml-3 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap"
+                  className="ml-4 text-sm font-semibold whitespace-nowrap"
                 >
-                  Logout
+                  Sign Out
                 </motion.span>
               )}
             </AnimatePresence>

@@ -3,8 +3,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+// Helper to get specialized AI model with custom key support
+export const getAIModel = (userApiKey) => {
+  const apiKey = userApiKey || process.env.GEMINI_API_KEY;
+  const genAI = new GoogleGenerativeAI(apiKey);
+  return genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+};
 
 const FAST_RESPONSE_OVERRIDE = `
 INSTRUCTION OVERRIDE:
@@ -15,7 +19,8 @@ INSTRUCTION OVERRIDE:
 - Prioritize clarity over detail
 `;
 
-export const analyzeSentiment = async (userText, userPreferences = "None", userHabits = "None") => {
+export const analyzeSentiment = async (userText, userPreferences = "None", userHabits = "None", userApiKey = null) => {
+  const model = getAIModel(userApiKey);
   const prompt = `
 SYSTEM ROLE:
 You are an emotional intelligence engine designed for a mental wellness application used by university students.
@@ -48,20 +53,20 @@ OUTPUT FORMAT (STRICT JSON):
 }
 `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
   try {
-    // Basic cleaning in case AI returns markdown backticks
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
     const cleanedJson = text.replace(/```json|```/gi, "").trim();
     return JSON.parse(cleanedJson);
   } catch (e) {
-    console.error("AI Response parsing error", text);
-    throw new Error("Failed to parse AI insights");
+    console.error("AI Response parsing error or limit reached", e);
+    throw new Error("AI analysis unavailable. Please check your API key quota.");
   }
 };
 
-export const detectCrisis = async (userText) => {
+export const detectCrisis = async (userText, userApiKey = null) => {
+  const model = getAIModel(userApiKey);
   const prompt = `
 SYSTEM ROLE:
 You are a safety detection layer.
@@ -80,24 +85,23 @@ OUTPUT (STRICT JSON):
 }
 `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
   try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
     const cleanedJson = text.replace(/```json|```/gi, "").trim();
     return JSON.parse(cleanedJson);
   } catch (e) {
-    return { risk: "low", reason: "Parsing error fallback", trigger_words: [] };
+    return { risk: "low", reason: "Parsing error or limit fallback", trigger_words: [] };
   }
 };
 
-export const getChatbotResponse = async (userMessage, context = {}) => {
+export const getChatbotResponse = async (userMessage, context = {}, userApiKey = null) => {
+  const model = getAIModel(userApiKey);
   const { preferences = "None", moodSummary = "Stable", lastEmotion = "Neutral" } = context;
 
-  // Normalize user message
   const msg = userMessage.trim().toLowerCase();
 
-  // Fixed response: Name
   if (
     msg === "what is your name?" ||
     msg === "who are you?" ||
@@ -106,7 +110,6 @@ export const getChatbotResponse = async (userMessage, context = {}) => {
     return "I am your wellness assistant 😊";
   }
 
-  // Fixed response: Creator / Author
   if (
     msg === "who is your creator?" ||
     msg === "who made you?" ||
@@ -116,7 +119,6 @@ export const getChatbotResponse = async (userMessage, context = {}) => {
     return "I was created by the IT team of MINDBRAIN INNOVATION 💡";
   }
 
-  // AI prompt for everything else
   const prompt = `
 SYSTEM ROLE:
 You are a calm, empathetic mental wellness companion for students.
@@ -149,12 +151,18 @@ OUTPUT:
 Plain text response only (no JSON)
 `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  return response.text();
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text();
+  } catch (e) {
+    console.error("Chatbot AI error", e);
+    return "I am currently taking a small breather. Please try again in a moment, or check your API key if you've provided one. I'm still here for you.";
+  }
 };
 
-export const formatForUI = async (aiJsonResponse) => {
+export const formatForUI = async (aiJsonResponse, userApiKey = null) => {
+  const model = getAIModel(userApiKey);
   const prompt = `
 SYSTEM ROLE:
 Convert AI output into UI-friendly format.
@@ -173,10 +181,10 @@ OUTPUT (STRICT JSON):
 }
 `;
 
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
   try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
     const cleanedJson = text.replace(/```json|```/gi, "").trim();
     return JSON.parse(cleanedJson);
   } catch (e) {

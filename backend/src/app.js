@@ -26,10 +26,14 @@ const ALLOWED_ORIGINS = [
 ];
 
 app.use(cors({
-    origin: true, // Allow all origins and reflect them in the response header (needed for credentials)
+    origin: (origin, callback) => {
+        // Allow all origins
+        callback(null, true);
+    },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "X-Requested-With", "Accept"],
+    exposedHeaders: ["Set-Cookie"]
 }));
 
 app.use(cookieParser());

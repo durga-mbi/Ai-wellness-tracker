@@ -8,13 +8,26 @@ export const signup = async (req, res, next) => {
     try {
         const { name, email, mobile, password } = req.body;
 
+        const conditions = [];
+        if (email) conditions.push({ email });
+        if (mobile) conditions.push({ mobile });
+
+        if (conditions.length === 0) {
+            return res.status(400).json({ message: "Email or Mobile is required" });
+        }
+
         const existingUser = await prisma.user.findFirst({
             where: {
-                OR: [{ email }, { mobile }]
+                OR: conditions
             }
         });
 
         if (existingUser) {
+            console.log("Signup conflict detected:", {
+                requestEmail: email,
+                requestMobile: mobile,
+                conflictId: existingUser.id
+            });
             return res.status(400).json({ message: "User already exists" });
         }
 
@@ -57,11 +70,17 @@ export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const user = await prisma.user.findUnique({
-            where: { email }
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { email: email },
+                    { mobile: email }
+                ]
+            }
         });
 
         if (!user) {
+            console.log("Login failure: User not found for identifier", email);
             return res.status(400).json({ message: "User not found" });
         }
 

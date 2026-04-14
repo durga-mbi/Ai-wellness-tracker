@@ -1,12 +1,8 @@
 import prisma from "../config/db.js";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+import { getAIModel } from "../services/ai.service.js";
 
 /**
  * Fetch mood data for a specific month/year
- * Grouped by day with average sentiment score
  */
 export const getMoodHeatmap = async (req, res, next) => {
     try {
@@ -23,42 +19,28 @@ export const getMoodHeatmap = async (req, res, next) => {
         const entries = await prisma.journalEntry.findMany({
             where: {
                 userId,
-                createdAt: {
-                    gte: startDate,
-                    lte: endDate
-                }
+                createdAt: { gte: startDate, lte: endDate }
             },
-            select: {
-                createdAt: true,
-                sentiment: true,
-                emotion: true
-            }
+            select: { createdAt: true, sentiment: true, emotion: true }
         });
 
-        // Group by YYYY-MM-DD to avoid timezone shifts during local getDate()
         const statsByDay = {};
-
         entries.forEach(entry => {
             const dateKey = entry.createdAt.toISOString().split('T')[0];
             let score = 0;
-            
             try {
                 const sentiment = JSON.parse(entry.sentiment || "{}");
                 score = sentiment.score || 0;
-            } catch (e) {
-                score = 0;
-            }
+            } catch (e) { score = 0; }
 
             if (!statsByDay[dateKey]) {
                 statsByDay[dateKey] = {
                     date: dateKey,
-                    day: entry.createdAt.getDate(), // Still keep day for easier FE mapping
                     totalScore: 0,
                     count: 0,
                     emotions: []
                 };
             }
-
             statsByDay[dateKey].totalScore += score;
             statsByDay[dateKey].count += 1;
             if (entry.emotion) statsByDay[dateKey].emotions.push(entry.emotion);
@@ -66,18 +48,13 @@ export const getMoodHeatmap = async (req, res, next) => {
 
         const result = Object.values(statsByDay).map(stat => ({
             date: stat.date,
-            day: parseInt(stat.date.split('-')[2]), // Use day from date string
+            day: parseInt(stat.date.split('-')[2]),
             avgScore: stat.totalScore / stat.count,
             dominantEmotion: getMostFrequent(stat.emotions) || "neutral",
             count: stat.count
         }));
 
-        res.json({
-            month: parseInt(month),
-            year: parseInt(year),
-            data: result
-        });
-
+        res.json({ month: parseInt(month), year: parseInt(year), data: result });
     } catch (error) {
         next(error);
     }
@@ -87,7 +64,9 @@ export const getCorrelationInsights = async (req, res, next) => {
     try {
         const userId = req.user.id;
         
-        // 1. Fetch journals and habits for the last 30 days
+        // Fetch user for API key support
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -105,14 +84,12 @@ export const getCorrelationInsights = async (req, res, next) => {
         if (journals.length < 3 || habits.length < 3) {
             return res.json({
                 success: true,
-                insight: "We're still gathering your data patterns. Keep journaling and tracking habits for 3 more days to unlock neural correlations! 🧠✨",
+                insight: "We're still gathering your data patterns. Keep journaling for 3 more days to unlock neural correlations! 🧠✨",
                 correlationValue: null
             });
         }
 
-        // 2. Aggregate data by day
         const dailyData = {};
-        
         journals.forEach(j => {
             const date = j.createdAt.toISOString().split('T')[0];
             let score = 0;
@@ -149,15 +126,13 @@ export const getCorrelationInsights = async (req, res, next) => {
             });
         }
 
-        // 3. Simple statistical check to provide context to Gemini
         const highSleepMood = correlationSummary.filter(d => d.sleep >= 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep >= 7).length || 1);
         const lowSleepMood = correlationSummary.filter(d => d.sleep < 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep < 7).length || 1);
-        
         const sleepImpact = highSleepMood > lowSleepMood 
             ? Math.round(((highSleepMood - lowSleepMood) / (Math.abs(lowSleepMood) || 1)) * 100)
             : 0;
 
-        // 4. Use Gemini to generate the high-fidelity insight
+        const model = getAIModel(user.apiKey);
         const prompt = `
             SYSTEM ROLE: Behavioral Analytics Engine.
             CONTEXT:
@@ -170,22 +145,29 @@ export const getCorrelationInsights = async (req, res, next) => {
             Generate a single, impactful, student-friendly insight (max 15 words).
             It must sound encouraging and data-driven. 
             Example: "You're 30% happier on days you hit 7 hours of sleep!"
-            Avoid medical advice.
             
             OUTPUT:
             Plain text only.
         `;
 
-        const result = await model.generateContent(prompt);
-        const insight = result.response.text().trim();
-
-        res.json({
-            success: true,
-            insight,
-            correlationValue: sleepImpact,
-            summary: correlationSummary.slice(-7) // Return last 7 active days for FE visualization if needed
-        });
-
+        try {
+            const result = await model.generateContent(prompt);
+            const insight = result.response.text().trim();
+            res.json({
+                success: true,
+                insight,
+                correlationValue: sleepImpact,
+                summary: correlationSummary.slice(-7)
+            });
+        } catch (e) {
+            console.error("Correlation Insight Error", e);
+            res.json({
+                success: true,
+                insight: `You're ${sleepImpact}% happier on days you hit 7+ hours of sleep! 😴✨`,
+                correlationValue: sleepImpact,
+                summary: correlationSummary.slice(-7)
+            });
+        }
     } catch (error) {
         next(error);
     }

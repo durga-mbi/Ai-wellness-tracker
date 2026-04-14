@@ -14,14 +14,14 @@ export const createEntry = async (req, res, next) => {
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     // 2. Analyze sentiment
-    const sentimentResult = await analyzeSentiment(content, user.preferences || "None");
+    const sentimentResult = await analyzeSentiment(content, user.preferences || "None", "None", user.apiKey);
 
     // 3. Detect crisis (AI-Driven)
-    const crisisResult = await detectCrisis(content);
+    const crisisResult = await detectCrisis(content, user.apiKey);
     const isHighRisk = crisisResult.trigger;
 
     // 4. Format feedback for UI
-    const uiFeedback = await formatForUI(sentimentResult);
+    const uiFeedback = await formatForUI(sentimentResult, user.apiKey);
 
     // 5. Store entry in DB
     const entry = await prisma.journalEntry.create({
