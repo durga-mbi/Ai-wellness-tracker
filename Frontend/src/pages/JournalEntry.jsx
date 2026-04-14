@@ -15,6 +15,7 @@ import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router";
 import CrisisModal from "../components/CrisisModal";
+import { HiFire } from "react-icons/hi2";
 
 // ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
 const C = {
@@ -242,62 +243,98 @@ const JournalEntry = () => {
             </div>
 
             {/* Advanced Insight Architecture */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 shrink-0">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start lg:items-stretch">
+
+              {/* CARD 1 - Emotion Insight */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="bg-white/70 backdrop-blur-xl border p-12 rounded-[56px] shadow-xl space-y-8 flex flex-col justify-between group overflow-hidden relative"
+                className="bg-white/70 backdrop-blur-xl border p-6 sm:p-10 lg:p-12 rounded-3xl sm:rounded-[40px] lg:rounded-[56px] shadow-xl space-y-6 flex flex-col justify-between group overflow-hidden relative"
                 style={{ borderColor: `${C.outline}20` }}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#506b4a]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                {/* glow */}
+                <div className="absolute top-0 right-0 w-24 sm:w-32 h-24 sm:h-32 bg-[#506b4a]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
                 <div className="space-y-6 relative z-10">
-                  <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner"
-                      style={{ background: `${C.primary}15`, color: C.primary }}>
-                      <HiFire className="text-3xl" />
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    <div
+                      className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl sm:rounded-[24px] flex items-center justify-center shadow-inner"
+                      style={{ background: `${C.primary}15`, color: C.primary }}
+                    >
+                      <HiFire className="text-2xl sm:text-3xl" />
                     </div>
+
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1" style={{ color: C.textMut }}>Intrinsic quality</p>
-                      <h4 className="text-4xl font-extrabold tracking-tighter capitalize" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      <p
+                        className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1"
+                        style={{ color: C.textMut }}
+                      >
+                        Intrinsic quality
+                      </p>
+
+                      <h4
+                        className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tighter capitalize"
+                        style={{
+                          color: C.text,
+                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        }}
+                      >
                         {result.insights.emotion}
                       </h4>
                     </div>
                   </div>
-                  <p className="text-lg font-medium italic opacity-80 leading-relaxed border-l-[3px] pl-8 transition-colors group-hover:border-opacity-100" style={{ color: C.text, borderColor: `${C.primary}40` }}>
-                    Your reflection pulses with a strong resonance of {result.insights.emotion}. This awareness is the first step toward harmony.
+
+                  <p
+                    className="text-base sm:text-lg font-medium italic opacity-80 leading-relaxed border-l-[3px] pl-4 sm:pl-6 lg:pl-8 transition-colors group-hover:border-opacity-100"
+                    style={{ color: C.text, borderColor: `${C.primary}40` }}
+                  >
+                    Your reflection pulses with a strong resonance of {result.insights.emotion}.
+                    This awareness is the first step toward harmony.
                   </p>
                 </div>
+
                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600/60 relative z-10">
-                  <HiCheckCircle className="text-lg" /> Pattern Authenticated
+                  <HiCheckCircle className="text-lg" />
+                  Pattern Authenticated
                 </div>
               </motion.div>
 
+              {/* CARD 2 - Celestial Guidance */}
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
-                className="bg-[#506b4a] border p-12 rounded-[56px] shadow-2xl space-y-8 relative overflow-hidden group"
+                className="bg-[#506b4a] border p-6 sm:p-10 lg:p-12 rounded-3xl sm:rounded-[40px] lg:rounded-[56px] shadow-2xl space-y-6 relative overflow-hidden group"
                 style={{ borderColor: `${C.outline}20` }}
               >
-                {/* Decorative glow for dark card */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[100px] pointer-events-none"></div>
+                {/* glow */}
+                <div className="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-white/5 blur-[80px] sm:blur-[100px] pointer-events-none"></div>
 
                 <div className="space-y-6 relative z-10">
-                  <div className="flex items-center gap-5">
-                    <div className="w-16 h-16 rounded-[24px] flex items-center justify-center bg-white/10 shadow-xl border border-white/10 backdrop-blur-md">
-                      <HiOutlineBolt className="text-3xl text-yellow-300" />
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl sm:rounded-[24px] flex items-center justify-center bg-white/10 shadow-xl border border-white/10 backdrop-blur-md">
+                      <HiOutlineBolt className="text-2xl sm:text-3xl text-yellow-300" />
                     </div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/50">Celestial Guidance</p>
+
+                    <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-white/50">
+                      Celestial Guidance
+                    </p>
                   </div>
-                  <h4 className="text-2xl md:text-3xl font-extrabold leading-[1.3] text-white tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+
+                  <h4
+                    className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-[1.3] text-white tracking-tight"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  >
                     {result.insights.suggestion}
                   </h4>
                 </div>
-                <div className="absolute -bottom-10 -right-10 w-48 h-48 opacity-10 pointer-events-none group-hover:rotate-12 transition-transform duration-1000">
+
+                <div className="absolute -bottom-10 -right-10 w-32 sm:w-48 h-32 sm:h-48 opacity-10 pointer-events-none group-hover:rotate-12 transition-transform duration-1000">
                   <HiOutlineSparkles className="w-full h-full text-white" />
                 </div>
               </motion.div>
+
             </div>
 
             <motion.button

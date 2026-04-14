@@ -16,15 +16,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
 const C = {
-  bg:       "#fefee5",
-  surface:  "#f4f6d2",
-  card:     "#ffffff",
-  primary:  "#506b4a",
-  priCont:  "#ccebc2",
-  onPri:    "#ffffff",
-  text:     "#373a1c",
-  textMut:  "#636745",
-  outline:  "#b9bc94",
+  bg: "#fefee5",
+  surface: "#f4f6d2",
+  card: "#ffffff",
+  primary: "#506b4a",
+  priCont: "#ccebc2",
+  onPri: "#ffffff",
+  text: "#373a1c",
+  textMut: "#636745",
+  outline: "#b9bc94",
 };
 
 const Settings = () => {
@@ -69,7 +69,7 @@ const Settings = () => {
     <div className="h-full flex flex-col gap-12 pb-16 overflow-y-auto custom-scrollbar pr-2 scroll-smooth">
       {/* Profile Header Architecture */}
       <section className="shrink-0 space-y-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-md rounded-full border shadow-sm uppercase font-bold text-[9px] tracking-[0.2em] w-fit"
@@ -85,10 +85,10 @@ const Settings = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="lg:col-span-4 bg-white/70 backdrop-blur-xl border border-white/40 p-12 rounded-[56px] shadow-2xl text-center relative overflow-hidden group transition-all duration-1000 flex flex-col justify-center"
+            className="lg:col-span-4 self-start h-fit bg-white/70 backdrop-blur-xl border border-white/40 p-12 rounded-[56px] shadow-2xl text-center relative overflow-hidden group transition-all duration-1000 flex flex-col justify-center"
           >
             <div className="relative z-10">
-              <div 
+              <div
                 className="w-40 h-40 bg-white border rounded-[48px] flex items-center justify-center text-6xl font-black mx-auto mb-10 shadow-xl italic uppercase group-hover:scale-105 group-hover:rotate-3 transition-all duration-1000 ring-1 ring-[#50664a]/10"
                 style={{ background: `linear-gradient(135deg, #ffffff 0%, ${C.surface} 100%)`, color: C.text }}
               >
@@ -103,10 +103,10 @@ const Settings = () => {
 
           {/* Profile Form Architecture */}
           <div className="lg:col-span-8">
-            <motion.form 
+            <motion.form
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              onSubmit={handleSave} 
+              onSubmit={handleSave}
               className="bg-white/80 backdrop-blur-xl border border-white/40 p-12 lg:p-16 rounded-[64px] shadow-2xl space-y-16 relative overflow-hidden flex flex-col"
             >
               {/* Basic Identity Section */}
