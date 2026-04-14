@@ -3,11 +3,11 @@ import { useAuth } from "../context/AuthContext";
 import {
   HiFaceSmile,
   HiOutlineChartBar,
+  HiOutlineUserGroup,
   HiOutlineHeart,
   HiOutlineBookOpen,
   HiOutlineBolt,
   HiFire,
-  HiSparkles,
   HiOutlineSparkles
 } from "react-icons/hi2";
 import api from "../utils/api";
@@ -43,7 +43,7 @@ const AnimatedHealthScore = ({ score }) => {
   const percentage = Math.min(Math.max(score * 10, 0), 100);
 
   return (
-    <div className="relative w-48 h-48 lg:w-64 lg:h-64 flex flex-col items-center justify-center shrink-0 rounded-full bg-white shadow-xl group transition-all duration-700 hover:shadow-2xl" style={{ border: `1.5px solid ${C.outline}40` }}>
+    <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-64 lg:h-64 flex flex-col items-center justify-center shrink-0 rounded-full bg-white shadow-xl group transition-all duration-700 hover:shadow-2xl" style={{ border: `1.5px solid ${C.outline}40` }}>
       <svg className="absolute inset-0 w-full h-full -rotate-90 p-4">
         <motion.circle
           cx="50%"
@@ -169,7 +169,7 @@ const Dashboard = () => {
           <div className="absolute inset-0 border-4 border-gray-100/50 rounded-full"></div>
           <div className="absolute inset-0 border-4 border-t-primary rounded-full animate-spin"></div>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-widest animate-pulse" style={{ color: C.textMut }}>Gathering Insights...</p>
+        <p className="text-xs font-semibold uppercase tracking-widest animate-pulse" style={{ color: C.textMut }}>Getting things ready...</p>
       </div>
     );
   }
@@ -181,25 +181,25 @@ const Dashboard = () => {
   const stats = [
     { label: "Reflections", value: data?.summary?.totalPosts || 0, icon: <HiOutlineChartBar />, color: C.primary },
     { label: "Steady Mood", value: data?.latestMood || "Balanced", icon: <HiFaceSmile />, color: C.primary },
-    { label: "Community", value: "Active", icon: <HiSparkles />, color: C.primary },
+    { label: "Community", value: "Active", icon: <HiOutlineUserGroup />, color: C.primary },
   ];
 
   return (
-    <div className="flex-1 flex flex-col gap-6 sm:gap-8 h-full overflow-y-auto custom-scrollbar px-3 sm:px-4 pr-2 pb-10">
+    <div className="flex-1 flex flex-col gap-4 sm:gap-8 h-full overflow-y-auto custom-scrollbar px-2 sm:px-4 pb-10">
 
       {/* Wellness Overview Hero */}
       <section
         className="
-      relative overflow-hidden 
-      rounded-[28px] sm:rounded-[40px] lg:rounded-[48px] 
-      p-5 sm:p-8 lg:p-14 
-      flex flex-col lg:flex-row 
-      items-center lg:items-center 
-      justify-between 
-      gap-8 lg:gap-10
-      min-h-[280px] sm:min-h-[320px] lg:min-h-[350px] 
-      shadow-sm border transition-all
-    "
+          relative overflow-hidden 
+          rounded-[32px] sm:rounded-[40px] lg:rounded-[48px] 
+          p-6 sm:p-8 lg:p-14 
+          flex flex-col lg:flex-row 
+          items-center lg:items-center 
+          justify-between 
+          gap-10 lg:gap-14
+          min-h-0 sm:min-h-[320px] lg:min-h-[350px] 
+          shadow-sm border transition-all
+        "
         style={{ background: C.surface, borderColor: `${C.outline}20` }}
       >
 
@@ -208,7 +208,7 @@ const Dashboard = () => {
         <div className="absolute bottom-0 left-0 w-[40%] sm:w-[30%] h-[30%] bg-white opacity-30 blur-[60px] sm:blur-[80px] rounded-full"></div>
 
         {/* LEFT CONTENT */}
-        <div className="relative z-10 w-full max-w-xl space-y-5 sm:space-y-7 text-center lg:text-left">
+        <div className="relative z-10 w-full max-w-xl space-y-4 sm:space-y-7 text-center lg:text-left">
 
           {/* Badge */}
           <motion.div
@@ -303,7 +303,7 @@ const Dashboard = () => {
                   flex items-center gap-1
                 "
                   >
-                    AI Sanctuary Insight
+                    A Daily Thought
                     <HiOutlineBolt className="text-yellow-300 text-xs sm:text-sm" />
                   </span>
 
@@ -323,13 +323,13 @@ const Dashboard = () => {
         </div>
 
         {/* RIGHT SIDE (Score) */}
-        <div className="w-full lg:w-auto flex justify-center lg:justify-end">
+        <div className="w-full lg:w-auto flex justify-center lg:justify-end mt-4 sm:mt-0">
           <AnimatedHealthScore score={normalizedScore} />
         </div>
       </section>
 
       {/* Secondary Stats Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
         {stats.map((stat, i) => (
           <motion.div
             key={i}
@@ -338,9 +338,9 @@ const Dashboard = () => {
             transition={{ delay: 0.1 * i }}
             className="
           bg-white border 
-          p-5 sm:p-6 lg:p-8 
+          p-4 sm:p-6 lg:p-8 
           rounded-2xl sm:rounded-[32px] lg:rounded-[40px] 
-          flex flex-col gap-4 sm:gap-6 
+          flex flex-col sm:flex-col gap-2 sm:gap-6 
           hover:shadow-lg transition-all group
         "
             style={{ borderColor: `${C.outline}20` }}

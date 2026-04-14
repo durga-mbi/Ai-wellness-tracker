@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
           ></motion.div>
         </div>
         <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 italic animate-pulse">
-          Synchronizing Sanctuary...
+          Opening your sanctuary...
         </p>
       </div>
     );

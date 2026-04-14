@@ -148,7 +148,7 @@ const Community = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#fefee5] overflow-hidden -m-4 relative">
+    <div className="flex flex-col h-full bg-[#fefee5] overflow-hidden -m-4 sm:m-0 relative">
       {/* Zen Chat Header */}
       {/* <div className={`h-16 ${ZEN.header} px-6 flex items-center justify-between border-b ${ZEN.border} shrink-0 z-20`}>
         <div className="flex items-center gap-4">
@@ -166,7 +166,7 @@ const Community = () => {
 
       {/* Message Feed - WhatsApp Style Bubbles */}
       <div
-        className="flex-1 overflow-y-auto p-6 lg:p-10 space-y-6 custom-scrollbar relative z-10"
+        className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10 space-y-4 sm:space-y-6 custom-scrollbar relative z-10"
         ref={chatContainerRef}
       >
         {isLoading && (
@@ -193,7 +193,7 @@ const Community = () => {
                     </span>
                   )}
 
-                  <div className={`relative px-5 py-3 rounded-[24px] ${ZEN.shadow} ${isMe ? ZEN.myBubble + ' rounded-tr-none' : ZEN.otherBubble + ' rounded-tl-none border ' + ZEN.border}`}>
+                  <div className={`relative px-4 sm:px-5 py-2 sm:py-3 rounded-[20px] sm:rounded-[24px] ${ZEN.shadow} ${isMe ? ZEN.myBubble + ' rounded-tr-none' : ZEN.otherBubble + ' rounded-tl-none border ' + ZEN.border}`}>
                     <p className="text-sm font-medium leading-relaxed italic pr-8">
                       {post.content}
                     </p>
@@ -248,7 +248,7 @@ const Community = () => {
       </div>
 
       {/* Modern Input Bed (Glassmorphic) */}
-      <div className={`px-6 py-4 bg-white/40 backdrop-blur-lg border-t ${ZEN.border} shrink-0 z-20`}>
+      <div className={`px-4 sm:px-6 py-3 sm:py-4 bg-white/40 backdrop-blur-lg border-t ${ZEN.border} shrink-0 z-20`}>
         <div className="max-w-5xl mx-auto flex items-end gap-4">
 
           <div className={`flex-1 min-h-[50px] bg-white ${ZEN.shadow} rounded-[28px] border ${ZEN.border} px-6 py-3 flex flex-col gap-1 transition-all group-focus-within:border-[#506b4a]/20`}>

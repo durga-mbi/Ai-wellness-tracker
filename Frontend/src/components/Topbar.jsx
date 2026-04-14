@@ -37,7 +37,7 @@ const Topbar = ({ title, subtitle, actions, onToggleSidebar, isSidebarOpen, onLo
 
   return (
     <header 
-      className="h-16 flex items-center justify-between sticky top-0 z-40 px-6 transition-all duration-300 border-b"
+      className="h-16 flex items-center justify-between sticky top-0 z-40 px-3 sm:px-6 transition-all duration-300 border-b"
       style={{ 
         background: `rgba(254, 254, 229, 0.85)`, // C.bg with alpha
         backdropFilter: "blur(20px)",
@@ -55,15 +55,15 @@ const Topbar = ({ title, subtitle, actions, onToggleSidebar, isSidebarOpen, onLo
           {isSidebarOpen ? <FaCaretLeft className="w-5 h-5" /> : <HiBars3BottomLeft className="w-5 h-5" />}
         </button>
 
-        <div className="hidden sm:block">
+        <div className="">
           <h1 
-            className="text-sm font-bold tracking-tight" 
+            className="text-xs sm:text-sm font-bold tracking-tight" 
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
           >
             {title || "Sanctuary"}
           </h1>
           {subtitle && (
-            <p className="text-[11px] font-medium" style={{ color: C.textMut }}>
+            <p className="hidden sm:block text-[11px] font-medium" style={{ color: C.textMut }}>
               {subtitle}
             </p>
           )}

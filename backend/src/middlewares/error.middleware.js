@@ -1,7 +1,11 @@
 export const errorHandler = (err, req, res, next) => {
-    console.error(err);
+    console.error("Error caught in middleware:", err.message);
 
-    res.status(500).json({
-        message: "Internal Server Error"
+    const status = err.status || 500;
+    const message = err.message || "Internal Server Error";
+
+    res.status(status).json({
+        success: false,
+        message: message
     });
 };

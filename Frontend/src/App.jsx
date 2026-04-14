@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router";
 import { AuthProvider } from "./context/AuthContext";
 import { LayoutProvider } from "./context/LayoutContext";
 import { SocketProvider } from "./context/SocketContext";
+import { Toaster } from "react-hot-toast";
 
 // Components
 import Layout from "./components/Layout";
@@ -28,6 +29,7 @@ import NotFound from "./pages/NotFound";
 function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-center" reverseOrder={false} />
       <SocketProvider>
         <LayoutProvider>
           <Router>

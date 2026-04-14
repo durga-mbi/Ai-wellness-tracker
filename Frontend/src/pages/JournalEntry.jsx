@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
   HiPaperAirplane,
   HiChevronRight,
@@ -6,7 +7,6 @@ import {
   HiCheckCircle,
   HiOutlineArrowLeft,
   HiOutlineSparkles,
-  HiSparkles,
   HiHeart,
   HiOutlineBolt
 } from "react-icons/hi2";
@@ -78,6 +78,7 @@ const JournalEntry = () => {
     setIsSubmitting(true);
     try {
       const response = await api.post("/journal", { content });
+      toast.success("Reflection captured.");
       setResult(response.data);
 
       if (response.data.crisisAlert) {
@@ -132,7 +133,7 @@ const JournalEntry = () => {
                 className="inline-flex items-center gap-2 px-5 py-2 bg-white/60 backdrop-blur-md rounded-full shadow-sm border text-[10px] font-bold uppercase tracking-[0.2em]"
                 style={{ borderColor: `${C.outline}40`, color: C.primary }}
               >
-                <HiOutlineSparkles className="animate-pulse text-lg" /> Presence Protocol
+                <HiOutlineSparkles className="animate-pulse text-lg" /> Mindful Moment
               </motion.div>
             </div>
 
@@ -159,9 +160,9 @@ const JournalEntry = () => {
                 <div className="flex flex-col md:flex-row items-center justify-between gap-8 pt-12 mt-10 border-t shrink-0 border-dashed" style={{ borderColor: `${C.outline}40` }}>
                   <div className="flex items-center gap-6">
                     <div className="text-left">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1" style={{ color: C.textMut }}>Intellection state</p>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1" style={{ color: C.textMut }}>Word count</p>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-extrabold tracking-tighter" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                        <span className="text-4xl sm:text-6xl lg:text-8xl font-extrabold tracking-tighter" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                           {wordCount}
                         </span>
                         <span className="text-xs font-bold uppercase tracking-widest opacity-60" style={{ color: C.textMut }}>Fragments</span>
@@ -174,7 +175,7 @@ const JournalEntry = () => {
                         className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xl shadow-lg shadow-[#506b4a]/20"
                         style={{ background: C.primary }}
                       >
-                        <HiSparkles />
+                        <HiOutlineSparkles />
                       </motion.div>
                     )}
                   </div>
@@ -192,7 +193,7 @@ const JournalEntry = () => {
                       <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <>
-                        Commit Reflection
+                        Save Reflection
                         <HiPaperAirplane className="w-5 h-5 rotate-45 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                       </>
                     )}
@@ -210,7 +211,7 @@ const JournalEntry = () => {
             className="flex flex-col h-full gap-8 overflow-y-auto pr-1 custom-scrollbar pb-16"
           >
             {/* Ethereal Insight Hero */}
-            <div className="p-16 lg:p-24 rounded-[64px] shadow-2xl relative overflow-hidden shrink-0 border border-white/40"
+            <div className="p-8 sm:p-16 lg:p-24 rounded-[40px] sm:rounded-[64px] shadow-2xl relative overflow-hidden shrink-0 border border-white/40"
               style={{ background: `linear-gradient(135deg, ${C.surface} 0%, #ffffff 100%)` }}>
 
               <div className="absolute top-0 right-0 w-[60%] h-full bg-[#fefee5] blur-[140px] opacity-40 pointer-events-none rounded-full"></div>
@@ -220,7 +221,7 @@ const JournalEntry = () => {
                   initial={{ rotate: -20, scale: 0 }}
                   animate={{ rotate: 0, scale: 1 }}
                   transition={{ type: "spring", stiffness: 100, damping: 12 }}
-                  className="text-9xl drop-shadow-2xl flex items-center justify-center bg-white/90 backdrop-blur-xl p-10 rounded-[48px] w-48 h-48 shadow-2xl ring-1 ring-[#506b4a]/10"
+                  className="text-7xl sm:text-9xl drop-shadow-2xl flex items-center justify-center bg-white/90 backdrop-blur-xl p-6 sm:p-10 rounded-[32px] sm:rounded-[48px] w-32 h-32 sm:w-48 sm:h-48 shadow-2xl ring-1 ring-[#506b4a]/10"
                 >
                   {result.uiFeedback.emoji}
                 </motion.div>
@@ -270,7 +271,7 @@ const JournalEntry = () => {
                         className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1"
                         style={{ color: C.textMut }}
                       >
-                        Intrinsic quality
+                        Your feeling
                       </p>
 
                       <h4
@@ -296,7 +297,7 @@ const JournalEntry = () => {
 
                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-emerald-600/60 relative z-10">
                   <HiCheckCircle className="text-lg" />
-                  Pattern Authenticated
+                  Inner Balance Found
                 </div>
               </motion.div>
 
@@ -354,7 +355,7 @@ const JournalEntry = () => {
               style={{ color: C.text, borderColor: `${C.outline}20` }}
             >
               <HiOutlineArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
-              Return to Silence
+              Back to Sanctuary
             </motion.button>
           </motion.div>
         )}

@@ -92,7 +92,7 @@ const LandingPage = () => {
   const features = [
     {
       icon: "✍️",
-      title: "AI Sentiment Journaling",
+      title: "Smart Journaling",
       description: "Write freely. Our AI gently analyzes your tone to help you identify underlying patterns in your thoughts.",
       imgUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80",
     },
@@ -130,8 +130,8 @@ const LandingPage = () => {
 
   const steps = [
     { icon: "💜", title: "Open Your Heart", description: "Write your thoughts or select your current mood blob." },
-    { icon: "🤖", title: "AI Reflection", description: "Our AI analyzes context and highlights emotional shifts." },
-    { icon: "🌱", title: "Get Guidance", description: "Receive custom exercises or connect with peer circles." },
+    { icon: "🤖", title: "Smart Review", description: "Our AI helps you see patterns and shifts in your emotions." },
+    { icon: "🌱", title: "Get Support", description: "Receive simple exercises or connect with peer groups." },
     { icon: "📈", title: "Grow Over Time", description: "Track your progress and build emotional resilience." },
   ];
 

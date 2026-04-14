@@ -2,7 +2,20 @@ import { useState, useEffect } from "react";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { HiOutlineShieldCheck, HiOutlineMoon, HiOutlineSun, HiOutlineSparkles, HiOutlineInformationCircle, HiOutlinePlay, HiSparkles } from "react-icons/hi2";
+import {
+    HiOutlineSparkles,
+    HiOutlineArrowPath,
+    HiOutlineClock,
+    HiPlay,
+    HiPause,
+    HiChevronRight,
+    HiXMark,
+    HiOutlineShieldCheck,
+    HiOutlineMoon,
+    HiOutlineSun,
+    HiOutlineInformationCircle,
+    HiOutlinePlay
+} from "react-icons/hi2";
 
 // ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
 const C = {
@@ -99,52 +112,49 @@ const Mindfulness = () => {
     ];
 
     return (
-        <div className="space-y-12 pb-20">
-            {/* Hero Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-4">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-md rounded-full shadow-sm border text-[10px] font-bold uppercase tracking-widest"
-                        style={{ borderColor: `${C.outline}40`, color: C.primary }}
-                    >
-                        <HiOutlineSparkles className="animate-pulse" /> Presence Protocol
-                    </motion.div>
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight"
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                        Mindfulness <span style={{ color: C.primary }}>Sanctuary</span>
-                    </h1>
+        <div className="flex-1 flex flex-col gap-6 sm:gap-8 h-full overflow-y-auto custom-scrollbar px-2 sm:px-4 pb-10">
+            {/* Header Identity */}
+            <section className="relative p-8 sm:p-14 lg:p-20 bg-white rounded-[40px] sm:rounded-[64px] border border-white/40 shadow-sm overflow-hidden shrink-0">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="space-y-4">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-md rounded-full shadow-sm border text-[10px] font-bold uppercase tracking-widest"
+                            style={{ borderColor: `${C.outline}40`, color: C.primary }}
+                        >
+                            <HiOutlineSparkles className="animate-pulse" /> Mindful Moment
+                        </motion.div>
+                        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight"
+                            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
+                            Mindfulness <span style={{ color: C.primary }}>Sanctuary</span>
+                        </h1>
+                    </div>
                 </div>
-                <div className="bg-white/40 backdrop-blur-md px-6 py-4 rounded-[24px] border border-white/50 hidden lg:block shadow-sm">
-                    <p className="text-[11px] font-semibold text-gray-600 uppercase tracking-widest leading-relaxed max-w-[220px]">
-                        Sync your neural rhythm with interactive breathing rituals.
-                    </p>
-                </div>
-            </div>
+            </section>
 
             {/* Interactive Breathing Ritual */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-[48px] p-12 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[550px]"
+                    className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-[48px] p-6 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center min-h-[450px] sm:min-h-[550px]"
                 >
                     {/* Background Ambient Circle */}
                     <div className="absolute inset-0 z-0 opacity-10">
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-[100px]" style={{ background: C.primary }}></div>
                     </div>
 
-                    <div className="relative z-10 text-center space-y-12 w-full">
+                    <div className="relative z-10 text-center space-y-8 sm:space-y-12 w-full">
                         <div className="relative flex items-center justify-center">
                             {/* The Breathing Circle */}
                             <motion.div
                                 animate={{
-                                    scale: isActive ? (breathState === "Inhale" ? 1.4 : (breathState === "Exhale" ? 1 : (breathState.includes("Hold") ? (breathState === "Hold" ? 1.4 : 1) : 1))) : 1,
+                                    scale: isActive ? (breathState === "Inhale" ? 1.2 : (breathState === "Exhale" ? 0.9 : (breathState.includes("Hold") ? (breathState === "Hold" ? 1.2 : 0.9) : 1))) : 1,
                                     borderColor: isActive ? C.primary : `${C.outline}40`
                                 }}
                                 transition={{ duration: 4, ease: "easeInOut" }}
-                                className="w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full bg-white flex items-center justify-center border-[12px] shadow-[0_0_80px_rgba(0,0,0,0.05)] relative"
+                                className="w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 rounded-full bg-white flex items-center justify-center border-[8px] sm:border-[12px] shadow-[0_0_80px_rgba(0,0,0,0.05)] relative"
                                 style={{ borderColor: `${C.outline}20` }}
                             >
                                 <div className="text-center">
@@ -152,7 +162,7 @@ const Mindfulness = () => {
                                         key={breathState}
                                         initial={{ opacity: 0, y: 5 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="text-2xl font-black uppercase tracking-tighter"
+                                        className="text-xl sm:text-2xl font-black uppercase tracking-tighter"
                                         style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                                     >
                                         {isActive ? breathState.trim() : "Ready?"}
@@ -164,7 +174,7 @@ const Mindfulness = () => {
                                                 initial={{ opacity: 0, scale: 0.8 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 exit={{ opacity: 0, scale: 1.2 }}
-                                                className="text-6xl font-extrabold mt-2"
+                                                className="text-4xl sm:text-6xl font-extrabold mt-2"
                                                 style={{ color: C.primary, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                                             >
                                                 {timer}
@@ -175,7 +185,7 @@ const Mindfulness = () => {
 
                                 {/* Progress Pulse */}
                                 {isActive && (
-                                    <motion.div 
+                                    <motion.div
                                         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
                                         transition={{ duration: 4, repeat: Infinity }}
                                         className="absolute inset-0 rounded-full"
@@ -186,8 +196,8 @@ const Mindfulness = () => {
                         </div>
 
                         <div className="space-y-6">
-                            <p className="text-[12px] font-bold text-gray-500 uppercase tracking-[0.3em] max-w-xs mx-auto leading-relaxed">
-                                {isActive ? "Calibrate your resonance with the pulse." : "Box Breathing Path: Cycle through the 4x4 architecture."}
+                            <p className="text-[10px] sm:text-[12px] font-bold text-gray-500 uppercase tracking-[0.3em] max-w-xs mx-auto leading-relaxed">
+                                {isActive ? "Focus on your breathing pattern." : "Box Breathing: A simple 4-step path to calm."}
                             </p>
 
                             <motion.button
@@ -195,7 +205,7 @@ const Mindfulness = () => {
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setIsActive(!isActive)}
                                 className={`
-                                    px-16 py-5 rounded-full font-bold text-xs uppercase tracking-[0.2em] transition-all shadow-xl
+                                    px-12 sm:px-16 py-4 sm:py-5 rounded-full font-bold text-[10px] sm:text-xs uppercase tracking-[0.2em] transition-all shadow-xl
                                     ${isActive ? 'bg-red-50 text-red-500 hover:bg-red-100' : 'text-white'}
                                 `}
                                 style={{ background: isActive ? '' : C.primary }}
@@ -207,7 +217,7 @@ const Mindfulness = () => {
                 </motion.div>
 
                 <div className="space-y-8 flex flex-col">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2 }}
@@ -223,16 +233,16 @@ const Mindfulness = () => {
                         <div className="space-y-8 pl-2">
                             <div className="flex gap-6 group">
                                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg flex-shrink-0 group-hover:scale-110 transition-transform shadow-sm"
-                                     style={{ background: C.primary, color: C.onPri }}>01</div>
+                                    style={{ background: C.primary, color: C.onPri }}>01</div>
                                 <div className="space-y-2">
                                     <h4 className="font-bold text-[13px] uppercase tracking-widest" style={{ color: C.text }}>The Origin</h4>
-                                    <p className="text-[12px] text-gray-600 font-medium leading-relaxed italic">The box-pattern protocol is utilized for rapid autonomic nervous system calibration during high-stress operational windows.</p>
+                                    <p className="text-[12px] text-gray-600 font-medium leading-relaxed italic">Box breathing is a simple method used to help find peace and focus during busy or stressful moments.</p>
                                 </div>
                             </div>
 
                             <div className="flex gap-6 group">
                                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg flex-shrink-0 group-hover:scale-110 transition-transform shadow-sm"
-                                     style={{ background: C.priCont, color: C.primary }}>02</div>
+                                    style={{ background: C.priCont, color: C.primary }}>02</div>
                                 <div className="space-y-2">
                                     <h4 className="font-bold text-[13px] uppercase tracking-widest opacity-60" style={{ color: C.text }}>Preparation</h4>
                                     <p className="text-[12px] text-gray-600 font-medium leading-relaxed italic">Maintain a neutral spinal alignment. Focus your visual anchor on the center pulse to reduce external cognitive load.</p>
@@ -245,7 +255,7 @@ const Mindfulness = () => {
                                 <div className="flex items-center justify-between mb-6">
                                     <div className="flex flex-col gap-2">
                                         <span className="px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest w-fit shadow-sm"
-                                              style={{ background: `${C.primary}10`, color: C.primary }}>
+                                            style={{ background: `${C.primary}10`, color: C.primary }}>
                                             Neural Sync Ritual
                                         </span>
                                         {video && <span className="text-xs font-bold uppercase tracking-tight italic line-clamp-1" style={{ color: C.text }}>{video.title}</span>}
@@ -257,10 +267,10 @@ const Mindfulness = () => {
                                         className={`p-2 rounded-xl transition-colors ${isLoadingVideo ? 'animate-spin' : ''}`}
                                         style={{ background: `${C.outline}10`, color: C.primary }}
                                     >
-                                        <HiSparkles className="w-5 h-5" />
+                                        <HiOutlineSparkles className="w-5 h-5" />
                                     </motion.button>
                                 </div>
-                                
+
                                 <div className="aspect-video bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 flex items-center justify-center relative overflow-hidden group shadow-inner">
                                     {isLoadingVideo ? (
                                         <div className="flex flex-col items-center gap-4">
@@ -283,7 +293,7 @@ const Mindfulness = () => {
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 {!video && !isLoadingVideo && (
                                     <motion.button
                                         whileHover={{ y: -2 }}
@@ -322,24 +332,24 @@ const Mindfulness = () => {
                             className="bg-white/80 backdrop-blur-md p-10 rounded-[48px] border border-white/60 shadow-xl hover:shadow-2xl transition-all group cursor-pointer relative overflow-hidden"
                         >
                             <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#50664a]/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                            
+
                             <div className="flex justify-between items-start mb-8 relative z-10">
                                 <div className="w-16 h-16 rounded-[24px] flex items-center justify-center text-3xl shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg"
-                                     style={{ background: `${C.primary}10`, color: C.primary }}>
+                                    style={{ background: `${C.primary}10`, color: C.primary }}>
                                     {res.icon}
                                 </div>
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full">{res.duration}</span>
                             </div>
-                            
+
                             <div className="relative z-10 space-y-4">
                                 <h3 className="text-xl font-bold tracking-tight" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{res.title}</h3>
                                 <p className="text-[12px] font-medium text-gray-500 uppercase tracking-wide leading-relaxed h-12 overflow-hidden italic">
                                     {res.desc}
                                 </p>
-                                
+
                                 <div className="pt-6">
                                     <button className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all border group-hover:bg-primary group-hover:text-white border-transparent"
-                                            style={{ background: `${C.primary}10`, color: C.primary }}>
+                                        style={{ background: `${C.primary}10`, color: C.primary }}>
                                         Engage Fragment
                                     </button>
                                 </div>

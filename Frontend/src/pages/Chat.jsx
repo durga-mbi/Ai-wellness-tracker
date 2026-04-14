@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { 
   HiPaperAirplane, 
-  HiSparkles, 
+  HiOutlineSparkles, 
   HiOutlineCubeTransparent, 
   HiOutlineChatBubbleBottomCenterText,
-  HiOutlineSparkles,
   HiHeart,
   HiOutlineLightBulb,
   HiOutlineArrowLeft
@@ -118,12 +117,12 @@ const Chat = () => {
           className="inline-flex items-center gap-2 px-6 py-2 bg-white/40 backdrop-blur-md rounded-full shadow-sm border text-[10px] font-bold uppercase tracking-[0.2em]"
           style={{ borderColor: `${C.outline}30`, color: C.primary }}
         >
-          <HiSparkles className="animate-pulse" /> Sanctuary Presence Active
+          <HiOutlineSparkles className="animate-pulse" /> Sanctuary Presence Active
         </motion.div>
       </div>
 
       {/* Messages Canvas */}
-      <div className="flex-1 overflow-y-auto px-6 md:px-16 pt-10 pb-16 space-y-10 rounded-[64px] bg-white/30 backdrop-blur-2xl border relative custom-scrollbar shadow-2xl mx-auto w-full max-w-6xl"
+      <div className="flex-1 overflow-y-auto px-4 sm:px-8 md:px-16 pt-6 sm:pt-10 pb-16 space-y-6 sm:space-y-10 rounded-[32px] sm:rounded-[64px] bg-white/30 backdrop-blur-2xl border relative custom-scrollbar shadow-2xl mx-auto w-full max-w-6xl"
            style={{ borderColor: `${C.outline}15` }}>
         
         <div className="max-w-3xl mx-auto space-y-12 w-full flex flex-col">
@@ -146,7 +145,7 @@ const Chat = () => {
 
                   <div className={`space-y-3 ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
                     <div className={`
-                      px-8 py-5 rounded-[36px] text-lg font-medium tracking-tight leading-relaxed shadow-xl border transition-all
+                      px-5 sm:px-8 py-3 sm:py-5 rounded-[24px] sm:rounded-[36px] text-base sm:text-lg font-medium tracking-tight leading-relaxed shadow-xl border transition-all
                       ${msg.role === "user"
                         ? "bg-[#506b4a] text-white rounded-tr-none border-[#506b4a]"
                         : "bg-white/95 text-[#373a1c] rounded-tl-none border-white/80 backdrop-blur-md"}
@@ -194,24 +193,24 @@ const Chat = () => {
             style={{ borderColor: `${C.outline}15` }}
             whileFocusWithin={{ borderColor: `${C.primary}30`, boxShadow: "0 30px 60px -15px rgba(80, 107, 74, 0.2)" }}
           >
-            <div className="pl-10 text-emerald-900/30">
-              <HiOutlineChatBubbleBottomCenterText className="text-3xl" />
+            <div className="pl-4 sm:pl-10 text-emerald-900/30">
+              <HiOutlineChatBubbleBottomCenterText className="text-2xl sm:text-3xl" />
             </div>
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="What whispers in your heart?"
-              className="w-full pl-6 pr-4 py-8 bg-transparent outline-none font-semibold text-lg text-[#373a1c] placeholder:text-[#636745]/30 selection:bg-[#506b4a]/15"
+              className="w-full pl-4 sm:pl-6 pr-2 sm:pr-4 py-5 sm:py-8 bg-transparent outline-none font-semibold text-base sm:text-lg text-[#373a1c] placeholder:text-[#636745]/30 selection:bg-[#506b4a]/15"
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="px-10 py-5 bg-[#506b4a] text-white rounded-[24px] flex items-center justify-center transition-all shadow-xl disabled:opacity-30 group disabled:scale-100"
+              className="px-6 sm:px-10 py-3 sm:py-5 bg-[#506b4a] text-white rounded-[20px] sm:rounded-[24px] flex items-center justify-center transition-all shadow-xl disabled:opacity-30 group disabled:scale-100"
             >
-              <HiPaperAirplane className="w-6 h-6 rotate-45 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <HiPaperAirplane className="w-5 h-5 sm:w-6 h-6 rotate-45 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </motion.button>
           </motion.div>
         </form>

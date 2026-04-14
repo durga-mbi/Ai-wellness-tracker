@@ -2,7 +2,20 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import { HiArrowRight, HiSparkles, HiAcademicCap, HiUserGroup } from "react-icons/hi2";
+import { HiArrowRight, HiOutlineSparkles, HiAcademicCap, HiUserGroup, HiHeart } from "react-icons/hi2";
+
+// ── Design tokens (Stitch "The Ethereal Sanctuary") ──────────────────────────
+const C = {
+  bg:      "#fefee5",
+  surface: "#f4f6d2",
+  card:    "#ffffff",
+  primary: "#506b4a",
+  priCont: "#ccebc2",
+  onPri:   "#ffffff",
+  text:    "#373a1c",
+  textMut: "#636745",
+  outline: "#b9bc94",
+};
 
 const OnboardingSurvey = () => {
   const { updateAuthProfile } = useAuth();
@@ -48,21 +61,28 @@ const OnboardingSurvey = () => {
 
   const surveySteps = [
     {
-      title: "Bio-Sync Initialization",
-      icon: <HiUserGroup className="w-14 h-14 text-black" />,
+      title: "Getting to Know You",
+      icon: <HiUserGroup className="w-14 h-14" style={{ color: C.primary }} />,
       content: (
         <div className="space-y-8">
-          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Define your demographic identity for model calibration.</p>
-          <div className="grid grid-cols-2 gap-6">
+          <p className="font-medium italic border-l-2 pl-6 px-4 py-2 bg-white/40 rounded-r-xl" style={{ color: C.textMut, borderColor: `${C.primary}30` }}>
+            Tell us a bit about yourself to help us understand you better.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
             {ageGroups.map(age => (
               <button
                 key={age}
                 onClick={() => setFormData({ ...formData, ageGroup: age })}
-                className={`p-6 rounded-[24px] font-black uppercase tracking-widest border-2 transition-all italic ${
+                className={`p-6 rounded-[32px] font-bold uppercase tracking-widest border-2 transition-all italic text-sm ${
                   formData.ageGroup === age 
-                    ? "border-black bg-black text-white shadow-xl scale-[1.02]" 
-                    : "border-gray-50 hover:border-gray-100 text-gray-500 hover:text-black bg-white"
+                    ? "scale-[1.02] shadow-xl" 
+                    : "border-transparent hover:border-white/60 text-emerald-800/40 hover:text-emerald-800 bg-white/40"
                 }`}
+                style={{ 
+                  background: formData.ageGroup === age ? C.primary : undefined,
+                  color: formData.ageGroup === age ? C.onPri : undefined,
+                  borderColor: formData.ageGroup === age ? C.primary : undefined,
+                }}
               >
                 {age}
               </button>
@@ -72,37 +92,49 @@ const OnboardingSurvey = () => {
       )
     },
     {
-      title: "Academic Sanctuary",
-      icon: <HiAcademicCap className="w-14 h-14 text-black" />,
+      title: "Your University",
+      icon: <HiAcademicCap className="w-14 h-14" style={{ color: C.primary }} />,
       content: (
         <div className="space-y-8">
-          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Locate your primary operational intelligence center.</p>
-          <input
-            type="text"
-            placeholder="EX: STANFORD UNIVERSITY"
-            value={formData.university}
-            onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-            className="w-full p-8 rounded-[32px] bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white outline-none transition-all font-black text-black placeholder:text-gray-400 uppercase tracking-widest italic shadow-inner"
-          />
+          <p className="font-medium italic border-l-2 pl-6 px-4 py-2 bg-white/40 rounded-r-xl" style={{ color: C.textMut, borderColor: `${C.primary}30` }}>
+            Where do you spend most of your time studying?
+          </p>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="EX: STANFORD UNIVERSITY"
+              value={formData.university}
+              onChange={(e) => setFormData({ ...formData, university: e.target.value })}
+              className="w-full p-8 rounded-[40px] bg-white border-2 outline-none transition-all font-bold placeholder:text-emerald-800/30 uppercase tracking-widest italic shadow-inner"
+              style={{ color: C.text, borderColor: `${C.outline}20`, focusBorderColor: C.primary }}
+            />
+          </div>
         </div>
       )
     },
     {
-      title: "Strategic Objectives",
-      icon: <HiSparkles className="w-14 h-14 text-black" />,
+      title: "Your Goals",
+      icon: <HiOutlineSparkles className="w-14 h-14" style={{ color: C.primary }} />,
       content: (
         <div className="space-y-8">
-          <p className="text-gray-600 font-medium italic border-l-2 border-black/5 pl-6 px-4 py-2 bg-gray-50/50 rounded-r-xl">Select targets for well-being optimization protocols.</p>
-          <div className="flex flex-wrap gap-4">
+          <p className="font-medium italic border-l-2 pl-6 px-4 py-2 bg-white/40 rounded-r-xl" style={{ color: C.textMut, borderColor: `${C.primary}30` }}>
+            What would you like to focus on for your well-being?
+          </p>
+          <div className="flex flex-wrap gap-3">
             {wellnessGoals.map(goal => (
               <button
                 key={goal}
                 onClick={() => toggleGoal(goal)}
-                className={`px-8 py-4 rounded-full font-black uppercase tracking-widest border-2 transition-all italic text-sm ${
+                className={`px-8 py-4 rounded-full font-bold uppercase tracking-widest border-2 transition-all italic text-xs ${
                   formData.goals.includes(goal)
-                    ? "border-black bg-black text-white shadow-xl"
-                    : "border-gray-50 hover:border-gray-100 text-gray-500 hover:text-black bg-white"
+                    ? "shadow-lg"
+                    : "border-transparent hover:border-white/60 text-emerald-800/40 hover:text-emerald-800 bg-white/40"
                 }`}
+                style={{ 
+                  background: formData.goals.includes(goal) ? C.primary : undefined,
+                  color: formData.goals.includes(goal) ? C.onPri : undefined,
+                  borderColor: formData.goals.includes(goal) ? C.primary : undefined,
+                }}
               >
                 {goal}
               </button>
@@ -114,15 +146,35 @@ const OnboardingSurvey = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 sm:p-14 relative overflow-hidden">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-8 sm:p-14 relative overflow-hidden font-sans"
+      style={{ background: C.bg, fontFamily: "'Inter', sans-serif" }}
+    >
+      {/* Google Fonts */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+      />
+
       {/* Visual Identity Atmosphere */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-gray-50/50 blur-[150px] rounded-full -translate-y-1/2 opacity-60"></div>
+      <div 
+        className="absolute top-0 left-0 w-full h-[600px] blur-[150px] rounded-full -translate-y-1/2 opacity-60"
+        style={{ background: C.priCont }}
+      ></div>
+      <div 
+        className="absolute bottom-0 right-0 w-[500px] h-[500px] blur-[150px] rounded-full opacity-30"
+        style={{ background: C.priCont }}
+      ></div>
 
       <div className="max-w-2xl w-full z-10 relative">
         {/* Synthetic Progress Interface */}
         <div className="flex gap-4 mb-16 px-4">
           {[0, 1, 2].map(i => (
-            <div key={i} className={`h-1.5 rounded-full flex-1 transition-all duration-700 ${i <= step ? "bg-black" : "bg-gray-100"}`} />
+            <div 
+              key={i} 
+              className={`h-1.5 rounded-full flex-1 transition-all duration-700`} 
+              style={{ background: i <= step ? C.primary : `${C.outline}30` }}
+            />
           ))}
         </div>
 
@@ -133,10 +185,19 @@ const OnboardingSurvey = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.02 }}
             transition={{ duration: 0.5 }}
-            className="bg-white p-12 sm:p-20 rounded-[48px] shadow-3xl border border-gray-50 relative group"
+            className="bg-white/60 backdrop-blur-2xl p-12 sm:p-20 rounded-[64px] shadow-3xl border relative group"
+            style={{ borderColor: `${C.outline}20` }}
           >
-            <div className="mb-14 p-6 bg-gray-50 inline-block rounded-[32px] group-hover:rotate-3 transition-transform duration-500">{surveySteps[step].icon}</div>
-            <h1 className="text-5xl md:text-6xl font-black text-black tracking-tighter mb-6 uppercase italic leading-none">{surveySteps[step].title}</h1>
+            <div className="mb-14 p-6 bg-white rounded-[32px] group-hover:rotate-3 transition-transform duration-500 shadow-sm border border-emerald-800/5">
+              {surveySteps[step].icon}
+            </div>
+            
+            <h1 
+              className="text-5xl md:text-6xl font-extrabold tracking-tighter mb-6 uppercase italic leading-none"
+              style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              {surveySteps[step].title}
+            </h1>
             
             <div className="mt-14">
               {surveySteps[step].content}
@@ -145,13 +206,18 @@ const OnboardingSurvey = () => {
             <button
               onClick={handleNext}
               disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : formData.goals.length === 0}
-              className="w-full mt-20 py-6 bg-black text-white font-black rounded-3xl shadow-2xl hover:bg-gray-800 disabled:opacity-40 disabled:grayscale transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn"
+              className="w-full mt-20 py-6 text-white font-bold rounded-[32px] shadow-2xl hover:opacity-90 disabled:opacity-20 transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn shadow-[#506b4a]/20"
+              style={{ background: C.primary }}
             >
-              {step === 2 ? "Finalize Protocols" : "Execute Next"}
+              {step === 2 ? "Finish Setup" : "Continue"}
               <HiArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         </AnimatePresence>
+        
+        <p className="text-center mt-12 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 italic" style={{ color: C.textMut }}>
+          <HiHeart className="inline animate-pulse text-lg mr-2" /> Setting up your sanctuary
+        </p>
       </div>
     </div>
   );

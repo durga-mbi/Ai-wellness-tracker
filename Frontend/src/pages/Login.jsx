@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
@@ -82,9 +83,10 @@ const Login = () => {
     setIsSubmitting(true);
     const result = await login(email, password);
     if (result.success) {
+      toast.success("Welcome back to your Sanctuary!");
       navigate("/dashboard");
     } else {
-      setError(result.message || "Failed to authenticate. Please check your credentials.");
+      setError(result.message || "Authentication failed");
     }
     setIsSubmitting(false);
   };

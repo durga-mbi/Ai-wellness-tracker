@@ -11,7 +11,7 @@ const AuthRoute = ({ children }) => {
       <div className="min-h-screen flex flex-col items-center justify-center bg-white space-y-10">
         <div className="w-12 h-12 border-2 border-gray-100 border-t-black rounded-full animate-spin"></div>
         <p className="text-[10px] font-black uppercase tracking-[0.5em] text-black/20 italic animate-pulse">
-          Authenticating Identity...
+          Finding your space...
         </p>
       </div>
     );

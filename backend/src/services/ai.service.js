@@ -61,7 +61,15 @@ OUTPUT FORMAT (STRICT JSON):
     return JSON.parse(cleanedJson);
   } catch (e) {
     console.error("AI Response parsing error or limit reached", e);
-    throw new Error("AI analysis unavailable. Please check your API key quota.");
+    
+    // Specifically handle 429 Quota Exceeded
+    if (e.status === 429 || (e.message && e.message.includes("429"))) {
+      const error = new Error("AI Quota Exceeded. Please try again in a few moments or use your own API key in Settings.");
+      error.status = 429;
+      throw error;
+    }
+    
+    throw new Error("AI analysis unavailable. Please check your technical connection.");
   }
 };
 
@@ -157,6 +165,9 @@ Plain text response only (no JSON)
     return response.text();
   } catch (e) {
     console.error("Chatbot AI error", e);
+    if (e.status === 429 || (e.message && e.message.includes("429"))) {
+        return "I am currently over-capacity (Quota Reached). I'd love to chat, but I need a quick breather. Please try again in a minute!";
+    }
     return "I am currently taking a small breather. Please try again in a moment, or check your API key if you've provided one. I'm still here for you.";
   }
 };

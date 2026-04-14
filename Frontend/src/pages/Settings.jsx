@@ -56,7 +56,7 @@ const Settings = () => {
     setMessage("");
     try {
       await updateAuthProfile(formData);
-      setMessage("Protocols updated successfully");
+      setMessage("Settings updated successfully");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setMessage("Failed to update protocols");
@@ -142,7 +142,7 @@ const Settings = () => {
                   </div>
                   <div>
                     <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Neural Bridge</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Custom AI integration protocols</p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Add your own Gemini API key</p>
                   </div>
                 </div>
 
@@ -160,7 +160,7 @@ const Settings = () => {
                     placeholder="Enter your personal API key..."
                   />
                   <p className="px-2 text-[11px] font-medium leading-relaxed italic" style={{ color: C.textMut }}>
-                    Provisioning a personal neural bridge ensures uninterrupted high-fidelity insights when collective system quotas reach threshold.
+                    Using your own API key ensures you can always get insights even when our shared limits are reached.
                   </p>
                 </div>
               </div>
@@ -245,7 +245,7 @@ const Settings = () => {
                     </span>
                   ) : (
                     <span className="flex items-center gap-4 relative z-10">
-                      Update Protocols <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
+                      Update Settings <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
                     </span>
                   )}
                 </motion.button>

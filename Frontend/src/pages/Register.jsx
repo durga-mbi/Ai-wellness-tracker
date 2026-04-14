@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
@@ -87,6 +88,7 @@ const Register = () => {
     setIsSubmitting(true);
     const result = await register({ name, email, mobile, password });
     if (result.success) {
+      toast.success("Welcome to the Sanctuary!");
       setSuccess(result.message || "Account created successfully!");
       setTimeout(() => navigate("/survey"), 2000);
     } else {

@@ -100,7 +100,7 @@ const Layout = ({ children, ...props }) => {
           {...headerProps}
         />
 
-        <main className="flex-1 overflow-y-auto p-6 md:p-10">
+        <main className="flex-1 overflow-y-auto p-4 md:p-10">
           <div className="max-w-[1600px] mx-auto w-full h-full flex flex-col">
             <AnimatePresence mode="wait">
               <motion.div
