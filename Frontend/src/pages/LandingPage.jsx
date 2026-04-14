@@ -1,259 +1,524 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { HiBars3, HiXMark, HiChevronRight, HiOutlineArrowSmallRight } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 
+// ── Design tokens from Stitch project "The Ethereal Sanctuary" ──────────────
+const C = {
+  bg:       "#fefee5",
+  surface:  "#f4f6d2",
+  card:     "#ffffff",
+  primary:  "#506b4a",
+  priCont:  "#ccebc2",
+  onPri:    "#ffffff",
+  text:     "#373a1c",
+  textMut:  "#636745",
+  outline:  "#b9bc94",
+};
+
+// Reusable pill badge
+const Badge = ({ children }) => (
+  <span
+    style={{ background: C.priCont, color: C.primary }}
+    className="inline-block px-4 py-1 rounded-full text-xs font-semibold tracking-widest uppercase"
+  >
+    {children}
+  </span>
+);
+
+// Feature card with dark overlay image background
+const FeatureCard = ({ icon, title, description, imgUrl }) => (
+  <div className="relative overflow-hidden rounded-3xl group cursor-default min-h-[260px] flex flex-col justify-end">
+    {/* Image background */}
+    <div
+      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+      style={{ backgroundImage: imgUrl ? `url(${imgUrl})` : "none", backgroundColor: imgUrl ? undefined : C.surface }}
+    />
+    {/* Gradient overlay */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+    {/* Content */}
+    <div className="relative z-10 p-6 space-y-2">
+      <div className="text-3xl">{icon}</div>
+      <h3 className="text-white font-bold text-lg leading-snug">{title}</h3>
+      <p className="text-white/70 text-sm leading-relaxed">{description}</p>
+    </div>
+  </div>
+);
+
+// Step card ("Your Path to Clarity")
+const StepCard = ({ icon, title, description, accent }) => (
+  <div className="flex flex-col items-center text-center gap-4">
+    <div
+      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md"
+      style={{ background: C.priCont }}
+    >
+      {icon}
+    </div>
+    <h4 className="font-bold text-base" style={{ color: C.text }}>{title}</h4>
+    <p className="text-sm leading-relaxed" style={{ color: C.textMut }}>{description}</p>
+  </div>
+);
+
+// Testimonial card
+const TestimonialCard = ({ quote, name, role }) => (
+  <div
+    className="rounded-3xl p-8 flex flex-col gap-5 shadow-sm"
+    style={{ background: C.card }}
+  >
+    {/* Stars */}
+    <div className="flex gap-1 text-yellow-400 text-sm">★★★★★</div>
+    <p className="text-sm leading-relaxed italic" style={{ color: C.textMut }}>"{quote}"</p>
+    <div>
+      <p className="font-bold text-sm" style={{ color: C.text }}>{name}</p>
+      <p className="text-xs" style={{ color: C.textMut }}>{role}</p>
+    </div>
+  </div>
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const LandingPage = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { user } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
 
-    const navigation = [
-        { name: "Stats", href: "#stats" },
-        { name: "Journal", href: "#journal" },
-        { name: "Community", href: "#community" },
-        { name: "Features", href: "#features" },
-    ];
+  const navLinks = [
+    { label: "Features", href: "#features" },
+    { label: "How it Works", href: "#how" },
+    { label: "Community", href: "#community" },
+    { label: "Resources", href: "#resources" },
+  ];
 
-    const allFeatures = [
-        "Daily Journaling", "Mood Tracking", "AI Insights", "Sleep Logs", 
-        "Water Tracking", "Exercise Logs", "Community Feed", "AI Chatbot", 
-        "Health Charts", "Weekly Score", "Privacy First", "Simple Design",
-        "Meditation", "Mental Peace", "University Life", "Social Sync"
-    ];
+  const features = [
+    {
+      icon: "✍️",
+      title: "AI Sentiment Journaling",
+      description: "Write freely. Our AI gently analyzes your tone to help you identify underlying patterns in your thoughts.",
+      imgUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80",
+    },
+    {
+      icon: "🤝",
+      title: "Anonymous Peer Support",
+      description: "Connect with fellow students who understand your journey, all while keeping your identity private and safe.",
+      imgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=600&q=80",
+    },
+    {
+      icon: "📅",
+      title: "Mood Heatmap Calendar",
+      description: "Visualize your emotional landscape over time. Spot trends and celebrate the bright days in your history.",
+      imgUrl: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&q=80",
+    },
+    {
+      icon: "📊",
+      title: "Habit & Mood Insights",
+      description: "See how your sleep, study, and social habits correlate with your mental state with clear, easy insights.",
+      imgUrl: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80",
+    },
+    {
+      icon: "🆘",
+      title: "Crisis Detection",
+      description: "Real-time support that recognizes when you're overwhelmed and offers immediate, gentle resources to help.",
+      imgUrl: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=600&q=80",
+    },
+    {
+      icon: "🧘",
+      title: "Personalized Mindfulness",
+      description: "Daily exercises, meditations, and breathing techniques tailored to your current emotional state.",
+      imgUrl: "https://images.unsplash.com/photo-1474418397713-7ede21d49118?w=600&q=80",
+    },
+  ];
 
-    return (
-        <div className="min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
-            {/* Typographic Header */}
-            <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 h-24 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full">
-                    <div className="flex justify-between items-center">
-                        <Link to="/" className="flex items-center gap-4 group">
-                            <img
-                              src={logo}
-                              alt="Wellness Hub Logo"
-                              className="w-12 h-12 object-contain hover:rotate-3 transition-transform"
-                            />
-                            <div className="flex flex-col">
-                               <span className="text-xl font-black tracking-tighter uppercase italic leading-none">Wellness Hub</span>
-                               <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-0.5">Your Daily Peace</span>
-                            </div>
-                        </Link>
+  const steps = [
+    { icon: "💜", title: "Open Your Heart", description: "Write your thoughts or select your current mood blob." },
+    { icon: "🤖", title: "AI Reflection", description: "Our AI analyzes context and highlights emotional shifts." },
+    { icon: "🌱", title: "Get Guidance", description: "Receive custom exercises or connect with peer circles." },
+    { icon: "📈", title: "Grow Over Time", description: "Track your progress and build emotional resilience." },
+  ];
 
-                        <div className="hidden md:flex items-center space-x-10">
-                            {navigation.map((item) => (
-                                <a key={item.name} href={item.href} className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-600 hover:text-black transition-all">
-                                    {item.name}
-                                </a>
-                            ))}
-                            {user ? (
-                              <Link to="/dashboard" className="px-10 py-3.5 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl flex items-center gap-2">
-                                  Dashboard <HiOutlineArrowSmallRight className="w-4 h-4" />
-                              </Link>
-                            ) : (
-                              <Link to="/login" className="px-10 py-3.5 bg-black text-white rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-gray-800 transition-all shadow-xl">
-                                  Site Login
-                              </Link>
-                            )}
-                        </div>
+  const testimonials = [
+    {
+      quote: "Finals week used to break me. Now, I have a place to dump my anxiety and get actionable advice that actually works.",
+      name: "Alex M.",
+      role: "Sophomore, Arts",
+    },
+    {
+      quote: "The anonymity in the peer support groups made it so much easier for me to open up about my struggle with burnout.",
+      name: "Sarah K.",
+      role: "Junior, Biology",
+    },
+    {
+      quote: "Seeing my mood history as a heatmap really helped me realize that my bad days are just temporary phases.",
+      name: "Jamie L.",
+      role: "Freshman, Engineering",
+    },
+  ];
 
-                        <div className="md:hidden flex items-center">
-                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-black">
-                                {isMenuOpen ? <HiXMark className="w-6 h-6" /> : <HiBars3 className="w-6 h-6" />}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div
+      className="min-h-screen font-sans overflow-x-hidden"
+      style={{ background: C.bg, color: C.text, fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      {/* ── Google Fonts ── */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
 
-                <AnimatePresence>
-                    {isMenuOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="absolute top-24 left-0 w-full bg-white border-b border-gray-100 md:hidden overflow-hidden"
-                        >
-                            <div className="px-6 py-10 space-y-6">
-                                {navigation.map((item) => (
-                                    <a key={item.name} href={item.href} onClick={() => setIsMenuOpen(false)} className="block text-xl font-bold italic uppercase text-gray-500 hover:text-black">
-                                        {item.name}
-                                    </a>
-                                ))}
-                                {user ? (
-                                  <Link to="/dashboard" className="block w-full py-4 bg-black text-white text-center rounded-2xl text-[10px] font-bold uppercase tracking-[0.3em]">
-                                      Go to Dashboard
-                                  </Link>
-                                ) : (
-                                  <Link to="/login" className="block w-full py-4 bg-black text-white text-center rounded-2xl text-[10px] font-bold uppercase tracking-[0.3em]">
-                                      Log In
-                                  </Link>
-                                )}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </nav>
+      {/* ══════════════════════════ NAVBAR ══════════════════════════ */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50"
+        style={{ background: "rgba(254,254,229,0.85)", backdropFilter: "blur(20px)", borderBottom: `1px solid ${C.outline}30` }}
+      >
+        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+          {/* Brand */}
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logo} alt="The Sanctuary" className="w-8 h-8 object-contain" />
+            <span
+              className="font-bold text-sm tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+            >
+              The Sanctuary
+            </span>
+          </Link>
 
-        <header className="relative pt-60 pb-32 px-6 lg:px-12">
-            <div className="max-w-5xl mx-auto text-center space-y-12">
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-3 px-5 py-2.5 bg-gray-50 rounded-full border border-gray-100 text-[10px] font-bold uppercase tracking-[0.4em] text-gray-600"
-                >
-                    Proactive Mental Health for Students
-                </motion.div>
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                className="text-sm font-medium transition-colors hover:opacity-70"
+                style={{ color: C.textMut }}
+              >
+                {l.label}
+              </a>
+            ))}
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="px-5 py-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
+                style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="px-5 py-2 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
+                style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
 
-                <motion.h1
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1, duration: 0.8 }}
-                    className="text-7xl md:text-9xl lg:text-[140px] font-black text-black tracking-tighter leading-[0.75] uppercase italic"
-                >
-                    Track. <br /> Talk. <br /> Thrive.
-                </motion.h1>
-
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium leading-[1.4] italic"
-                >
-                    Managed wellness for the modern student. Track habits, record reflections with AI insights, and find your calm in a busy world—all through a distraction-free interface.
-                </motion.p>
-
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-                >
-                    {user ? (
-                      <Link to="/dashboard" className="w-full sm:w-auto px-16 py-6 bg-black text-white rounded-3xl text-sm font-black uppercase tracking-[0.3em] hover:bg-gray-800 transition-all shadow-3xl shadow-black/10 flex items-center gap-4">
-                          Welcome Back, {user.name.split(' ')[0]} <HiOutlineArrowSmallRight className="w-6 h-6" />
-                      </Link>
-                    ) : (
-                      <>
-                        <Link to="/register" className="w-full sm:w-auto px-16 py-6 bg-black text-white rounded-3xl text-sm font-black uppercase tracking-[0.3em] hover:bg-gray-800 transition-all shadow-3xl shadow-black/10">
-                            Join Today
-                        </Link>
-                        <Link to="/login" className="w-full sm:w-auto px-16 py-6 bg-white text-black border-2 border-black rounded-3xl text-sm font-black uppercase tracking-[0.3em] hover:bg-gray-50 transition-all">
-                            Log In
-                        </Link>
-                      </>
-                    )}
-                </motion.div>
-            </div>
-        </header>
-
-            {/* Infinite Feature Marquee */}
-            <section className="py-12 bg-black overflow-hidden border-y border-black">
-                <div className="relative flex overflow-x-hidden">
-                    <motion.div
-                        className="flex whitespace-nowrap gap-12 items-center py-4"
-                        animate={{ x: [0, -1000] }}
-                        transition={{
-                            repeat: Infinity,
-                            duration: 25,
-                            ease: "linear"
-                        }}
-                    >
-                        {allFeatures.concat(allFeatures).map((f, i) => (
-                            <span key={i} className="text-white text-4xl md:text-6xl font-black italic uppercase tracking-tighter opacity-80 hover:opacity-100 transition-opacity flex items-center gap-12">
-                                {f} <span className="w-3 h-3 bg-white rounded-full"></span>
-                            </span>
-                        ))}
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Detailed Feature Sections */}
-            <section id="stats" className="py-32 px-6 lg:px-12 bg-gray-50">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-12 mb-20">
-                    <div className="space-y-4">
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.5em] italic">Step 01</span>
-                        <h2 className="text-5xl md:text-7xl font-black text-black italic uppercase tracking-tighter leading-none">Daily <br /> Stats.</h2>
-                    </div>
-                    <p className="text-lg text-gray-600 font-medium max-w-md italic text-right leading-relaxed">
-                       Check your sleep, water, and exercise in seconds. Our daily charts help you see exactly how you're feeling and doing every single day.
-                    </p>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[
-                        { t: "Sleep Tracking", d: "Record your rest cycles to ensure peak recovery each night." },
-                        { t: "Water Intake", d: "Stay hydrated with simple daily goal tracking. Never miss a liter." },
-                        { t: "Exercise Logs", d: "Track your activity level and see its direct impact on your mood." }
-                    ].map((f, i) => (
-                        <div key={i} className="bg-white p-12 rounded-[48px] border border-gray-100 space-y-4 hover:border-black transition-all">
-                            <h3 className="text-2xl font-black italic uppercase tracking-tight">{f.t}</h3>
-                            <p className="text-sm text-gray-600 font-medium italic leading-relaxed">{f.d}</p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            <section id="journal" className="py-32 px-6 lg:px-12 bg-white">
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-24 items-center">
-                   <div className="space-y-8">
-                       <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.5em] italic">Step 02</span>
-                       <h2 className="text-6xl lg:text-8xl font-black text-black italic uppercase tracking-tighter leading-[0.85]">AI <br /> Journaling.</h2>
-                       <p className="text-xl text-gray-600 font-medium italic leading-relaxed">
-                          Write your heart out. Our smart AI gives you honest, helpful insights into your mood and sentiment, helping you find quiet and peace in a busy day.
-                       </p>
-                       <Link to="/register" className="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-[0.3em] group">
-                          Try for Free <HiOutlineArrowSmallRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-                       </Link>
-                   </div>
-                   <div className="bg-gray-50 rounded-[60px] p-2 aspect-video overflow-hidden border border-gray-100 shadow-inner">
-                       <div className="w-full h-full bg-white rounded-[58px] flex flex-col items-center justify-center p-12 text-center">
-                           <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 italic">Recent Mood Insight</p>
-                           <h4 className="text-3xl font-black italic uppercase italic underline decoration-black decoration-4 underline-offset-8">Perfectly Balanced</h4>
-                           <p className="text-sm text-gray-600 mt-8 italic px-12">"Your reflection suggests a high level of mental clarity today. Keep up the consistent habits."</p>
-                       </div>
-                   </div>
-                </div>
-            </section>
-
-            <section id="community" className="py-32 px-6 lg:px-12 bg-gray-50 border-t border-gray-100">
-                <div className="max-w-7xl mx-auto text-center space-y-12">
-                   <div className="space-y-4">
-                       <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.5em] italic">Step 03</span>
-                       <h2 className="text-7xl lg:text-[120px] font-black text-black italic uppercase tracking-tighter leading-[0.8]">Peer <br /> Support.</h2>
-                   </div>
-                   <p className="text-xl text-gray-600 max-w-2xl mx-auto font-medium italic">
-                       Grow with others. Share your wins, ask for help, and join a community that cares about mental health just as much as you do.
-                   </p>
-                   <div className="flex justify-center pt-8">
-                      <Link to="/register" className="px-16 py-6 bg-black text-white rounded-3xl text-sm font-black uppercase tracking-[0.4em] shadow-3xl hover:-translate-y-1 transition-all">
-                         Join the Community
-                      </Link>
-                   </div>
-                </div>
-            </section>
-
-            {/* Simple Performance Footer */}
-            <footer className="py-20 px-6 lg:px-12 bg-white border-t border-gray-100">
-                <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-                    <Link to="/" className="flex items-center gap-6 group">
-                        <img
-                          src={logo}
-                          alt="Wellness Hub Logo"
-                          className="w-10 h-10 object-contain grayscale group-hover:grayscale-0 transition-all"
-                        />
-                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] italic">Wellness Hub © 2026</span>
-                    </Link>
-
-                    <div className="flex gap-12">
-                        {["Privacy", "Terms", "Help"].map(l => (
-                            <a key={l} href="#" className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">{l}</a>
-                        ))}
-                    </div>
-                </div>
-            </footer>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`block h-0.5 w-6 rounded transition-transform ${menuOpen ? "rotate-45 translate-y-2" : ""}`} style={{ background: C.text }} />
+            <span className={`block h-0.5 w-6 rounded transition-opacity ${menuOpen ? "opacity-0" : ""}`} style={{ background: C.text }} />
+            <span className={`block h-0.5 w-6 rounded transition-transform ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} style={{ background: C.text }} />
+          </button>
         </div>
-    );
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="md:hidden overflow-hidden"
+              style={{ background: C.bg, borderTop: `1px solid ${C.outline}40` }}
+            >
+              <div className="px-6 py-6 space-y-4">
+                {navLinks.map((l) => (
+                  <a key={l.label} href={l.href} onClick={() => setMenuOpen(false)} className="block text-base font-medium" style={{ color: C.textMut }}>
+                    {l.label}
+                  </a>
+                ))}
+                {user ? (
+                  <Link to="/dashboard" className="block text-center py-3 rounded-full font-semibold text-sm" style={{ background: C.primary, color: C.onPri }}>
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/login" className="block text-center py-3 rounded-full font-semibold text-sm" style={{ background: C.primary, color: C.onPri }}>
+                    Sign In
+                  </Link>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
+      {/* ══════════════════════════ HERO ══════════════════════════ */}
+      <header className="pt-32 pb-20 px-6 lg:px-10 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left: copy */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+            className="space-y-6"
+          >
+            <Badge>AI-Driven Mental Wellness</Badge>
+
+            <h1
+              className="text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+            >
+              Your Gentle Space for{" "}
+              <em className="not-italic" style={{ color: C.primary }}>
+                Mental Wellness
+              </em>
+            </h1>
+
+            <p className="text-base leading-relaxed max-w-md" style={{ color: C.textMut }}>
+              Navigate university life with an AI-driven sanctuary. Private journaling, sentiment insights,
+              and peer support designed specifically for students.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              {user ? (
+                <Link
+                  to="/dashboard"
+                  className="px-8 py-3.5 rounded-full font-semibold text-sm transition-opacity hover:opacity-90 shadow-md text-center"
+                  style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+                >
+                  Go to Dashboard →
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/register"
+                    className="px-8 py-3.5 rounded-full font-semibold text-sm transition-opacity hover:opacity-90 shadow-md text-center"
+                    style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+                  >
+                    Get Started Free
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="px-8 py-3.5 rounded-full font-semibold text-sm border text-center transition-colors hover:opacity-70"
+                    style={{ borderColor: C.outline, color: C.text }}
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {/* Social proof chips */}
+            <div className="flex flex-wrap gap-6 pt-2">
+              {["🔒 100% Private", "🤖 AI-Powered", "🌱 Free to Start"].map((chip) => (
+                <span key={chip} className="text-sm font-medium" style={{ color: C.textMut }}>
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right: hero illustration */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.4, 0, 0.2, 1] }}
+            className="relative flex justify-center"
+          >
+            <div
+              className="w-full max-w-sm rounded-3xl overflow-hidden shadow-xl"
+              style={{ background: "#a8c6a0" }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=700&q=80"
+                alt="Student journaling for mental wellness"
+                className="w-full h-80 lg:h-96 object-cover mix-blend-multiply opacity-90"
+              />
+            </div>
+            {/* Floating stats card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-6 left-0 rounded-2xl px-5 py-4 shadow-lg"
+              style={{ background: C.card }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: C.primary }}>This week</p>
+              <div className="flex items-center gap-3">
+                <div>
+                  <p className="text-2xl font-bold" style={{ color: C.text }}>87%</p>
+                  <p className="text-[11px]" style={{ color: C.textMut }}>Mood Score</p>
+                </div>
+                <div className="w-px h-10 bg-gray-100" />
+                <div>
+                  <p className="text-2xl font-bold" style={{ color: C.text }}>12</p>
+                  <p className="text-[11px]" style={{ color: C.textMut }}>Entries</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Trusted by strip */}
+        <div className="mt-16 flex flex-wrap items-center gap-8 justify-center md:justify-start">
+          <span className="text-xs font-medium uppercase tracking-widest" style={{ color: C.outline }}>
+            Trusted by students from
+          </span>
+          {["MIT", "Stanford", "Oxford", "NUS", "IIT"].map((uni) => (
+            <span key={uni} className="text-sm font-bold" style={{ color: C.textMut }}>
+              {uni}
+            </span>
+          ))}
+        </div>
+      </header>
+
+      {/* ══════════════════════════ FEATURES ══════════════════════════ */}
+      <section id="features" className="py-24 px-6 lg:px-10" style={{ background: C.surface }}>
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-4">
+            <Badge>Features</Badge>
+            <h2
+              className="text-4xl lg:text-5xl font-extrabold tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+            >
+              A calmer way to understand yourself
+            </h2>
+            <p className="text-base max-w-xl mx-auto" style={{ color: C.textMut }}>
+              Intelligent tools designed to provide clarity and comfort without the noise.
+            </p>
+          </div>
+
+          {/* Grid: 3 cols desktop, 2 tablet, 1 mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f) => (
+              <FeatureCard key={f.title} {...f} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════ HOW IT WORKS ══════════════════════════ */}
+      <section id="how" className="py-24 px-6 lg:px-10" style={{ background: C.bg }}>
+        <div className="max-w-6xl mx-auto space-y-16">
+          <div className="text-center space-y-4">
+            <Badge>How it Works</Badge>
+            <h2
+              className="text-4xl lg:text-5xl font-extrabold tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+            >
+              Your Path to Clarity
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
+            {steps.map((s, i) => (
+              <div key={s.title}>
+                <StepCard {...s} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════ TESTIMONIALS ══════════════════════════ */}
+      <section id="community" className="py-24 px-6 lg:px-10" style={{ background: C.surface }}>
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center space-y-4">
+            <Badge>Community</Badge>
+            <h2
+              className="text-4xl lg:text-5xl font-extrabold tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+            >
+              Voices of the Sanctuary
+            </h2>
+            <p className="text-base max-w-xl mx-auto" style={{ color: C.textMut }}>
+              Hear from students who found their space for reflection and found their way back to calm.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {testimonials.map((t) => (
+              <div key={t.name}>
+                <TestimonialCard {...t} />
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="text-center pt-4">
+            {user ? (
+              <Link
+                to="/dashboard"
+                className="inline-block px-10 py-4 rounded-full font-semibold text-sm shadow-md transition-opacity hover:opacity-90"
+                style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+              >
+                Go to My Dashboard →
+              </Link>
+            ) : (
+              <Link
+                to="/register"
+                className="inline-block px-10 py-4 rounded-full font-semibold text-sm shadow-md transition-opacity hover:opacity-90"
+                style={{ backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`, color: C.onPri }}
+              >
+                Join the Community Free →
+              </Link>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════ FOOTER ══════════════════════════ */}
+      <footer
+        className="py-14 px-6 lg:px-10"
+        style={{ background: C.bg, borderTop: `1px solid ${C.outline}40` }}
+      >
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
+          {/* Brand */}
+          <div className="space-y-3">
+            <Link to="/" className="flex items-center gap-3">
+              <img src={logo} alt="The Sanctuary" className="w-8 h-8 object-contain" />
+              <span className="font-bold text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
+                The Ethereal Sanctuary
+              </span>
+            </Link>
+            <p className="text-xs max-w-xs" style={{ color: C.textMut }}>
+              Your weightless archive for mental clarity. © 2024 The Ethereal Sanctuary.
+            </p>
+          </div>
+
+          {/* Links */}
+          <div className="flex flex-wrap gap-12">
+            {[
+              { heading: "Product", links: ["Features", "How it Works", "Community", "Resources"] },
+              { heading: "Legal", links: ["Privacy Policy", "Terms of Service", "Crisis Resources"] },
+              { heading: "Contact", links: ["Contact Us", "Support", "Feedback"] },
+            ].map((col) => (
+              <div key={col.heading} className="space-y-3">
+                <p className="text-xs font-bold uppercase tracking-widest" style={{ color: C.text }}>
+                  {col.heading}
+                </p>
+                {col.links.map((l) => (
+                  <a
+                    key={l}
+                    href="#"
+                    className="block text-xs transition-opacity hover:opacity-70"
+                    style={{ color: C.textMut }}
+                  >
+                    {l}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 };
 
 export default LandingPage;

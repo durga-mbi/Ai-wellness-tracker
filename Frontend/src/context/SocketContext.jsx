@@ -12,7 +12,9 @@ export const SocketProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState([]);
 
     useEffect(() => {
-        const newSocket = io("http://localhost:4000", {
+        const socketUrl = "http://localhost:4000";
+
+        const newSocket = io(socketUrl, {
             withCredentials: true
         });
 

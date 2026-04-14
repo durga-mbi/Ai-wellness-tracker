@@ -17,11 +17,24 @@ import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
+app.set("trust proxy", 1); // Trust the first proxy (Render/Vercel)
+
 app.use(express.json());
 
+const ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://ai-wellness-tracker-pi.vercel.app"
+];
+
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
+    origin: (origin, callback) => {
+        // Allow all origins
+        callback(null, true);
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie", "X-Requested-With", "Accept"],
+    exposedHeaders: ["Set-Cookie"]
 }));
 
 app.use(cookieParser());
@@ -39,9 +52,13 @@ app.use("/api/mindfulness", mindfulnessRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/ai", aiRoutes);
 
-// Health route
+// Health route (High-Availability Alias)
+app.get("/health", (req, res) => {
+    res.json({ status: "ok", mode: "For the testing purpose" });
+});
+
 app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+    res.json({ status: "ok", mode: "api" });
 });
 
 app.use(errorHandler);

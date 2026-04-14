@@ -26,10 +26,10 @@ export const chat = async (req, res, next) => {
       lastEmotion: lastEntry?.emotion || "Neutral"
     };
 
-    const aiResponse = await getChatbotResponse(message, context);
+    const aiResponse = await getChatbotResponse(message, context, user.apiKey);
 
     // Crisis detection
-    const { riskLevel, trigger } = await detectCrisis(message);
+    const { riskLevel, trigger } = await detectCrisis(message, user.apiKey);
 
     res.json({
       response: aiResponse,

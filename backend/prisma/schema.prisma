@@ -18,6 +18,7 @@ model User {
   university  String?        // user's university
   isAnonymous Boolean        @default(false)
   preferences String?        // JSON string for AI context
+  apiKey      String?        // User-provided Gemini API key
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]

@@ -8,13 +8,26 @@ export const signup = async (req, res, next) => {
     try {
         const { name, email, mobile, password } = req.body;
 
+        const conditions = [];
+        if (email) conditions.push({ email });
+        if (mobile) conditions.push({ mobile });
+
+        if (conditions.length === 0) {
+            return res.status(400).json({ message: "Email or Mobile is required" });
+        }
+
         const existingUser = await prisma.user.findFirst({
             where: {
-                OR: [{ email }, { mobile }]
+                OR: conditions
             }
         });
 
         if (existingUser) {
+            console.log("Signup conflict detected:", {
+                requestEmail: email,
+                requestMobile: mobile,
+                conflictId: existingUser.id
+            });
             return res.status(400).json({ message: "User already exists" });
         }
 
@@ -34,15 +47,16 @@ export const signup = async (req, res, next) => {
         // store in cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // true in production (HTTPS)
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
         res.status(201).json({
             message: "User created and logged in",
             userId: user.id,
-            user
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
@@ -56,11 +70,17 @@ export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const user = await prisma.user.findUnique({
-            where: { email }
+        const user = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { email: email },
+                    { mobile: email }
+                ]
+            }
         });
 
         if (!user) {
+            console.log("Login failure: User not found for identifier", email);
             return res.status(400).json({ message: "User not found" });
         }
 
@@ -75,13 +95,15 @@ export const login = async (req, res, next) => {
         // store in cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false, // true in production (HTTPS)
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
 
         res.json({
-            message: "Login success"
+            message: "Login success",
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
@@ -104,14 +126,15 @@ export const guestLogin = async (req, res, next) => {
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: "lax",
+            secure: true,
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000 // 1 day for guests
         });
 
         res.json({
             message: "Guest login success",
-            user
+            user,
+            token // Include token for header-based auth
         });
 
     } catch (err) {
@@ -129,7 +152,11 @@ export const getMe = (req, res) => {
 
 // logout 
 export const logout = (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+    });
 
     res.json({
         message: "Logged out successfully"

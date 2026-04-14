@@ -1,8 +1,8 @@
 import { detectCrisis as detectCrisisAI } from '../services/ai.service.js';
 
-export const detectCrisis = async (text) => {
+export const detectCrisis = async (text, userApiKey = null) => {
   try {
-    const aiResult = await detectCrisisAI(text);
+    const aiResult = await detectCrisisAI(text, userApiKey);
     
     // Normalize implementation to match expected controller format
     // AI returns: { risk: "low" | "medium" | "high", reason: "...", trigger_words: [] }
