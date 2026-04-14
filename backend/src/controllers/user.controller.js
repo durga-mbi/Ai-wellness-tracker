@@ -10,6 +10,7 @@ export const savePreferences = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid issues data" });
         }
 
+        //delete many -> API 1 CALL
         await prisma.preference.deleteMany({
             where: { userId }
         });
@@ -20,6 +21,7 @@ export const savePreferences = async (req, res, next) => {
             userId
         }));
 
+        //create many -> API 2 CALL
         await prisma.preference.createMany({
             data
         });

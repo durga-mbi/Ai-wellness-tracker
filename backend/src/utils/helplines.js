@@ -6,8 +6,8 @@ export const HELPLINES = [
         number: "9178330413"
     },
     {
-        name: "muna bhai",
-        number: "+91-9820466726"
+        name: "subhrajit daring boy",
+        number: "9658304584"
     },
     {
         name: "om bhai",

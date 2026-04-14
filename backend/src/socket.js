@@ -10,6 +10,7 @@ export const initSocket = (server) => {
         }
     });
 
+    //getting the socket id with the rename data id
     const typingUsers = new Map();
 
     io.on("connection", (socket) => {
@@ -36,6 +37,8 @@ export const initSocket = (server) => {
     return io;
 };
 
+
+//get the socket io with the client id
 export const getIO = () => {
     if (!io) {
         throw new Error("Socket.io not initialized!");
