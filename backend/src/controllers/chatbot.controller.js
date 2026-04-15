@@ -19,10 +19,14 @@ export const chat = async (req, res, next) => {
       }
     });
 
-    const lastEntry = user.journals[0];
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found. Please log in again." });
+    }
+
+    const lastEntry = user.journals ? user.journals[0] : null;
     const context = {
       preferences: user.preferences || "None",
-      moodSummary: "Standard context", // Could be aggregated from DB
+      moodSummary: "Standard context",
       lastEmotion: lastEntry?.emotion || "Neutral"
     };
 

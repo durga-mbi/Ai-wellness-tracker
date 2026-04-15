@@ -88,7 +88,7 @@ const Register = () => {
     setIsSubmitting(true);
     const result = await register({ name, email, mobile, password });
     if (result.success) {
-      toast.success("Welcome to the Sanctuary!");
+      toast.success("Welcome to Mindmetrics AI!");
       setSuccess(result.message || "Account created successfully!");
       setTimeout(() => navigate("/survey"), 2000);
     } else {
@@ -129,12 +129,12 @@ const Register = () => {
 
         {/* Brand logo */}
         <Link to="/" className="flex items-center gap-3 relative z-10">
-          <img src={logo} alt="The Sanctuary" className="w-9 h-9 object-contain brightness-200" />
+          <img src={logo} alt="Mindmetrics AI" className="w-9 h-9 object-contain brightness-200" />
           <span
             className="font-bold text-sm tracking-tight"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "rgba(255,255,255,0.9)" }}
           >
-            The Sanctuary
+            Mindmetrics AI
           </span>
         </Link>
 
@@ -200,9 +200,9 @@ const Register = () => {
         {/* Mobile brand (hidden on lg) */}
         <div className="lg:hidden mb-8 text-center">
           <Link to="/">
-            <img src={logo} alt="The Sanctuary" className="w-12 h-12 mx-auto mb-2 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 mx-auto mb-2 object-contain" />
           </Link>
-          <p className="text-sm font-semibold" style={{ color: C.textMut }}>The Sanctuary</p>
+          <p className="text-sm font-semibold" style={{ color: C.textMut }}>Mindmetrics AI</p>
         </div>
 
         <motion.div
@@ -340,7 +340,7 @@ const Register = () => {
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs" style={{ color: C.textMut }}>
-            © 2024 The Ethereal Sanctuary ·{" "}
+            © 2024 Mindmetrics AI ·{" "}
             <a href="#" className="underline underline-offset-2">Privacy</a>
             {" · "}
             <a href="#" className="underline underline-offset-2">Terms</a>

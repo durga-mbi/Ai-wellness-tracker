@@ -97,7 +97,7 @@ const Chat = () => {
         setIsCrisisOpen(true);
       }
     } catch (error) {
-      setMessages(prev => [...prev, { role: "ai", text: "The connection to the sanctuary has flickered. Let us breathe and try again." }]);
+      setMessages(prev => [...prev, { role: "ai", text: "The connection to Mindmetrics AI has flickered. Let us breathe and try again." }]);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +117,7 @@ const Chat = () => {
           className="inline-flex items-center gap-2 px-6 py-2 bg-white/40 backdrop-blur-md rounded-full shadow-sm border text-[10px] font-bold uppercase tracking-[0.2em]"
           style={{ borderColor: `${C.outline}30`, color: C.primary }}
         >
-          <HiOutlineSparkles className="animate-pulse" /> Sanctuary Presence Active
+          <HiOutlineSparkles className="animate-pulse" /> Mindmetrics presence active
         </motion.div>
       </div>
 
@@ -155,7 +155,7 @@ const Chat = () => {
                     <div className="flex items-center gap-2 px-5">
                        {msg.role === "ai" ? <HiHeart className="text-[10px] text-red-400" /> : <HiOutlineSparkles className="text-[10px] text-emerald-600" />}
                        <p className="text-[9px] font-bold text-[#636745] uppercase tracking-[0.3em] opacity-60">
-                        {msg.role === "user" ? "The Seeker" : "Sanctuary Echo"}
+                        {msg.role === "user" ? "The Seeker" : "Mindmetrics Echo"}
                       </p>
                     </div>
                   </div>

@@ -71,7 +71,7 @@ const Onboarding = () => {
     {
       id: 1,
       title: "Absolute Privacy",
-      subtext: "Your thoughts are private and safe. Your data stays only with you in your sanctuary.",
+      subtext: "Your thoughts are private and safe. Your data stays only with you in Mindmetrics AI.",
       bgColor: C.bg,
       accentColor: C.primary,
       illustration: (
@@ -111,7 +111,7 @@ const Onboarding = () => {
     {
       id: 3,
       title: "Establish Connection",
-      subtext: "Start your journey in the Health Sanctuary.",
+      subtext: "Start your journey in Mindmetrics AI.",
       bgColor: C.bg,
       accentColor: C.primary,
       illustration: (
@@ -156,14 +156,14 @@ const Onboarding = () => {
             className="w-12 h-12 bg-white flex items-center justify-center rounded-2xl rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-lg border"
             style={{ borderColor: `${C.outline}30` }}
           >
-            <img src={logo} alt="The Sanctuary" className="w-8 h-8 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-8 h-8 object-contain" />
           </div>
           <div className="flex flex-col">
             <span
               className="text-xl font-bold tracking-tighter uppercase italic leading-none"
               style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              Sanctuary.
+              Mindmetrics AI.
             </span>
             <span
               className="text-[9px] font-bold uppercase tracking-widest mt-1 italic opacity-60"

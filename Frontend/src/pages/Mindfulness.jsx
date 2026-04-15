@@ -127,7 +127,7 @@ const Mindfulness = () => {
                         </motion.div>
                         <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
                             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                            Mindfulness <span style={{ color: C.primary }}>Sanctuary</span>
+                            Mindmetrics <span style={{ color: C.primary }}>AI</span>
                         </h1>
                     </div>
                 </div>

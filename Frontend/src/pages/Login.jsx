@@ -83,7 +83,7 @@ const Login = () => {
     setIsSubmitting(true);
     const result = await login(email, password);
     if (result.success) {
-      toast.success("Welcome back to your Sanctuary!");
+      toast.success("Welcome back to Mindmetrics AI!");
       navigate("/dashboard");
     } else {
       setError(result.message || "Authentication failed");
@@ -120,15 +120,15 @@ const Login = () => {
         />
 
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-3 relative z-10">
-          <img src={logo} alt="The Sanctuary" className="w-9 h-9 object-contain brightness-200" />
-          <span
-            className="font-bold text-sm tracking-tight"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "rgba(255,255,255,0.9)" }}
-          >
-            The Sanctuary
-          </span>
-        </Link>
+          <Link to="/" className="flex items-center gap-3 relative z-10">
+            <img src={logo} alt="Mindmetrics AI" className="w-9 h-9 object-contain brightness-200" />
+            <span
+              className="font-bold text-sm tracking-tight"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "rgba(255,255,255,0.9)" }}
+            >
+              Mindmetrics AI
+            </span>
+          </Link>
 
         {/* Centre content */}
         <div className="relative z-10 space-y-8">
@@ -192,9 +192,9 @@ const Login = () => {
         {/* Mobile brand */}
         <div className="lg:hidden mb-8 text-center">
           <Link to="/">
-            <img src={logo} alt="The Sanctuary" className="w-12 h-12 mx-auto mb-2 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 mx-auto mb-2 object-contain" />
           </Link>
-          <p className="text-sm font-semibold" style={{ color: C.textMut }}>The Sanctuary</p>
+          <p className="text-sm font-semibold" style={{ color: C.textMut }}>Mindmetrics AI</p>
         </div>
 
         <motion.div
@@ -249,7 +249,7 @@ const Login = () => {
             >
               <input
                 type="email"
-                placeholder="you@sanctuary.com"
+                placeholder="you@mindmetrics.ai"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value.toLowerCase());
@@ -307,7 +307,7 @@ const Login = () => {
                 opacity: isSubmitting ? 0.7 : 1,
               }}
             >
-              {isSubmitting ? "Signing in…" : "Sign In to My Sanctuary"}
+              {isSubmitting ? "Signing in…" : "Sign In to Mindmetrics AI"}
             </button>
 
             {/* Divider */}
@@ -333,7 +333,7 @@ const Login = () => {
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs" style={{ color: C.textMut }}>
-            © 2024 The Ethereal Sanctuary ·{" "}
+            © 2024 Mindmetrics AI ·{" "}
             <a href="#" className="underline underline-offset-2">Privacy</a>
             {" · "}
             <a href="#" className="underline underline-offset-2">Terms</a>

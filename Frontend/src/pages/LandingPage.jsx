@@ -188,12 +188,12 @@ const LandingPage = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           {/* Brand */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="The Sanctuary" className="w-8 h-8 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-8 h-8 object-contain" />
             <span
-              className="font-bold text-sm tracking-tight"
+              className="font-bold text-xl tracking-tighter"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              The Sanctuary
+              Mindmetrics AI
             </span>
           </Link>
 
@@ -447,7 +447,7 @@ const LandingPage = () => {
               className="text-4xl lg:text-5xl font-extrabold tracking-tight"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              Voices of the Sanctuary
+              Voices of Mindmetrics AI
             </h2>
             <p className="text-base max-w-xl mx-auto" style={{ color: C.textMut }}>
               Hear from students who found their space for reflection and found their way back to calm.
@@ -493,14 +493,17 @@ const LandingPage = () => {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
           {/* Brand */}
           <div className="space-y-3">
-            <Link to="/" className="flex items-center gap-3">
-              <img src={logo} alt="The Sanctuary" className="w-8 h-8 object-contain" />
-              <span className="font-bold text-sm" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                The Ethereal Sanctuary
+            <div className="flex items-center gap-3 mb-6">
+              <img src={logo} alt="Mindmetrics AI" className="w-8 h-8 object-contain" />
+              <span
+                className="font-bold text-xl tracking-tighter"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+              >
+                Mindmetrics AI
               </span>
-            </Link>
-            <p className="text-xs max-w-xs" style={{ color: C.textMut }}>
-              Your weightless archive for mental clarity. © 2024 The Ethereal Sanctuary.
+            </div>
+            <p className="text-sm font-medium leading-relaxed mb-6" style={{ color: C.textMut }}>
+              Your weightless archive for mental clarity. © 2024 Mindmetrics AI.
             </p>
           </div>
 

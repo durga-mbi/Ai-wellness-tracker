@@ -17,7 +17,7 @@ import { useNavigate } from "react-router";
 import CrisisModal from "../components/CrisisModal";
 import { HiFire } from "react-icons/hi2";
 
-// ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
+// ── Design tokens from "Mindmetrics AI" ──────────────────────────────
 const C = {
   bg: "#fefee5",
   surface: "#f4f6d2",
@@ -64,7 +64,7 @@ const JournalEntry = () => {
 
   useEffect(() => {
     updateLayout({
-      title: "Sanctuary Reflection",
+      title: "Mindmetrics Reflection",
       subtitle: "A moment for yourself",
       onBack: () => navigate("/dashboard"),
       actions: null
@@ -93,7 +93,7 @@ const JournalEntry = () => {
           setResult(null);
           setContent("");
           updateLayout({
-            title: "Sanctuary Reflection",
+            title: "Mindmetrics Reflection",
             subtitle: "A moment for yourself",
             onBack: () => navigate("/dashboard"),
             actions: null
@@ -345,7 +345,7 @@ const JournalEntry = () => {
                 setResult(null);
                 setContent("");
                 updateLayout({
-                  title: "Sanctuary Reflection",
+                  title: "Mindmetrics Reflection",
                   subtitle: "A moment for yourself",
                   onBack: () => navigate("/dashboard"),
                   actions: null
@@ -355,7 +355,7 @@ const JournalEntry = () => {
               style={{ color: C.text, borderColor: `${C.outline}20` }}
             >
               <HiOutlineArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
-              Back to Sanctuary
+              Back to Home
             </motion.button>
           </motion.div>
         )}

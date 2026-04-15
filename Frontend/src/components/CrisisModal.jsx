@@ -69,7 +69,7 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
             <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
               <HiOutlineHeart className="text-red-400 text-sm sm:text-base" />
               <span className="text-[9px] sm:text-[10px] font-bold text-[#636745] uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-                Sanctuary Support Lines
+                Mindmetrics AI Support Lines
               </span>
             </div>
 
@@ -144,7 +144,7 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
                            font-bold uppercase tracking-[0.2em] sm:tracking-[0.4em] 
                            shadow-xl"
               >
-                Return to Sanctuary
+                Return to Home
               </motion.button>
             </div>
           </div>

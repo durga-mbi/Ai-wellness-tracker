@@ -216,7 +216,7 @@ const OnboardingSurvey = () => {
         </AnimatePresence>
         
         <p className="text-center mt-12 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 italic" style={{ color: C.textMut }}>
-          <HiHeart className="inline animate-pulse text-lg mr-2" /> Setting up your sanctuary
+          <HiHeart className="inline animate-pulse text-lg mr-2" /> Setting up Mindmetrics AI
         </p>
       </div>
     </div>

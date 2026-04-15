@@ -126,7 +126,7 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
                     className="font-bold text-sm tracking-tight"
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
                   >
-                    The Sanctuary
+                    Mindmetrics AI
                   </span>
                   <span className="text-[10px] font-medium opacity-60" style={{ color: C.textMut }}>
                     Find your calm

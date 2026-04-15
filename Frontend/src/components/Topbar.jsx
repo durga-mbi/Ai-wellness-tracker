@@ -60,7 +60,7 @@ const Topbar = ({ title, subtitle, actions, onToggleSidebar, isSidebarOpen, onLo
             className="text-xs sm:text-sm font-bold tracking-tight" 
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
           >
-            {title || "Sanctuary"}
+            {title || "Mindmetrics AI"}
           </h1>
           {subtitle && (
             <p className="hidden sm:block text-[11px] font-medium" style={{ color: C.textMut }}>

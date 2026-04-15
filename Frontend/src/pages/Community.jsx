@@ -139,7 +139,7 @@ const Community = () => {
   };
 
   const getStatusText = () => {
-    if (typingUsers.length === 0) return "Active Sanctuary";
+    if (typingUsers.length === 0) return "Active Mindmetrics AI";
     if (typingUsers.length === 1) {
       const u = typingUsers[0];
       return u.isAnonymous ? "Someone is typing..." : `${u.name} is typing...`;
@@ -159,7 +159,7 @@ const Community = () => {
             <HiOutlineFaceSmile className="text-xl" />
           </div>
           <div>
-            <h3 className="text-base font-black text-[#506b4a] italic leading-none tracking-tight">Ethereal Sanctuary</h3>
+            <h3 className="text-base font-black text-[#506b4a] italic leading-none tracking-tight">Mindmetrics AI</h3>
           </div>
         </div>
       </div> */}
@@ -266,7 +266,7 @@ const Community = () => {
             <textarea
               value={content}
               onChange={handleContentChange}
-              placeholder="Whisper to the sanctuary..."
+              placeholder="Whisper to Mindmetrics AI..."
               className="w-full bg-transparent outline-none text-[#506b4a] text-sm font-medium italic resize-none custom-scrollbar py-1 placeholder:text-[#506b4a]/20"
               style={{ height: `${Math.min(content.split('\n').length * 20 + 24, 120)}px` }}
             />

@@ -6,8 +6,19 @@ dotenv.config();
 // Helper to get specialized AI model with custom key support
 export const getAIModel = (userApiKey) => {
   const apiKey = userApiKey || process.env.GEMINI_API_KEY;
-  const genAI = new GoogleGenerativeAI(apiKey);
-  return genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+  
+  if (!apiKey) {
+    console.error("FATAL: GEMINI_API_KEY is missing from environment variables.");
+    throw new Error("AI Configuration Error: Missing API Key. If you are a developer, set GEMINI_API_KEY in your .env or Render dashboard.");
+  }
+
+  try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    return genAI.getGenerativeModel({ model: "gemini-flash-latest" });
+  } catch (error) {
+    console.error("Failed to initialize GoogleGenerativeAI:", error.message);
+    throw new Error("AI Initialization failed. Please check your API key validity.");
+  }
 };
 
 const FAST_RESPONSE_OVERRIDE = `
@@ -60,7 +71,7 @@ OUTPUT FORMAT (STRICT JSON):
     const cleanedJson = text.replace(/```json|```/gi, "").trim();
     return JSON.parse(cleanedJson);
   } catch (e) {
-    console.error("AI Response parsing error or limit reached", e);
+    console.error("AI Analysis Execution Error:", e.message || e);
     
     // Specifically handle 429 Quota Exceeded
     if (e.status === 429 || (e.message && e.message.includes("429"))) {

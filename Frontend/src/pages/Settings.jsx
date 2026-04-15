@@ -44,7 +44,7 @@ const Settings = () => {
   useEffect(() => {
     updateLayout({
       title: "Settings",
-      subtitle: "Your Sanctuary Setup",
+      subtitle: "Your Mindmetrics AI Setup",
       onBack: () => navigate("/dashboard"),
       actions: null
     });
@@ -263,7 +263,7 @@ const Settings = () => {
             How it Works.
           </h2>
           <p className="text-[12px] font-bold uppercase tracking-[0.2em] italic max-w-xl" style={{ color: C.textMut }}>
-            Find help and learn how to get the most out of your sanctuary.
+            Find help and learn how to get the most out of Mindmetrics AI.
           </p>
         </div>
 
@@ -271,7 +271,7 @@ const Settings = () => {
           {[
             {
               title: "User Guide",
-              desc: "Learn how to use all the features of your sanctuary.",
+              desc: "Learn how to use all the features of Mindmetrics AI.",
               icon: <HiAcademicCap />,
               label: "Education"
             },

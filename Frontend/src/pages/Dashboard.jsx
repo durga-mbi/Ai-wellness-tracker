@@ -157,7 +157,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     updateLayout({
-      title: "Your Sanctuary",
+      title: "Your Mindmetrics AI",
       subtitle: "Personal Overview",
       onBack: null,
       actions: null
@@ -241,7 +241,7 @@ const Dashboard = () => {
           "
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              {isNewUser ? "Your Sanctuary Awaits." : (data?.weeklyAnalysis?.result || "Finding Balance.")}
+              {isNewUser ? "Mindmetrics AI Awaits." : (data?.weeklyAnalysis?.result || "Finding Balance.")}
             </h2>
 
             {!isNewUser && (
@@ -271,7 +271,7 @@ const Dashboard = () => {
           >
             "
             {isNewUser 
-              ? "We are gently waiting for your first mood to bloom. Your sanctuary is ready whenever you feel like sharing."
+              ? "We are gently waiting for your first mood to bloom. Mindmetrics AI is ready whenever you feel like sharing."
               : (data?.weeklyAnalysis?.result
                   ? `You've shown a ${data.weeklyAnalysis.result.toLowerCase()} pattern this week.`
                   : "Continuing to observe your patterns.")}
