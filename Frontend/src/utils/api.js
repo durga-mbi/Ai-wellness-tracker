@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const API_BASE_URL = "http://localhost:4000/api";
+export const API_BASE_URL = "https://ai-wellness-tracker.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -25,7 +25,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const message = error.response?.data?.message || "An unexpected error occurred";
-    
+
     // Specifically handle structured errors from our backend
     toast.error(message, {
       id: "global-error-toast", // Prevent duplicate toasts for the same error
