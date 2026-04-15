@@ -2,6 +2,22 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { 
+  HiOutlinePencilSquare, 
+  HiOutlineChatBubbleLeftRight, 
+  HiOutlineCalendarDays, 
+  HiOutlineChartBar, 
+  HiOutlineShieldCheck, 
+  HiOutlineSparkles,
+  HiOutlineHeart,
+  HiOutlineUserGroup,
+  HiOutlineArrowTrendingUp,
+  HiOutlineCheckBadge,
+  HiOutlineSparkles as HiSparklesIcon,
+  HiOutlineArrowRight,
+  HiOutlineBars3,
+  HiXMark
+} from "react-icons/hi2";
 import logo from "../assets/logo.png";
 
 // ── Design tokens from Stitch project "The Ethereal Sanctuary" ──────────────
@@ -27,21 +43,25 @@ const Badge = ({ children }) => (
   </span>
 );
 
-// Feature card with dark overlay image background
-const FeatureCard = ({ icon, title, description, imgUrl }) => (
-  <div className="relative overflow-hidden rounded-3xl group cursor-default min-h-[260px] flex flex-col justify-end">
-    {/* Image background */}
-    <div
-      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-      style={{ backgroundImage: imgUrl ? `url(${imgUrl})` : "none", backgroundColor: imgUrl ? undefined : C.surface }}
-    />
-    {/* Gradient overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-    {/* Content */}
-    <div className="relative z-10 p-6 space-y-2">
-      <div className="text-3xl">{icon}</div>
-      <h3 className="text-white font-bold text-lg leading-snug">{title}</h3>
-      <p className="text-white/70 text-sm leading-relaxed">{description}</p>
+// Feature card - Clean, icon-focused, premium
+const FeatureCard = ({ icon: Icon, title, description, color }) => (
+  <div className="relative overflow-hidden rounded-[32px] group cursor-default min-h-[220px] sm:min-h-[260px] flex flex-col justify-start p-8 sm:p-10 transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] border"
+       style={{ background: C.card, borderColor: `${C.outline}20` }}>
+    {/* Subtle Background Icon Blob */}
+    <div className="absolute -right-6 -top-6 text-[120px] opacity-[0.03] rotate-12 transition-transform duration-700 group-hover:rotate-0"
+         style={{ color: C.primary }}>
+      <Icon />
+    </div>
+    
+    <div className="relative z-10 space-y-4">
+      <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border transition-all duration-500 group-hover:scale-110"
+           style={{ background: `${C.primary}10`, color: C.primary, borderColor: `${C.primary}20` }}>
+        <Icon />
+      </div>
+      <div className="space-y-2">
+        <h3 className="font-bold text-xl tracking-tight" style={{ color: C.text }}>{title}</h3>
+        <p className="text-sm font-medium leading-relaxed" style={{ color: C.textMut }}>{description}</p>
+      </div>
     </div>
   </div>
 );
@@ -91,48 +111,42 @@ const LandingPage = () => {
 
   const features = [
     {
-      icon: "✍️",
+      icon: HiOutlinePencilSquare,
       title: "Smart Journaling",
       description: "Write freely. Our AI gently analyzes your tone to help you identify underlying patterns in your thoughts.",
-      imgUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&q=80",
     },
     {
-      icon: "🤝",
+      icon: HiOutlineChatBubbleLeftRight,
       title: "Anonymous Peer Support",
       description: "Connect with fellow students who understand your journey, all while keeping your identity private and safe.",
-      imgUrl: "https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?w=600&q=80",
     },
     {
-      icon: "📅",
+      icon: HiOutlineCalendarDays,
       title: "Mood Heatmap Calendar",
       description: "Visualize your emotional landscape over time. Spot trends and celebrate the bright days in your history.",
-      imgUrl: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600&q=80",
     },
     {
-      icon: "📊",
+      icon: HiOutlineChartBar,
       title: "Habit & Mood Insights",
       description: "See how your sleep, study, and social habits correlate with your mental state with clear, easy insights.",
-      imgUrl: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80",
     },
     {
-      icon: "🆘",
+      icon: HiOutlineShieldCheck,
       title: "Crisis Detection",
       description: "Real-time support that recognizes when you're overwhelmed and offers immediate, gentle resources to help.",
-      imgUrl: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=600&q=80",
     },
     {
-      icon: "🧘",
+      icon: HiOutlineSparkles,
       title: "Personalized Mindfulness",
       description: "Daily exercises, meditations, and breathing techniques tailored to your current emotional state.",
-      imgUrl: "https://images.unsplash.com/photo-1474418397713-7ede21d49118?w=600&q=80",
     },
   ];
 
   const steps = [
-    { icon: "💜", title: "Open Your Heart", description: "Write your thoughts or select your current mood blob." },
-    { icon: "🤖", title: "Smart Review", description: "Our AI helps you see patterns and shifts in your emotions." },
-    { icon: "🌱", title: "Get Support", description: "Receive simple exercises or connect with peer groups." },
-    { icon: "📈", title: "Grow Over Time", description: "Track your progress and build emotional resilience." },
+    { icon: <HiOutlineHeart />, title: "Open Your Heart", description: "Write your thoughts or select your current mood blob." },
+    { icon: <HiSparklesIcon />, title: "Smart Review", description: "Our AI helps you see patterns and shifts in your emotions." },
+    { icon: <HiOutlineUserGroup />, title: "Get Support", description: "Receive simple exercises or connect with peer groups." },
+    { icon: <HiOutlineArrowTrendingUp />, title: "Grow Over Time", description: "Track your progress and build emotional resilience." },
   ];
 
   const testimonials = [
@@ -216,13 +230,12 @@ const LandingPage = () => {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden flex flex-col gap-1.5 p-2"
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl"
+            style={{ background: C.surface }}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
-            <span className={`block h-0.5 w-6 rounded transition-transform ${menuOpen ? "rotate-45 translate-y-2" : ""}`} style={{ background: C.text }} />
-            <span className={`block h-0.5 w-6 rounded transition-opacity ${menuOpen ? "opacity-0" : ""}`} style={{ background: C.text }} />
-            <span className={`block h-0.5 w-6 rounded transition-transform ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`} style={{ background: C.text }} />
+            {menuOpen ? <HiXMark className="text-xl" /> : <HiOutlineBars3 className="text-xl" />}
           </button>
         </div>
 
@@ -279,7 +292,7 @@ const LandingPage = () => {
               </em>
             </h1>
 
-            <p className="text-base leading-relaxed max-w-md" style={{ color: C.textMut }}>
+            <p className="text-base sm:text-lg leading-relaxed max-w-md mx-auto lg:mx-0 font-medium" style={{ color: C.textMut }}>
               Navigate university life with an AI-driven sanctuary. Private journaling, sentiment insights,
               and peer support designed specifically for students.
             </p>
@@ -494,9 +507,31 @@ const LandingPage = () => {
           {/* Links */}
           <div className="flex flex-wrap gap-12">
             {[
-              { heading: "Product", links: ["Features", "How it Works", "Community", "Resources"] },
-              { heading: "Legal", links: ["Privacy Policy", "Terms of Service", "Crisis Resources"] },
-              { heading: "Contact", links: ["Contact Us", "Support", "Feedback"] },
+              { 
+                heading: "Product", 
+                links: [
+                  { name: "Features", href: "#features" },
+                  { name: "How it Works", href: "#how" }, 
+                  { name: "Community", href: "#community" },
+                  { name: "Resources", href: "#features" }
+                ] 
+              },
+              { 
+                heading: "Legal", 
+                links: [
+                  { name: "Privacy Policy", href: "#" },
+                  { name: "Terms of Service", href: "#" },
+                  { name: "Crisis Resources", href: "#" }
+                ] 
+              },
+              { 
+                heading: "Contact", 
+                links: [
+                  { name: "Contact Us", href: "#" },
+                  { name: "Support", href: "#" },
+                  { name: "Feedback", href: "#" }
+                ] 
+              },
             ].map((col) => (
               <div key={col.heading} className="space-y-3">
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: C.text }}>
@@ -504,12 +539,12 @@ const LandingPage = () => {
                 </p>
                 {col.links.map((l) => (
                   <a
-                    key={l}
-                    href="#"
+                    key={l.name}
+                    href={l.href}
                     className="block text-xs transition-opacity hover:opacity-70"
                     style={{ color: C.textMut }}
                   >
-                    {l}
+                    {l.name}
                   </a>
                 ))}
               </div>

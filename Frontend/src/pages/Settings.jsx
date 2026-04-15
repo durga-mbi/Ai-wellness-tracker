@@ -44,7 +44,7 @@ const Settings = () => {
   useEffect(() => {
     updateLayout({
       title: "Settings",
-      subtitle: "Sanctuary Configuration",
+      subtitle: "Your Sanctuary Setup",
       onBack: () => navigate("/dashboard"),
       actions: null
     });
@@ -59,7 +59,7 @@ const Settings = () => {
       setMessage("Settings updated successfully");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
-      setMessage("Failed to update protocols");
+      setMessage("Failed to save your changes");
     } finally {
       setSaving(false);
     }
@@ -75,7 +75,7 @@ const Settings = () => {
           className="flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-md rounded-full border shadow-sm uppercase font-bold text-[9px] tracking-[0.2em] w-fit"
           style={{ borderColor: `${C.outline}30`, color: C.primary }}
         >
-          Identity Calibration Terminal
+          Your Profile Details
         </motion.div>
       </section>
 
@@ -116,20 +116,20 @@ const Settings = () => {
                     <HiOutlineUserCircle className="text-4xl" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Core Identity</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Primary account resonance parameters</p>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Your Identity</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Basic details about you</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Full Recognition Name</label>
+                  <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>How we should call you</label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-2xl font-bold italic placeholder:text-gray-300 outline-none focus:bg-white transition-all shadow-inner"
                     style={{ color: C.text, fontFamily: "'Inter', sans-serif" }}
-                    placeholder="Enter name..."
+                    placeholder="Enter your name..."
                   />
                 </div>
               </div>
@@ -141,15 +141,15 @@ const Settings = () => {
                     <HiOutlineSquare2Stack className="text-4xl" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Neural Bridge</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Add your own Gemini API key</p>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>AI Connection</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Connect your personal Gemini support</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex items-center justify-between px-2">
-                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic" style={{ color: C.textMut }}>Gemini Neural Key</label>
-                    <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest italic animate-pulse">Neural Active</span>
+                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic" style={{ color: C.textMut }}>Your API Key</label>
+                    <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest italic animate-pulse">Connected</span>
                   </div>
                   <input
                     type="password"
@@ -172,8 +172,8 @@ const Settings = () => {
                     <HiAcademicCap className="text-4xl" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Physical Origin</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Academic and baseline credentials</p>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Your Background</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>A bit more about your student life</p>
                   </div>
                 </div>
 
@@ -187,11 +187,11 @@ const Settings = () => {
                         className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-sm font-bold italic outline-none focus:bg-white appearance-none cursor-pointer shadow-inner pr-16"
                         style={{ color: C.text }}
                       >
-                        <option value="">Select Baseline</option>
-                        <option value="18-21">18-21 Era</option>
-                        <option value="22-25">22-25 Era</option>
-                        <option value="26-30">26-30 Era</option>
-                        <option value="30+">30+ Baseline</option>
+                        <option value="">Choose your age</option>
+                        <option value="18-21">18-21 years</option>
+                        <option value="22-25">22-25 years</option>
+                        <option value="26-30">26-30 years</option>
+                        <option value="30+">30+ years</option>
                       </select>
                       <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
                         <HiOutlineUserCircle className="text-2xl" />
@@ -199,14 +199,14 @@ const Settings = () => {
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Academy Identity</label>
+                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Where you study</label>
                     <input
                       type="text"
                       value={formData.university}
                       onChange={(e) => setFormData({ ...formData, university: e.target.value })}
                       className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-sm font-bold italic placeholder:text-gray-300 outline-none focus:bg-white transition-all shadow-inner"
                       style={{ color: C.text }}
-                      placeholder="Identify institution..."
+                      placeholder="Enter your university name..."
                     />
                   </div>
                 </div>
@@ -241,11 +241,11 @@ const Settings = () => {
                   <div className="absolute inset-0 bg-white/10 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                   {saving ? (
                     <span className="flex items-center gap-4">
-                      Synchronizing <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Saving... <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                     </span>
                   ) : (
                     <span className="flex items-center gap-4 relative z-10">
-                      Update Settings <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
+                      Update Profile <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
                     </span>
                   )}
                 </motion.button>
@@ -258,12 +258,12 @@ const Settings = () => {
       {/* Guide Hub Section */}
       <section className="pt-24 border-t border-dashed space-y-16" style={{ borderColor: `${C.outline}40` }}>
         <div className="flex flex-col gap-6 text-center lg:text-left">
-          <Badge>Guide Hub</Badge>
+          <Badge>Help Center</Badge>
           <h2 className="text-4xl md:text-6xl font-extrabold italic tracking-tighter uppercase leading-none" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Protocol Handbooks.
+            How it Works.
           </h2>
           <p className="text-[12px] font-bold uppercase tracking-[0.2em] italic max-w-xl" style={{ color: C.textMut }}>
-            Access the technical insights and support protocols required to navigate the sanctuary landscape.
+            Find help and learn how to get the most out of your sanctuary.
           </p>
         </div>
 
@@ -271,25 +271,25 @@ const Settings = () => {
           {[
             {
               title: "User Guide",
-              desc: "Technical documentation for effective sanctuary navigation.",
+              desc: "Learn how to use all the features of your sanctuary.",
               icon: <HiAcademicCap />,
               label: "Education"
             },
             {
               title: "Privacy Hub",
-              desc: "Bit-level analysis of resonance data protection.",
+              desc: "Learn how we keep your thoughts and data safe.",
               icon: <HiShieldCheck />,
               label: "Safety"
             },
             {
-              title: "Assistance",
-              desc: "Real-time support streams for sync resolution.",
+              title: "Support",
+              desc: "Get help if something isn't working right.",
               icon: <HiCheckBadge />,
-              label: "Support"
+              label: "Assistance"
             },
             {
-              title: "Handbook",
-              desc: "Core rules for human-environment alchemy.",
+              title: "Terms",
+              desc: "Basic rules for using our platform.",
               icon: <HiOutlineFingerPrint />,
               label: "Rules"
             }

@@ -39,8 +39,8 @@ const C = {
   outline: "#b9bc94",
 };
 
-const AnimatedHealthScore = ({ score }) => {
-  const percentage = Math.min(Math.max(score * 10, 0), 100);
+const AnimatedHealthScore = ({ score, isNewUser }) => {
+  const percentage = isNewUser ? 0 : Math.min(Math.max(score * 10, 0), 100);
 
   return (
     <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-64 lg:h-64 flex flex-col items-center justify-center shrink-0 rounded-full bg-white shadow-xl group transition-all duration-700 hover:shadow-2xl" style={{ border: `1.5px solid ${C.outline}40` }}>
@@ -76,9 +76,11 @@ const AnimatedHealthScore = ({ score }) => {
         className="flex flex-col items-center justify-center z-10"
       >
         <span className="text-5xl lg:text-7xl font-extrabold tracking-tighter" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-          <Counter value={score} />
+          {isNewUser ? "—" : <Counter value={score} />}
         </span>
-        <span className="text-[11px] font-bold uppercase tracking-widest mt-1 opacity-60" style={{ color: C.textMut }}>Wellness Score</span>
+        <span className="text-[11px] font-bold uppercase tracking-widest mt-1 opacity-60 text-center px-4" style={{ color: C.textMut }}>
+          {isNewUser ? "Waiting to Bloom" : "Wellness Score"}
+        </span>
       </motion.div>
 
       {/* Decorative pulse */}
@@ -175,11 +177,13 @@ const Dashboard = () => {
   }
 
   const avgScore = data?.weeklyAnalysis?.avgScore ?? 0;
+  const totalEntries = data?.summary?.totalEntries || 0;
+  const isNewUser = totalEntries === 0;
   const normalizedScore = (avgScore + 1) * 5;
   const scorePercentage = (normalizedScore * 10).toFixed(0);
 
   const stats = [
-    { label: "Reflections", value: data?.summary?.totalPosts || 0, icon: <HiOutlineChartBar />, color: C.primary },
+    { label: "Reflections", value: totalEntries, icon: <HiOutlineChartBar />, color: C.primary },
     { label: "Steady Mood", value: data?.latestMood || "Balanced", icon: <HiFaceSmile />, color: C.primary },
     { label: "Community", value: "Active", icon: <HiOutlineUserGroup />, color: C.primary },
   ];
@@ -237,20 +241,22 @@ const Dashboard = () => {
           "
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              {data?.weeklyAnalysis?.result || "Finding Balance."}
+              {isNewUser ? "Your Sanctuary Awaits." : (data?.weeklyAnalysis?.result || "Finding Balance.")}
             </h2>
 
-            <div className="flex items-center gap-3 justify-center lg:justify-start flex-wrap">
-              <p
-                className="text-[11px] sm:text-xs font-semibold px-3 py-1 bg-white/50 rounded-lg"
-                style={{ color: C.textMut }}
-              >
-                Intensity:{" "}
-                <span style={{ color: C.primary }} className="font-bold">
-                  {normalizedScore.toFixed(1)} / 10
-                </span>
-              </p>
-            </div>
+            {!isNewUser && (
+              <div className="flex items-center gap-3 justify-center lg:justify-start flex-wrap">
+                <p
+                  className="text-[11px] sm:text-xs font-semibold px-3 py-1 bg-white/50 rounded-lg"
+                  style={{ color: C.textMut }}
+                >
+                  Intensity:{" "}
+                  <span style={{ color: C.primary }} className="font-bold">
+                    {normalizedScore.toFixed(1)} / 10
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Description */}
@@ -264,11 +270,31 @@ const Dashboard = () => {
             style={{ color: C.text }}
           >
             "
-            {data?.weeklyAnalysis?.result
-              ? `You've shown a ${data.weeklyAnalysis.result.toLowerCase()} pattern this week.`
-              : "Continuing to observe your patterns."}{" "}
+            {isNewUser 
+              ? "We are gently waiting for your first mood to bloom. Your sanctuary is ready whenever you feel like sharing."
+              : (data?.weeklyAnalysis?.result
+                  ? `You've shown a ${data.weeklyAnalysis.result.toLowerCase()} pattern this week.`
+                  : "Continuing to observe your patterns.")}
+            {" "}
             Remember to take small breaks for your mind today."
           </p>
+
+          {isNewUser && (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="pt-4"
+            >
+              <button 
+                onClick={() => navigate("/journal")}
+                className="px-8 py-4 rounded-full font-bold text-sm shadow-xl shadow-[#506b4a]/20 transition-all hover:scale-105 active:scale-95"
+                style={{ background: C.primary, color: C.onPri }}
+              >
+                Share My First Reflection →
+              </button>
+            </motion.div>
+          )}
 
           {/* Insight Card */}
           <AnimatePresence>
@@ -324,7 +350,7 @@ const Dashboard = () => {
 
         {/* RIGHT SIDE (Score) */}
         <div className="w-full lg:w-auto flex justify-center lg:justify-end mt-4 sm:mt-0">
-          <AnimatedHealthScore score={normalizedScore} />
+          <AnimatedHealthScore score={normalizedScore} isNewUser={isNewUser} />
         </div>
       </section>
 

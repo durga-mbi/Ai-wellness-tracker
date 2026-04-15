@@ -319,7 +319,7 @@ const JournalEntry = () => {
                     </div>
 
                     <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.3em] text-white/50">
-                      Celestial Guidance
+                      Guidance
                     </p>
                   </div>
 
