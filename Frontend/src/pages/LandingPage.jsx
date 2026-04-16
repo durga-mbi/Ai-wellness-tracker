@@ -188,7 +188,7 @@ const LandingPage = () => {
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           {/* Brand */}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logo} alt="Mindmetrics AI" className="w-8 h-8 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 object-contain" />
             <span
               className="font-bold text-xl tracking-tighter"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
@@ -494,7 +494,7 @@ const LandingPage = () => {
           {/* Brand */}
           <div className="space-y-3">
             <div className="flex items-center gap-3 mb-6">
-              <img src={logo} alt="Mindmetrics AI" className="w-8 h-8 object-contain" />
+              <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 object-contain" />
               <span
                 className="font-bold text-xl tracking-tighter"
                 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}

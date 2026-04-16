@@ -105,13 +105,13 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
             <motion.div
               animate={{ rotate: isOpen ? 0 : 360 }}
               transition={{ duration: 0.8, ease: "easeInOut" }}
-              className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm"
+              className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm"
               style={{ background: C.priCont }}
             >
               <img
                 src={logo}
                 alt="Logo"
-                className="w-6 h-6 object-contain"
+                className="w-12 h-12 object-contain"
               />
             </motion.div>
             <AnimatePresence>

@@ -121,7 +121,7 @@ const Login = () => {
 
         {/* Brand */}
           <Link to="/" className="flex items-center gap-3 relative z-10">
-            <img src={logo} alt="Mindmetrics AI" className="w-9 h-9 object-contain brightness-200" />
+            <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 object-contain brightness-200" />
             <span
               className="font-bold text-sm tracking-tight"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "rgba(255,255,255,0.9)" }}
@@ -192,7 +192,7 @@ const Login = () => {
         {/* Mobile brand */}
         <div className="lg:hidden mb-8 text-center">
           <Link to="/">
-            <img src={logo} alt="Mindmetrics AI" className="w-12 h-12 mx-auto mb-2 object-contain" />
+            <img src={logo} alt="Mindmetrics AI" className="w-16 h-16 mx-auto mb-2 object-contain" />
           </Link>
           <p className="text-sm font-semibold" style={{ color: C.textMut }}>Mindmetrics AI</p>
         </div>
