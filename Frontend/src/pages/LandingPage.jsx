@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import { 
-  HiOutlinePencilSquare, 
-  HiOutlineChatBubbleLeftRight, 
-  HiOutlineCalendarDays, 
-  HiOutlineChartBar, 
-  HiOutlineShieldCheck, 
+import {
+  HiOutlinePencilSquare,
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineCalendarDays,
+  HiOutlineChartBar,
+  HiOutlineShieldCheck,
   HiOutlineSparkles,
   HiOutlineHeart,
   HiOutlineUserGroup,
@@ -22,15 +22,15 @@ import logo from "../assets/logo.png";
 
 // ── Design tokens from Stitch project "The Ethereal Sanctuary" ──────────────
 const C = {
-  bg:       "#fefee5",
-  surface:  "#f4f6d2",
-  card:     "#ffffff",
-  primary:  "#506b4a",
-  priCont:  "#ccebc2",
-  onPri:    "#ffffff",
-  text:     "#373a1c",
-  textMut:  "#636745",
-  outline:  "#b9bc94",
+  bg: "#fefee5",
+  surface: "#f4f6d2",
+  card: "#ffffff",
+  primary: "#506b4a",
+  priCont: "#ccebc2",
+  onPri: "#ffffff",
+  text: "#373a1c",
+  textMut: "#636745",
+  outline: "#b9bc94",
 };
 
 // Reusable pill badge
@@ -46,16 +46,16 @@ const Badge = ({ children }) => (
 // Feature card - Clean, icon-focused, premium
 const FeatureCard = ({ icon: Icon, title, description, color }) => (
   <div className="relative overflow-hidden rounded-[32px] group cursor-default min-h-[220px] sm:min-h-[260px] flex flex-col justify-start p-8 sm:p-10 transition-all duration-500 hover:shadow-2xl hover:translate-y-[-4px] border"
-       style={{ background: C.card, borderColor: `${C.outline}20` }}>
+    style={{ background: C.card, borderColor: `${C.outline}20` }}>
     {/* Subtle Background Icon Blob */}
     <div className="absolute -right-6 -top-6 text-[120px] opacity-[0.03] rotate-12 transition-transform duration-700 group-hover:rotate-0"
-         style={{ color: C.primary }}>
+      style={{ color: C.primary }}>
       <Icon />
     </div>
-    
+
     <div className="relative z-10 space-y-4">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm border transition-all duration-500 group-hover:scale-110"
-           style={{ background: `${C.primary}10`, color: C.primary, borderColor: `${C.primary}20` }}>
+        style={{ background: `${C.primary}10`, color: C.primary, borderColor: `${C.primary}20` }}>
         <Icon />
       </div>
       <div className="space-y-2">
@@ -503,38 +503,47 @@ const LandingPage = () => {
               </span>
             </div>
             <p className="text-sm font-medium leading-relaxed mb-6" style={{ color: C.textMut }}>
-              Your weightless archive for mental clarity. © 2024 Mindmetrics AI.
+              Your weightless archive for mental clarity. © 2024 Mindmetrics AI by{" "}
+              <a
+                href="https://mindbrain.co.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity underline decoration-dotted underline-offset-4"
+                style={{ color: C.primary }}
+              >
+                MindBrain Innovations Private Limited
+              </a>.
             </p>
           </div>
 
           {/* Links */}
           <div className="flex flex-wrap gap-12">
             {[
-              { 
-                heading: "Product", 
+              {
+                heading: "Product",
                 links: [
                   { name: "Features", href: "#features" },
-                  { name: "How it Works", href: "#how" }, 
+                  { name: "How it Works", href: "#how" },
                   { name: "Community", href: "#community" },
                   { name: "Resources", href: "#features" }
-                ] 
+                ]
               },
-              { 
-                heading: "Legal", 
-                links: [
-                  { name: "Privacy Policy", href: "#" },
-                  { name: "Terms of Service", href: "#" },
-                  { name: "Crisis Resources", href: "#" }
-                ] 
-              },
-              { 
-                heading: "Contact", 
-                links: [
-                  { name: "Contact Us", href: "#" },
-                  { name: "Support", href: "#" },
-                  { name: "Feedback", href: "#" }
-                ] 
-              },
+              // { 
+              //   heading: "Legal", 
+              //   links: [
+              //     { name: "Privacy Policy", href: "#" },
+              //     { name: "Terms of Service", href: "#" },
+              //     { name: "Crisis Resources", href: "#" }
+              //   ] 
+              // },
+              // { 
+              //   heading: "Contact", 
+              //   links: [
+              //     { name: "Contact Us", href: "#" },
+              //     { name: "Support", href: "#" },
+              //     { name: "Feedback", href: "#" }
+              //   ] 
+              // },
             ].map((col) => (
               <div key={col.heading} className="space-y-3">
                 <p className="text-xs font-bold uppercase tracking-widest" style={{ color: C.text }}>

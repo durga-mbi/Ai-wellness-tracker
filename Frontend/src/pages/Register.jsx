@@ -8,16 +8,16 @@ import logo from "../assets/logo.png";
 
 // ── Design tokens (Stitch "The Ethereal Sanctuary") ──────────────────────────
 const C = {
-  bg:      "#fefee5",
+  bg: "#fefee5",
   surface: "#f4f6d2",
-  card:    "#ffffff",
+  card: "#ffffff",
   primary: "#506b4a",
   priCont: "#ccebc2",
-  onPri:   "#ffffff",
-  text:    "#373a1c",
+  onPri: "#ffffff",
+  text: "#373a1c",
   textMut: "#636745",
   outline: "#b9bc94",
-  error:   "#ae4025",
+  error: "#ae4025",
   errCont: "#fde8e3",
 };
 
@@ -183,12 +183,25 @@ const Register = () => {
         </div>
 
         {/* Footer links */}
-        <div className="relative z-10 flex gap-6">
-          {["Privacy Policy", "Terms of Service"].map((l) => (
-            <a key={l} href="#" className="text-xs transition-opacity hover:opacity-100 opacity-60" style={{ color: "#ffffff" }}>
-              {l}
+        <div className="relative z-10 flex flex-col gap-4">
+          {/* <div className="flex gap-6">
+            {["Privacy Policy", "Terms of Service"].map((l) => (
+              <a key={l} href="#" className="text-xs transition-opacity hover:opacity-100 opacity-60" style={{ color: "#ffffff" }}>
+                {l}
+              </a>
+            ))}
+          </div> */}
+          <p className="text-[10px] opacity-50" style={{ color: "#ffffff" }}>
+            Mindmetrics AI by{" "}
+            <a
+              href="https://mindbrain.co.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:opacity-100 transition-opacity"
+            >
+              MindBrain Innovations Private Limited
             </a>
-          ))}
+          </p>
         </div>
       </div>
 
@@ -341,9 +354,9 @@ const Register = () => {
           {/* Footer */}
           <p className="mt-8 text-center text-xs" style={{ color: C.textMut }}>
             © 2024 Mindmetrics AI ·{" "}
-            <a href="#" className="underline underline-offset-2">Privacy</a>
+            {/* <a href="#" className="underline underline-offset-2">Privacy</a>
             {" · "}
-            <a href="#" className="underline underline-offset-2">Terms</a>
+            <a href="#" className="underline underline-offset-2">Terms</a> */}
           </p>
         </motion.div>
       </div>

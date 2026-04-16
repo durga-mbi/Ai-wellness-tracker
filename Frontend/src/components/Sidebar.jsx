@@ -191,7 +191,7 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t" style={{ borderColor: `${C.outline}20` }}>
+        <div className="p-4 border-t flex flex-col gap-3" style={{ borderColor: `${C.outline}20` }}>
           <button
             onClick={onLogoutClick}
             className={`
@@ -215,6 +215,28 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
               )}
             </AnimatePresence>
           </button>
+
+          {/* Corporate Branding */}
+          <AnimatePresence mode="wait">
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.6 }}
+                exit={{ opacity: 0 }}
+                className="px-4 py-2 text-center"
+              >
+                <a 
+                  href="https://mindbrain.co.in/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-bold tracking-tight hover:opacity-100 transition-opacity"
+                  style={{ color: C.textMut }}
+                >
+                  by MindBrain Innovations
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.aside>
     </>
