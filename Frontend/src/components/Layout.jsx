@@ -101,10 +101,10 @@ const Layout = ({ children, ...props }) => {
         />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-10">
-          <div className="max-w-[1600px] mx-auto w-full h-full flex flex-col">
+          <div className="max-w-[1600px] mx-auto w-full min-h-full flex flex-col">
             <AnimatePresence mode="wait">
               <motion.div
-                className="h-full"
+                className="min-h-full"
                 key={window.location.pathname}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

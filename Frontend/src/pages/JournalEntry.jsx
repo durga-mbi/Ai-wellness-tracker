@@ -72,13 +72,20 @@ const JournalEntry = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!content.trim()) return;
+    if (e) e.preventDefault();
+    if (!content.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
       const response = await api.post("/journal", { content });
-      toast.success("Reflection captured.");
+      toast.success("Your reflection has been safely captured.", {
+        icon: '🌿',
+        style: {
+          borderRadius: '16px',
+          background: C.primary,
+          color: '#fff',
+        },
+      });
       setResult(response.data);
 
       if (response.data.crisisAlert) {
@@ -103,8 +110,20 @@ const JournalEntry = () => {
       });
     } catch (error) {
       console.error("Failed to save journal", error);
+      // The global interceptor handles basic toasts, but we can add more context here if needed.
+      // If we want a specialized message for journal failure:
+      toast.error("The sanctuary is currently having trouble saving your thoughts. Please check your connection or try again in a moment.", {
+        id: "journal-save-error"
+      });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
     }
   };
 
@@ -151,6 +170,7 @@ const JournalEntry = () => {
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Breathe in... What's on your mind today?"
                   className="flex-1 w-full p-0 text-2xl md:text-4xl font-medium bg-transparent border-none outline-none resize-none placeholder:text-gray-300 leading-[1.6] custom-scrollbar selection:bg-[#506b4a]/10"
                   style={{ color: C.text, fontFamily: "'Inter', sans-serif" }}

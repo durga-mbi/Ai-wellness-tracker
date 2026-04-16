@@ -189,12 +189,12 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col gap-4 sm:gap-8 h-full overflow-y-auto custom-scrollbar px-2 sm:px-4 pb-10">
+    <div className="flex-1 flex flex-col gap-4 sm:gap-8 px-2 sm:px-4 pb-10">
 
       {/* Wellness Overview Hero */}
       <section
         className="
-          relative overflow-hidden 
+          relative 
           rounded-[32px] sm:rounded-[40px] lg:rounded-[48px] 
           p-6 sm:p-8 lg:p-14 
           flex flex-col lg:flex-row 
@@ -203,6 +203,7 @@ const Dashboard = () => {
           gap-10 lg:gap-14
           min-h-0 sm:min-h-[320px] lg:min-h-[350px] 
           shadow-sm border transition-all
+          overflow-hidden
         "
         style={{ background: C.surface, borderColor: `${C.outline}20` }}
       >
@@ -212,7 +213,7 @@ const Dashboard = () => {
         <div className="absolute bottom-0 left-0 w-[40%] sm:w-[30%] h-[30%] bg-white opacity-30 blur-[60px] sm:blur-[80px] rounded-full"></div>
 
         {/* LEFT CONTENT */}
-        <div className="relative z-10 w-full max-w-xl space-y-4 sm:space-y-7 text-center lg:text-left">
+        <div className="relative z-10 w-full max-w-xl flex flex-col items-center lg:items-start text-center lg:text-left gap-4 sm:gap-7">
 
           {/* Badge */}
           <motion.div
@@ -233,7 +234,7 @@ const Dashboard = () => {
           </motion.div>
 
           {/* Title */}
-          <div className="space-y-3">
+          <div className="space-y-3 w-full">
             <h2
               className="
             text-2xl sm:text-3xl md:text-4xl lg:text-6xl 
@@ -264,7 +265,7 @@ const Dashboard = () => {
             className="
           text-xs sm:text-sm 
           leading-relaxed 
-          max-w-md mx-auto lg:mx-0 
+          max-w-md 
           italic opacity-80
         "
             style={{ color: C.text }}
@@ -297,17 +298,19 @@ const Dashboard = () => {
           )}
 
           {/* Insight Card */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {!insightLoading && correlationData?.insight && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="
-              relative mt-4 sm:mt-6 
+              relative w-full
+              mt-2 sm:mt-4
               p-4 sm:p-6 
               rounded-2xl sm:rounded-3xl 
-              shadow-xl overflow-hidden 
+              shadow-xl
               group border
+              flex flex-col gap-2
             "
                 style={{ background: C.primary, borderColor: `${C.outline}20` }}
               >
@@ -320,7 +323,7 @@ const Dashboard = () => {
               "
                 />
 
-                <div className="flex flex-col relative z-10 gap-2">
+                <div className="flex flex-col relative z-10 gap-1 sm:gap-2">
                   <span
                     className="
                   text-[9px] sm:text-[10px] 

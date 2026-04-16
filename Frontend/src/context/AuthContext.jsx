@@ -33,9 +33,14 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (err) {
       setLoading(false);
+      const message = err.response?.data?.message;
       return {
         success: false,
-        message: err.response?.data?.message || "Login failed"
+        message: message === "User not found" 
+          ? "We couldn't find an account with those details. Please double-check or sign up."
+          : message === "Invalid credentials"
+          ? "The password you entered doesn't seem quite right. Please try again."
+          : message || "We're having a bit of trouble connecting to the sanctuary. Please try again in a moment."
       };
     }
   };
@@ -49,9 +54,12 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (err) {
       setLoading(false);
+      const message = err.response?.data?.message;
       return {
         success: false,
-        message: err.response?.data?.message || "Signup failed"
+        message: message === "User already exists"
+          ? "It looks like you've already started your journey with us! Try logging in instead."
+          : message || "We encountered a small storm creating your space. Please check your details and try again."
       };
     }
   };
@@ -67,7 +75,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return {
         success: false,
-        message: err.response?.data?.message || "Guest login failed"
+        message: "The guest entrance is currently closed for a moment of peace. Please try again shortly."
       };
     }
   };
