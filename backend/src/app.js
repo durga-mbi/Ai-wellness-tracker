@@ -44,7 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/journal", journalRoutes);
 app.use("/api/chat", chatbotRoutes);
 app.use("/api/user", userRoutes); // keep this
-app.use("/api/user-habits", userHabitsRoute);
+app.use("/api/habits", userHabitsRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/forum", forumRoutes);
 app.use("/api/crisis", crisisRoutes);

@@ -6,13 +6,32 @@ import {
   HiOutlineFingerPrint,
   HiOutlineSquare2Stack,
   HiOutlineUserCircle,
-  HiOutlineShieldCheck
+  HiOutlineShieldCheck,
+  HiOutlineBolt,
+  HiOutlineSparkles,
+  HiOutlineMoon,
+  HiOutlineBeaker,
+  HiOutlineHeart,
+  HiOutlineTrophy,
+  HiArrowTrendingUp
 } from "react-icons/hi2";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  AreaChart,
+  Area
+} from 'recharts';
 
 // ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
 const C = {
@@ -36,19 +55,39 @@ const Settings = () => {
     name: user?.name || "",
     ageGroup: user?.ageGroup || "",
     university: user?.university || "",
-    apiKey: user?.apiKey || ""
+    apiKey: user?.apiKey || "",
+    wellnessGoals: user?.wellnessGoals ? JSON.parse(user.wellnessGoals) : {
+      sleep: 8,
+      water: 2.5,
+      exercise: 30,
+      mindfulness: 15
+    }
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [correlationData, setCorrelationData] = useState(null);
+  const [loadingInsights, setLoadingInsights] = useState(true);
 
   useEffect(() => {
     updateLayout({
-      title: "Settings",
-      subtitle: "Your Mindmetrics AI Setup",
+      title: "Profile & Wellness",
+      subtitle: "Your Mindmetrics AI Journey",
       onBack: () => navigate("/dashboard"),
       actions: null
     });
+    fetchCorrelationData();
   }, []);
+
+  const fetchCorrelationData = async () => {
+    try {
+      const { data } = await api.get("/analytics/correlations");
+      setCorrelationData(data);
+    } catch (err) {
+      console.error("Failed to fetch correlation data", err);
+    } finally {
+      setLoadingInsights(false);
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -56,7 +95,7 @@ const Settings = () => {
     setMessage("");
     try {
       await updateAuthProfile(formData);
-      setMessage("Settings updated successfully");
+      setMessage("Profile updated successfully");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
       setMessage("Failed to save your changes");
@@ -75,7 +114,7 @@ const Settings = () => {
           className="flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-md rounded-full border shadow-sm uppercase font-bold text-[9px] tracking-[0.2em] w-fit"
           style={{ borderColor: `${C.outline}30`, color: C.primary }}
         >
-          Your Profile Details
+          Your Profile & Neural Insights
         </motion.div>
       </section>
 
@@ -96,6 +135,16 @@ const Settings = () => {
               </div>
               <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase mb-3" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.name || "Seeker"}</h3>
               <p className="text-[11px] font-bold uppercase tracking-[0.4em] italic opacity-60" style={{ color: C.textMut }}>{user?.email || "Ephemeral Account"}</p>
+              
+              <div className="mt-8 pt-8 border-t border-dashed flex flex-col gap-4" style={{ borderColor: `${C.outline}40` }}>
+                <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest" style={{ color: C.textMut }}>
+                  <span>Wellness Streak</span>
+                  <span className="flex items-center gap-1" style={{ color: C.primary }}><HiOutlineBolt /> 12 Days</span>
+                </div>
+                <div className="w-full bg-black/5 h-1.5 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: '65%', background: C.primary }}></div>
+                </div>
+              </div>
             </div>
             {/* Soft decorative blob */}
             <div className="absolute -top-20 -right-20 w-64 h-64 blur-[100px] rounded-full opacity-20 pointer-events-none" style={{ background: C.primary }}></div>
@@ -134,6 +183,178 @@ const Settings = () => {
                 </div>
               </div>
 
+              {/* Neural Correlation Insights (New) */}
+              <div className="space-y-12 pt-16 border-t border-dashed" style={{ borderColor: `${C.outline}40` }}>
+                <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner border border-white" style={{ background: `${C.primary}10`, color: C.primary }}>
+                    <HiArrowTrendingUp className="text-4xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Habit & Mood Neural Sync</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>AI-driven correlation analytics</p>
+                  </div>
+                </div>
+
+                {loadingInsights ? (
+                  <div className="flex justify-center p-12">
+                    <div className="w-8 h-8 border-4 border-t-primary rounded-full animate-spin"></div>
+                  </div>
+                ) : correlationData?.summary?.length > 0 ? (
+                  <div className="space-y-8">
+                    {/* Insight Card */}
+                    <div className="p-8 rounded-[40px] border shadow-sm relative overflow-hidden group" style={{ background: `${C.surface}40`, borderColor: `${C.outline}30` }}>
+                       <HiOutlineSparkles className="absolute top-6 right-8 text-4xl opacity-10 group-hover:scale-110 transition-transform" style={{ color: C.primary }} />
+                       <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block" style={{ color: C.primary }}>Neural Insight</span>
+                       <p className="text-xl font-bold italic" style={{ color: C.text }}>
+                         "{correlationData.insight}"
+                       </p>
+                    </div>
+
+                    {/* Chart Visualization */}
+                    <div className="h-64 w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={correlationData.summary}>
+                          <defs>
+                            <linearGradient id="colorMood" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor={C.primary} stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor={C.primary} stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={`${C.outline}40`} />
+                          <XAxis 
+                            dataKey="date" 
+                            tick={{ fontSize: 9, fill: C.textMut }} 
+                            axisLine={false} 
+                            tickLine={false}
+                            tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                          />
+                          <YAxis hide domain={[-1, 1]} />
+                          <Tooltip 
+                            contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '16px' }}
+                            itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="avgMood" 
+                            stroke={C.primary} 
+                            strokeWidth={4} 
+                            fillOpacity={1} 
+                            fill="url(#colorMood)" 
+                            name="Mood Score"
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {correlationData.impacts?.map((imp, idx) => (
+                        <div key={idx} className="p-4 rounded-3xl border text-center" style={{ background: 'white', borderColor: `${C.outline}20` }}>
+                          <span className="text-[9px] font-bold uppercase opacity-50 block mb-1" style={{ color: C.textMut }}>{imp.label}</span>
+                          <span className="text-sm font-black" style={{ color: imp.value > 0 ? '#10b981' : C.text }}>+{imp.value}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-12 text-center rounded-[40px] border border-dashed" style={{ borderColor: `${C.outline}60` }}>
+                    <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: C.textMut }}>
+                      More neural patterns needed. Keep tracking habits to unlock insights.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Wellness Protocol Architecture (Goals) */}
+              <div className="space-y-12 pt-16 border-t border-dashed" style={{ borderColor: `${C.outline}40` }}>
+                <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner border border-white" style={{ background: `${C.primary}10`, color: C.primary }}>
+                    <HiOutlineTrophy className="text-4xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Wellness Goals</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Define your optimal daily targets</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  {/* Sleep Goal */}
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center px-2">
+                      <label className="text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-2" style={{ color: C.textMut }}>
+                        <HiOutlineMoon className="text-lg" /> Sleep Target
+                      </label>
+                      <span className="text-sm font-black" style={{ color: C.text }}>{formData.wellnessGoals.sleep} hrs</span>
+                    </div>
+                    <input
+                      type="range" min="4" max="12" step="0.5"
+                      value={formData.wellnessGoals.sleep}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        wellnessGoals: { ...formData.wellnessGoals, sleep: parseFloat(e.target.value) } 
+                      })}
+                      className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
+                    />
+                  </div>
+
+                  {/* Water Goal */}
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center px-2">
+                      <label className="text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-2" style={{ color: C.textMut }}>
+                        <HiOutlineBeaker className="text-lg" /> Hydration
+                      </label>
+                      <span className="text-sm font-black" style={{ color: C.text }}>{formData.wellnessGoals.water} L</span>
+                    </div>
+                    <input
+                      type="range" min="1" max="5" step="0.1"
+                      value={formData.wellnessGoals.water}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        wellnessGoals: { ...formData.wellnessGoals, water: parseFloat(e.target.value) } 
+                      })}
+                      className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
+                    />
+                  </div>
+
+                  {/* Exercise Goal */}
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center px-2">
+                      <label className="text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-2" style={{ color: C.textMut }}>
+                        <HiOutlineHeart className="text-lg" /> Exercise
+                      </label>
+                      <span className="text-sm font-black" style={{ color: C.text }}>{formData.wellnessGoals.exercise} min</span>
+                    </div>
+                    <input
+                      type="range" min="0" max="120" step="5"
+                      value={formData.wellnessGoals.exercise}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        wellnessGoals: { ...formData.wellnessGoals, exercise: parseFloat(e.target.value) } 
+                      })}
+                      className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
+                    />
+                  </div>
+
+                  {/* Mindfulness Goal */}
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center px-2">
+                      <label className="text-[11px] font-bold uppercase tracking-[0.2em] flex items-center gap-2" style={{ color: C.textMut }}>
+                        <HiOutlineSparkles className="text-lg" /> Mindfulness
+                      </label>
+                      <span className="text-sm font-black" style={{ color: C.text }}>{formData.wellnessGoals.mindfulness} min</span>
+                    </div>
+                    <input
+                      type="range" min="0" max="60" step="5"
+                      value={formData.wellnessGoals.mindfulness}
+                      onChange={(e) => setFormData({ 
+                        ...formData, 
+                        wellnessGoals: { ...formData.wellnessGoals, mindfulness: parseFloat(e.target.value) } 
+                      })}
+                      className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Technical Protocols Section */}
               <div className="space-y-12 pt-16 border-t border-dashed" style={{ borderColor: `${C.outline}40` }}>
                 <div className="flex items-center gap-6">
@@ -149,7 +370,7 @@ const Settings = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between px-2">
                     <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic" style={{ color: C.textMut }}>Your API Key</label>
-                    <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest italic animate-pulse">Connected</span>
+                    {user?.apiKey && <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-widest italic animate-pulse">Connected</span>}
                   </div>
                   <input
                     type="password"
@@ -162,53 +383,6 @@ const Settings = () => {
                   <p className="px-2 text-[11px] font-medium leading-relaxed italic" style={{ color: C.textMut }}>
                     Using your own API key ensures you can always get insights even when our shared limits are reached.
                   </p>
-                </div>
-              </div>
-
-              {/* Human Background Section */}
-              <div className="space-y-12 pt-16 border-t border-dashed" style={{ borderColor: `${C.outline}40` }}>
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner border border-white" style={{ background: `${C.primary}10`, color: C.primary }}>
-                    <HiAcademicCap className="text-4xl" />
-                  </div>
-                  <div>
-                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Your Background</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>A bit more about your student life</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                  <div className="space-y-6">
-                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Age Group Reference</label>
-                    <div className="relative">
-                      <select
-                        value={formData.ageGroup}
-                        onChange={(e) => setFormData({ ...formData, ageGroup: e.target.value })}
-                        className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-sm font-bold italic outline-none focus:bg-white appearance-none cursor-pointer shadow-inner pr-16"
-                        style={{ color: C.text }}
-                      >
-                        <option value="">Choose your age</option>
-                        <option value="18-21">18-21 years</option>
-                        <option value="22-25">22-25 years</option>
-                        <option value="26-30">26-30 years</option>
-                        <option value="30+">30+ years</option>
-                      </select>
-                      <div className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
-                        <HiOutlineUserCircle className="text-2xl" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-6">
-                    <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Where you study</label>
-                    <input
-                      type="text"
-                      value={formData.university}
-                      onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-                      className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-sm font-bold italic placeholder:text-gray-300 outline-none focus:bg-white transition-all shadow-inner"
-                      style={{ color: C.text }}
-                      placeholder="Enter your university name..."
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -245,7 +419,7 @@ const Settings = () => {
                     </span>
                   ) : (
                     <span className="flex items-center gap-4 relative z-10">
-                      Update Profile <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
+                      Save Profile & Goals <HiOutlineFingerPrint className="text-2xl group-hover:scale-125 transition-transform duration-700" />
                     </span>
                   )}
                 </motion.button>
@@ -301,6 +475,7 @@ const Settings = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.8 }}
               whileHover={{ y: -8, scale: 1.02 }}
+              onClick={() => toast.success(`${item.title} is being prepared for the sanctuary. Coming soon!`, { icon: '📖' })}
               className="bg-white/70 backdrop-blur-xl p-10 rounded-[48px] border border-white/40 shadow-xl hover:shadow-2xl transition-all group cursor-pointer relative overflow-hidden"
             >
               <div className="flex justify-between items-start relative z-10 mb-8">

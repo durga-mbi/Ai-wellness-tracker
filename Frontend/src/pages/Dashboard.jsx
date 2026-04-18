@@ -14,6 +14,7 @@ import api from "../utils/api";
 import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
+import HabitTracker from "../components/HabitTracker";
 import {
   BarChart,
   Bar,
@@ -166,12 +167,16 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="h-full flex flex-col items-center justify-center gap-6">
-        <div className="relative w-12 h-12">
-          <div className="absolute inset-0 border-4 border-gray-100/50 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-t-primary rounded-full animate-spin"></div>
+      <div className="flex-1 flex flex-col gap-4 sm:gap-8 px-2 sm:px-4 animate-pulse">
+        {/* Skeleton Hero */}
+        <div className="rounded-[40px] h-[350px] bg-white/40 border border-[#50664a]/10"></div>
+        
+        {/* Skeleton Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-40 rounded-[32px] bg-white/40 border border-[#50664a]/10"></div>
+          ))}
         </div>
-        <p className="text-xs font-semibold uppercase tracking-widest animate-pulse" style={{ color: C.textMut }}>Getting things ready...</p>
       </div>
     );
   }
@@ -412,6 +417,101 @@ const Dashboard = () => {
           </motion.div>
         ))}
       </section>
+
+      {/* Habit Tracking Rituals */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-8 rounded-full bg-primary" style={{ background: C.primary }}></div>
+            <h2 className="text-3xl font-black italic tracking-tighter uppercase" style={{ color: C.text }}>Wellness Protocols</h2>
+          </div>
+        </div>
+        <HabitTracker user={user} />
+      </section>
+
+      {/* Neural Correlations & Deep Analytics */}
+      {!insightLoading && correlationData?.summary?.length > 0 && (
+        <section className="space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-1.5 h-8 rounded-full bg-primary" style={{ background: C.primary }}></div>
+            <h2 className="text-3xl font-black italic tracking-tighter uppercase" style={{ color: C.text }}>Neural Sync Analytics</h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Correlation Chart */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-8 bg-white/70 backdrop-blur-xl rounded-[48px] p-10 border border-white shadow-xl h-[450px] flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-10">
+                <div>
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter" style={{ color: C.text }}>Mood & Habit Sync</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-50" style={{ color: C.textMut }}>14-Day Activity Correlation</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ background: C.primary }}></div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Mood</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex-1 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={correlationData.summary}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={`${C.outline}20`} />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fontSize: 9, fill: C.textMut, fontWeight: 'bold' }} 
+                      axisLine={false} 
+                      tickLine={false}
+                      tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                    />
+                    <YAxis hide domain={[-1, 1]} />
+                    <Tooltip 
+                      cursor={{ fill: `${C.primary}05` }}
+                      contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '20px' }}
+                      itemStyle={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase' }}
+                    />
+                    <Bar 
+                      dataKey="avgMood" 
+                      fill={C.primary} 
+                      radius={[10, 10, 10, 10]} 
+                      barSize={32}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </motion.div>
+
+            {/* Impact Breakdown */}
+            <motion.div 
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-4 flex flex-col gap-6"
+            >
+              <div className="bg-[#50664a] rounded-[40px] p-8 text-white shadow-xl relative overflow-hidden group h-full flex flex-col justify-center">
+                <HiOutlineSparkles className="absolute top-6 right-8 text-5xl opacity-20 animate-spin-slow" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block opacity-70">Top Neuro-Correlation</span>
+                <p className="text-2xl font-black italic uppercase leading-tight mb-8">
+                  {correlationData.insight}
+                </p>
+                <div className="space-y-4">
+                  {correlationData.impacts?.slice(0, 3).map((imp, idx) => (
+                    <div key={idx} className="flex items-center justify-between py-3 border-b border-white/10">
+                      <span className="text-[11px] font-bold uppercase tracking-widest opacity-80">{imp.label} Impact</span>
+                      <span className="text-sm font-black italic">+{imp.value}% Resilience</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
 
     </div>
   );

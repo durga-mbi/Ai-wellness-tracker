@@ -291,7 +291,7 @@ const JournalEntry = () => {
                         className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40 mb-1"
                         style={{ color: C.textMut }}
                       >
-                        Your feeling
+                        Your Feelings
                       </p>
 
                       <h4
@@ -310,8 +310,11 @@ const JournalEntry = () => {
                     className="text-base sm:text-lg font-medium italic opacity-80 leading-relaxed border-l-[3px] pl-4 sm:pl-6 lg:pl-8 transition-colors group-hover:border-opacity-100"
                     style={{ color: C.text, borderColor: `${C.primary}40` }}
                   >
-                    Your reflection pulses with a strong resonance of {result.insights.emotion}.
-                    This awareness is the first step toward harmony.
+                    {result.uiFeedback.quote ? (
+                      `Your reflection pulses with a strong resonance of ${result.insights.emotion}. This awareness is the first step toward harmony.`
+                    ) : (
+                      "Your feelings are valid and heard. Taking a moment to reflect is a powerful step toward inner peace."
+                    )}
                   </p>
                 </div>
 

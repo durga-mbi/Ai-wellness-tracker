@@ -25,7 +25,7 @@ const C = {
 const Field = ({ label, icon: Icon, error, children }) => (
   <div className="space-y-1.5">
     <label className="block text-xs font-semibold" style={{ color: C.textMut }}>
-      {label}
+      {label} <span className="text-red-500">*</span>
     </label>
     <div
       className="relative flex items-center rounded-2xl transition-all duration-200"

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from "../utils/api";
-import { HiOutlineMoon, HiOutlineBeaker, HiOutlineAcademicCap, HiCheckCircle } from "react-icons/hi2";
+import { HiOutlineMoon, HiOutlineBeaker, HiOutlineAcademicCap, HiCheckCircle, HiOutlineSparkles } from "react-icons/hi2";
 
 const HabitLog = ({ userId }) => {
   const [habits, setHabits] = useState({
     sleep: 0,
     water: 0,
-    exercise: 0
+    exercise: 0,
+    mindfulness: 0
   });
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
@@ -88,6 +89,16 @@ const HabitLog = ({ userId }) => {
           step={5}
           color="bg-teal-50 text-teal-600"
           onChange={(v) => updateHabit('exercise', v)}
+        />
+        <HabitSlider 
+          icon={<HiOutlineSparkles className="w-6 h-6" />}
+          label="Mindfulness"
+          unit="min"
+          value={habits.mindfulness || 0}
+          max={60}
+          step={5}
+          color="bg-purple-50 text-purple-600"
+          onChange={(v) => updateHabit('mindfulness', v)}
         />
       </div>
     </div>

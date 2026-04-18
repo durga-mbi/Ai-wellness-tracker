@@ -38,6 +38,7 @@ const Community = () => {
   const [isAnonymous, setIsAnonymous] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [likingPosts, setLikingPosts] = useState(new Set());
   const chatContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -116,8 +117,16 @@ const Community = () => {
   };
 
   const handleLike = async (postId) => {
+    if (likingPosts.has(postId)) return;
+
     const post = posts.find(p => p.id === postId);
     if (!post) return;
+
+    setLikingPosts(prev => {
+      const next = new Set(prev);
+      next.add(postId);
+      return next;
+    });
 
     const isCurrentlyLiked = post.isLiked;
     // Optimistic
@@ -135,6 +144,19 @@ const Community = () => {
       setPosts(prev => prev.map(p =>
         p.id === postId ? { ...p, isLiked: isCurrentlyLiked, likesCount: post.likesCount } : p
       ));
+    } finally {
+      setLikingPosts(prev => {
+        const next = new Set(prev);
+        next.delete(postId);
+        return next;
+      });
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handlePost(e);
     }
   };
 
@@ -266,6 +288,7 @@ const Community = () => {
             <textarea
               value={content}
               onChange={handleContentChange}
+              onKeyDown={handleKeyDown}
               placeholder="Whisper to Mindmetrics AI..."
               className="w-full bg-transparent outline-none text-[#506b4a] text-sm font-medium italic resize-none custom-scrollbar py-1 placeholder:text-[#506b4a]/20"
               style={{ height: `${Math.min(content.split('\n').length * 20 + 24, 120)}px` }}

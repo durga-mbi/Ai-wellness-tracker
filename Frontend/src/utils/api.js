@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const API_BASE_URL = "https://ai-wellness-tracker.onrender.com/api";
+export const API_BASE_URL = "http://localhost:4000/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -24,7 +24,14 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const message = error.response?.data?.message || "An unexpected error occurred";
+    const status = error.response?.status;
+    let message = error.response?.data?.message || "An unexpected error occurred";
+
+    if (status === 429) {
+      message = "Mindmetrics AI is currently receiving many whispers. Please give the sanctuary a moment to breathe and try again.";
+    } else if (message.toLowerCase().includes("quota") || message.toLowerCase().includes("exhausted")) {
+      message = "Our shared AI resource has reached its current limit. You can add your own API key in Settings to continue without interruption!";
+    }
 
     // Specifically handle structured errors from our backend
     toast.error(message, {

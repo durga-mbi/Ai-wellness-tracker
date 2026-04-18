@@ -3,7 +3,7 @@ import prisma from "../config/db.js";
 // Create or update habit
 export const createOrUpdateHabit = async (req, res, next) => {
     try {
-        const { userId, date, sleep, water, exercise } = req.body;
+        const { userId, date, sleep, water, exercise, mindfulness, completedGoals } = req.body;
 
         if (!userId) return res.status(400).json({ message: "userId is required" });
         if (!date) return res.status(400).json({ message: "date is required (YYYY-MM-DD)" });
@@ -19,12 +19,12 @@ export const createOrUpdateHabit = async (req, res, next) => {
             // Update existing habit
             habit = await prisma.userHabit.update({
                 where: { id: habit.id },
-                data: { sleep, water, exercise, updatedAt: new Date() },
+                data: { sleep, water, exercise, mindfulness, completedGoals, updatedAt: new Date() },
             });
         } else {
             // Create new habit
             habit = await prisma.userHabit.create({
-                data: { userId, sleep, water, exercise, date: habitDate },
+                data: { userId, sleep, water, exercise, mindfulness, completedGoals: completedGoals || [], date: habitDate },
             });
         }
 
@@ -64,7 +64,7 @@ export const getHabitByDate = async (req, res, next) => {
         });
 
         if (!habit) {
-            return res.json({ sleep: 0, water: 0, exercise: 0 });
+            return res.json({ sleep: 0, water: 0, exercise: 0, mindfulness: 0, completedGoals: [] });
         }
 
         res.json(habit);

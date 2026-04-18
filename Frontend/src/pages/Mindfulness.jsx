@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { AnimatePresence, motion } from "framer-motion";
@@ -355,7 +356,9 @@ const Mindfulness = () => {
                                 </p>
 
                                 <div className="pt-6">
-                                    <button className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all border group-hover:bg-primary group-hover:text-white border-transparent"
+                                    <button 
+                                        onClick={() => toast.success("Mindful Fragment is preparing to bloom. Coming soon!", { icon: '🌱' })}
+                                        className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all border group-hover:bg-primary group-hover:text-white border-transparent"
                                         style={{ background: `${C.primary}10`, color: C.primary }}>
                                         Engage Fragment
                                     </button>

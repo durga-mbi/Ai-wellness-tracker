@@ -64,7 +64,7 @@ export const getCorrelationInsights = async (req, res, next) => {
     try {
         const userId = req.user.id;
         
-        // Fetch user for API key support
+        // Fetch user for API key support and goals
         const user = await prisma.user.findUnique({ where: { id: userId } });
 
         const thirtyDaysAgo = new Date();
@@ -77,14 +77,14 @@ export const getCorrelationInsights = async (req, res, next) => {
             }),
             prisma.userHabit.findMany({
                 where: { userId, date: { gte: thirtyDaysAgo } },
-                select: { date: true, sleep: true, exercise: true, water: true }
+                select: { date: true, sleep: true, exercise: true, water: true, mindfulness: true }
             })
         ]);
 
         if (journals.length < 3 || habits.length < 3) {
             return res.json({
                 success: true,
-                insight: "We're still gathering your data patterns. Keep journaling for 3 more days to unlock neural correlations! 🧠✨",
+                insight: "We're still gathering your data patterns. Keep journaling and tracking habits for a few more days to unlock neural correlations! 🧠✨",
                 correlationValue: null
             });
         }
@@ -113,9 +113,10 @@ export const getCorrelationInsights = async (req, res, next) => {
             .map(([date, data]) => ({
                 date,
                 avgMood: data.score / data.count,
-                sleep: data.habits.sleep,
-                exercise: data.habits.exercise,
-                water: data.habits.water
+                sleep: data.habits.sleep || 0,
+                exercise: data.habits.exercise || 0,
+                water: data.habits.water || 0,
+                mindfulness: data.habits.mindfulness || 0
             }));
 
         if (correlationSummary.length < 3) {
@@ -126,11 +127,34 @@ export const getCorrelationInsights = async (req, res, next) => {
             });
         }
 
-        const highSleepMood = correlationSummary.filter(d => d.sleep >= 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep >= 7).length || 1);
-        const lowSleepMood = correlationSummary.filter(d => d.sleep < 7).reduce((acc, d) => acc + d.avgMood, 0) / (correlationSummary.filter(d => d.sleep < 7).length || 1);
-        const sleepImpact = highSleepMood > lowSleepMood 
-            ? Math.round(((highSleepMood - lowSleepMood) / (Math.abs(lowSleepMood) || 1)) * 100)
-            : 0;
+        // Calculate impacts for different habits
+        const calculateImpact = (habitKey, threshold) => {
+            const highHabit = correlationSummary.filter(d => d[habitKey] >= threshold);
+            const lowHabit = correlationSummary.filter(d => d[habitKey] < threshold);
+            
+            if (highHabit.length === 0 || lowHabit.length === 0) return 0;
+
+            const highMood = highHabit.reduce((acc, d) => acc + d.avgMood, 0) / highHabit.length;
+            const lowMood = lowHabit.reduce((acc, d) => acc + d.avgMood, 0) / lowHabit.length;
+
+            return highMood > lowMood 
+                ? Math.round(((highMood - lowMood) / (Math.abs(lowMood) || 1)) * 100)
+                : 0;
+        };
+
+        const sleepImpact = calculateImpact('sleep', 7);
+        const waterImpact = calculateImpact('water', 2);
+        const exerciseImpact = calculateImpact('exercise', 30);
+        const mindfulnessImpact = calculateImpact('mindfulness', 10);
+
+        const impacts = [
+            { label: 'sleep', value: sleepImpact, threshold: '7 hours' },
+            { label: 'water', value: waterImpact, threshold: '2 liters' },
+            { label: 'exercise', value: exerciseImpact, threshold: '30 minutes' },
+            { label: 'mindfulness', value: mindfulnessImpact, threshold: '10 minutes' }
+        ].sort((a, b) => b.value - a.value);
+
+        const topImpact = impacts[0];
 
         const model = getAIModel(user.apiKey);
         const prompt = `
@@ -138,11 +162,12 @@ export const getCorrelationInsights = async (req, res, next) => {
             CONTEXT:
             User has ${correlationSummary.length} days of overlapping habit and mood data.
             KEY FINDINGS:
-            - Users who sleep >= 7h have a ${sleepImpact}% higher mood score than those who don't.
+            - Top correlation: ${topImpact.label} (Threshold: ${topImpact.threshold}) results in ${topImpact.value}% mood improvement.
+            - All impacts: ${JSON.stringify(impacts)}
             - RAW DATA SUMMARY (Last 30 Days): ${JSON.stringify(correlationSummary)}
             
             TASK:
-            Generate a single, impactful, student-friendly insight (max 15 words).
+            Generate a single, impactful, student-friendly insight (max 15 words) based on the STRONGEST correlation.
             It must sound encouraging and data-driven. 
             Example: "You're 30% happier on days you hit 7 hours of sleep!"
             
@@ -156,16 +181,20 @@ export const getCorrelationInsights = async (req, res, next) => {
             res.json({
                 success: true,
                 insight,
-                correlationValue: sleepImpact,
-                summary: correlationSummary.slice(-7)
+                correlationValue: topImpact.value,
+                impacts,
+                summary: correlationSummary.slice(-14) // Return last 2 weeks for charts
             });
         } catch (e) {
             console.error("Correlation Insight Error", e);
             res.json({
                 success: true,
-                insight: `You're ${sleepImpact}% happier on days you hit 7+ hours of sleep! 😴✨`,
-                correlationValue: sleepImpact,
-                summary: correlationSummary.slice(-7)
+                insight: topImpact.value > 0 
+                    ? `You feel ${topImpact.value}% better on days you reach your ${topImpact.label} goals! ✨`
+                    : "Keep tracking your habits to unlock deeper mood correlations.",
+                correlationValue: topImpact.value,
+                impacts,
+                summary: correlationSummary.slice(-14)
             });
         }
     } catch (error) {

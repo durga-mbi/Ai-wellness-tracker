@@ -38,16 +38,26 @@ const OnboardingSurvey = () => {
   ];
 
   const handleNext = async () => {
+    // Validation
+    if (step === 1 && !formData.university.trim()) {
+      toast.error("Please enter your university name.");
+      return;
+    }
+
     if (step < 2) {
       setStep(step + 1);
     } else {
       await updateAuthProfile({
         ageGroup: formData.ageGroup,
-        university: formData.university,
+        university: formData.university.trim(),
         preferences: { goals: formData.goals }
       });
       navigate("/dashboard");
     }
+  };
+
+  const handleBack = () => {
+    if (step > 0) setStep(step - 1);
   };
 
   const toggleGoal = (goal) => {
@@ -203,15 +213,26 @@ const OnboardingSurvey = () => {
               {surveySteps[step].content}
             </div>
 
-            <button
-              onClick={handleNext}
-              disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : formData.goals.length === 0}
-              className="w-full mt-20 py-6 text-white font-bold rounded-[32px] shadow-2xl hover:opacity-90 disabled:opacity-20 transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn shadow-[#506b4a]/20"
-              style={{ background: C.primary }}
-            >
-              {step === 2 ? "Finish Setup" : "Continue"}
-              <HiArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
-            </button>
+            <div className="flex gap-4 mt-20">
+              {step > 0 && (
+                <button
+                  onClick={handleBack}
+                  className="px-8 py-6 rounded-[32px] border-2 font-bold uppercase tracking-[0.4em] italic transition-all shadow-lg active:scale-95"
+                  style={{ borderColor: `${C.outline}40`, color: C.textMut }}
+                >
+                  Back
+                </button>
+              )}
+              <button
+                onClick={handleNext}
+                disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : formData.goals.length === 0}
+                className="flex-1 py-6 text-white font-bold rounded-[32px] shadow-2xl hover:opacity-90 disabled:opacity-20 transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn shadow-[#506b4a]/20"
+                style={{ background: C.primary }}
+              >
+                {step === 2 ? "Finish Setup" : "Continue"}
+                <HiArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </motion.div>
         </AnimatePresence>
         

@@ -19,6 +19,7 @@ model User {
   isAnonymous Boolean        @default(false)
   preferences String?        // JSON string for AI context
   apiKey      String?        // User-provided Gemini API key
+  wellnessGoals String?      // JSON string for user-defined goals
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]
@@ -71,15 +72,17 @@ model Preference {
 
 // user habits
 model UserHabit {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sleep     Float?   // in hours
-  water     Float?   // in liters
-  exercise  Float?   // in minutes
-  date      DateTime @default(now()) // The day for this habit
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sleep       Float?   // in hours
+  water       Float?   // in liters
+  exercise    Float?   // in minutes
+  mindfulness Float?   // in minutes
+  completedGoals String[] // List of goal IDs or labels marked as "done"
+  date           DateTime @default(now()) // The day for this habit
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([userId, date]) // optional, for faster queries by user & date
 }

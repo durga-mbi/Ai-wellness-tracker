@@ -18,8 +18,10 @@ const AuthRoute = ({ children }) => {
   }
 
   if (user) {
-    // If logged in, don't allow access to Login/Register, redirect to Dashboard
-    return <Navigate to="/dashboard" replace />;
+    // If logged in, don't allow access to Login/Register
+    // If they haven't onboarded yet, send them to survey, otherwise dashboard
+    const isOnboarded = user.ageGroup;
+    return <Navigate to={isOnboarded ? "/dashboard" : "/survey"} replace />;
   }
 
   return children;
