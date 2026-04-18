@@ -13,7 +13,8 @@ import {
   HiOutlineBeaker,
   HiOutlineHeart,
   HiOutlineTrophy,
-  HiArrowTrendingUp
+  HiArrowTrendingUp,
+  HiOutlinePhone
 } from "react-icons/hi2";
 import api from "../utils/api";
 import { useAuth } from "../context/AuthContext";
@@ -61,12 +62,31 @@ const Settings = () => {
       water: 2.5,
       exercise: 30,
       mindfulness: 15
-    }
+    },
+    emergencyContacts: user?.emergencyContacts ? JSON.parse(user.emergencyContacts) : []
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [correlationData, setCorrelationData] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        ageGroup: user.ageGroup || "",
+        university: user.university || "",
+        apiKey: user.apiKey || "",
+        wellnessGoals: user.wellnessGoals ? JSON.parse(user.wellnessGoals) : {
+          sleep: 8,
+          water: 2.5,
+          exercise: 30,
+          mindfulness: 15
+        },
+        emergencyContacts: user.emergencyContacts ? JSON.parse(user.emergencyContacts) : []
+      });
+    }
+  }, [user]);
 
   useEffect(() => {
     updateLayout({
@@ -91,8 +111,16 @@ const Settings = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    setMessage("");
+    // User requested that they can submit less than 10 digits, so we just check for non-numeric or too long (handled by input)
+    // We just ensure it's not empty if a name is provided
+    const missingNumber = formData.emergencyContacts.some(c => c.name && !c.number);
+    if (missingNumber) {
+      setMessage("Please provide a phone number for each contact");
+      setTimeout(() => setMessage(""), 3000);
+      setSaving(false);
+      return;
+    }
+
     try {
       await updateAuthProfile(formData);
       setMessage("Profile updated successfully");
@@ -135,8 +163,8 @@ const Settings = () => {
               </div>
               <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase mb-3" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{user?.name || "Seeker"}</h3>
               <p className="text-[11px] font-bold uppercase tracking-[0.4em] italic opacity-60" style={{ color: C.textMut }}>{user?.email || "Ephemeral Account"}</p>
-              
-              <div className="mt-8 pt-8 border-t border-dashed flex flex-col gap-4" style={{ borderColor: `${C.outline}40` }}>
+
+              {/* <div className="mt-8 pt-8 border-t border-dashed flex flex-col gap-4" style={{ borderColor: `${C.outline}40` }}>
                 <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest" style={{ color: C.textMut }}>
                   <span>Wellness Streak</span>
                   <span className="flex items-center gap-1" style={{ color: C.primary }}><HiOutlineBolt /> 12 Days</span>
@@ -144,7 +172,7 @@ const Settings = () => {
                 <div className="w-full bg-black/5 h-1.5 rounded-full overflow-hidden">
                   <div className="h-full rounded-full" style={{ width: '65%', background: C.primary }}></div>
                 </div>
-              </div>
+              </div> */}
             </div>
             {/* Soft decorative blob */}
             <div className="absolute -top-20 -right-20 w-64 h-64 blur-[100px] rounded-full opacity-20 pointer-events-none" style={{ background: C.primary }}></div>
@@ -203,11 +231,11 @@ const Settings = () => {
                   <div className="space-y-8">
                     {/* Insight Card */}
                     <div className="p-8 rounded-[40px] border shadow-sm relative overflow-hidden group" style={{ background: `${C.surface}40`, borderColor: `${C.outline}30` }}>
-                       <HiOutlineSparkles className="absolute top-6 right-8 text-4xl opacity-10 group-hover:scale-110 transition-transform" style={{ color: C.primary }} />
-                       <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block" style={{ color: C.primary }}>Neural Insight</span>
-                       <p className="text-xl font-bold italic" style={{ color: C.text }}>
-                         "{correlationData.insight}"
-                       </p>
+                      <HiOutlineSparkles className="absolute top-6 right-8 text-4xl opacity-10 group-hover:scale-110 transition-transform" style={{ color: C.primary }} />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block" style={{ color: C.primary }}>Neural Insight</span>
+                      <p className="text-xl font-bold italic" style={{ color: C.text }}>
+                        "{correlationData.insight}"
+                      </p>
                     </div>
 
                     {/* Chart Visualization */}
@@ -216,30 +244,30 @@ const Settings = () => {
                         <AreaChart data={correlationData.summary}>
                           <defs>
                             <linearGradient id="colorMood" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor={C.primary} stopOpacity={0.3}/>
-                              <stop offset="95%" stopColor={C.primary} stopOpacity={0}/>
+                              <stop offset="5%" stopColor={C.primary} stopOpacity={0.3} />
+                              <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={`${C.outline}40`} />
-                          <XAxis 
-                            dataKey="date" 
-                            tick={{ fontSize: 9, fill: C.textMut }} 
-                            axisLine={false} 
+                          <XAxis
+                            dataKey="date"
+                            tick={{ fontSize: 9, fill: C.textMut }}
+                            axisLine={false}
                             tickLine={false}
                             tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                           />
                           <YAxis hide domain={[-1, 1]} />
-                          <Tooltip 
+                          <Tooltip
                             contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '16px' }}
                             itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                           />
-                          <Area 
-                            type="monotone" 
-                            dataKey="avgMood" 
-                            stroke={C.primary} 
-                            strokeWidth={4} 
-                            fillOpacity={1} 
-                            fill="url(#colorMood)" 
+                          <Area
+                            type="monotone"
+                            dataKey="avgMood"
+                            stroke={C.primary}
+                            strokeWidth={4}
+                            fillOpacity={1}
+                            fill="url(#colorMood)"
                             name="Mood Score"
                           />
                         </AreaChart>
@@ -288,9 +316,9 @@ const Settings = () => {
                     <input
                       type="range" min="4" max="12" step="0.5"
                       value={formData.wellnessGoals.sleep}
-                      onChange={(e) => setFormData({ 
-                        ...formData, 
-                        wellnessGoals: { ...formData.wellnessGoals, sleep: parseFloat(e.target.value) } 
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        wellnessGoals: { ...formData.wellnessGoals, sleep: parseFloat(e.target.value) }
                       })}
                       className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
                     />
@@ -307,9 +335,9 @@ const Settings = () => {
                     <input
                       type="range" min="1" max="5" step="0.1"
                       value={formData.wellnessGoals.water}
-                      onChange={(e) => setFormData({ 
-                        ...formData, 
-                        wellnessGoals: { ...formData.wellnessGoals, water: parseFloat(e.target.value) } 
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        wellnessGoals: { ...formData.wellnessGoals, water: parseFloat(e.target.value) }
                       })}
                       className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
                     />
@@ -326,9 +354,9 @@ const Settings = () => {
                     <input
                       type="range" min="0" max="120" step="5"
                       value={formData.wellnessGoals.exercise}
-                      onChange={(e) => setFormData({ 
-                        ...formData, 
-                        wellnessGoals: { ...formData.wellnessGoals, exercise: parseFloat(e.target.value) } 
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        wellnessGoals: { ...formData.wellnessGoals, exercise: parseFloat(e.target.value) }
                       })}
                       className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
                     />
@@ -345,13 +373,102 @@ const Settings = () => {
                     <input
                       type="range" min="0" max="60" step="5"
                       value={formData.wellnessGoals.mindfulness}
-                      onChange={(e) => setFormData({ 
-                        ...formData, 
-                        wellnessGoals: { ...formData.wellnessGoals, mindfulness: parseFloat(e.target.value) } 
+                      onChange={(e) => setFormData({
+                        ...formData,
+                        wellnessGoals: { ...formData.wellnessGoals, mindfulness: parseFloat(e.target.value) }
                       })}
                       className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#50664a]"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Emergency Protocols Section */}
+              <div className="space-y-12 pt-16 border-t border-dashed" style={{ borderColor: `${C.outline}40` }}>
+                <div className="flex items-center gap-6">
+                  <div className="w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner border border-white" style={{ background: `${C.primary}10`, color: C.primary }}>
+                    <HiOutlineShieldCheck className="text-4xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-extrabold italic tracking-tighter uppercase leading-none mb-2" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Emergency Protocol</h3>
+                    <p className="text-[11px] font-bold uppercase tracking-widest italic opacity-50" style={{ color: C.textMut }}>Add your personal emergency contacts</p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {formData.emergencyContacts.map((contact, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex flex-col gap-6 p-8 rounded-[40px] border border-white bg-white/40 shadow-xl transition-all hover:bg-white/60 group"
+                      style={{ borderColor: `${C.outline}20` }}
+                    >
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex-1 space-y-3">
+                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] ml-4" style={{ color: C.textMut }}>Contact Name</label>
+                          <div className="relative group/input">
+                            <HiOutlineUserCircle className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl transition-colors group-focus-within/input:text-[#50664a]" style={{ color: `${C.textMut}60` }} />
+                            <input
+                              type="text"
+                              placeholder="Ex: Father, Sister..."
+                              value={contact.name}
+                              onChange={(e) => {
+                                const newContacts = [...formData.emergencyContacts];
+                                newContacts[idx].name = e.target.value;
+                                setFormData({ ...formData, emergencyContacts: newContacts });
+                              }}
+                              className="w-full pl-16 pr-8 py-5 rounded-[24px] border border-white bg-white/50 text-base font-bold outline-none focus:bg-white transition-all shadow-inner"
+                              style={{ color: C.text }}
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-1 space-y-3">
+                          <label className="text-[10px] font-bold uppercase tracking-[0.2em] ml-4" style={{ color: C.textMut }}>Mobile Number</label>
+                          <div className="relative group/input">
+                            <HiOutlinePhone className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl transition-colors group-focus-within/input:text-[#50664a]" style={{ color: `${C.textMut}60` }} />
+                            <input
+                              type="tel"
+                              placeholder="10 Digits Max"
+                              maxLength={10}
+                              value={contact.number}
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                                const newContacts = [...formData.emergencyContacts];
+                                newContacts[idx].number = val;
+                                setFormData({ ...formData, emergencyContacts: newContacts });
+                              }}
+                              className="w-full pl-16 pr-8 py-5 rounded-[24px] border border-white bg-white/50 text-base font-bold outline-none focus:bg-white transition-all shadow-inner"
+                              style={{ color: C.text }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newContacts = formData.emergencyContacts.filter((_, i) => i !== idx);
+                          setFormData({ ...formData, emergencyContacts: newContacts });
+                        }}
+                        className="flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-red-50 text-red-500 font-bold text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all duration-500 shadow-sm self-end"
+                      >
+                        Delete Contact
+                      </button>
+                    </motion.div>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() => setFormData({
+                      ...formData,
+                      emergencyContacts: [...formData.emergencyContacts, { name: "", number: "" }]
+                    })}
+                    className="w-full py-6 rounded-[32px] border border-dashed text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-white/50"
+                    style={{ borderColor: `${C.outline}60`, color: C.textMut }}
+                  >
+                    + Add Emergency Contact
+                  </button>
                 </div>
               </div>
 
@@ -430,7 +547,8 @@ const Settings = () => {
       </div>
 
       {/* Guide Hub Section */}
-      <section className="pt-24 border-t border-dashed space-y-16" style={{ borderColor: `${C.outline}40` }}>
+
+      {/* <section className="pt-24 border-t border-dashed space-y-16" style={{ borderColor: `${C.outline}40` }}>
         <div className="flex flex-col gap-6 text-center lg:text-left">
           <Badge>Help Center</Badge>
           <h2 className="text-4xl md:text-6xl font-extrabold italic tracking-tighter uppercase leading-none" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
@@ -490,7 +608,7 @@ const Settings = () => {
             </motion.div>
           ))}
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

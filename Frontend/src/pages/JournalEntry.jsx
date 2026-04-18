@@ -8,14 +8,26 @@ import {
   HiOutlineArrowLeft,
   HiOutlineSparkles,
   HiHeart,
-  HiOutlineBolt
+  HiOutlineFaceSmile,
+  HiOutlineFaceFrown,
+  HiFire,
+  HiOutlineBolt,
+  HiOutlineUser,
 } from "react-icons/hi2";
+import { 
+  BsEmojiAngry, 
+  BsEmojiSmile, 
+  BsEmojiLaughing, 
+  BsEmojiGrimace, 
+  BsEmojiExpressionless, 
+  BsEmojiDizzy, 
+  BsEmojiFrown 
+} from "react-icons/bs";
 import api from "../utils/api";
 import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useNavigate } from "react-router";
 import CrisisModal from "../components/CrisisModal";
-import { HiFire } from "react-icons/hi2";
 
 // ── Design tokens from "Mindmetrics AI" ──────────────────────────────
 const C = {
@@ -53,6 +65,34 @@ const FloatingBlob = ({ color, size, duration, delay, position }) => (
   />
 );
 
+// ── Mood to Icon Mapping ──────────────────────────────────────────
+const MoodIcon = ({ emotion }) => {
+  const mod = emotion?.toLowerCase();
+  switch (mod) {
+    case "happy": return <HiOutlineFaceSmile />;
+    case "sad":
+    case "disappointed": return <HiOutlineFaceFrown />;
+    case "angry":
+    case "frustrated": return <BsEmojiAngry />;
+    case "normal":
+    case "relaxed": return <BsEmojiSmile />;
+    case "excited":
+    case "hopeful": return <BsEmojiLaughing />;
+    case "nervous":
+    case "anxious": return <BsEmojiGrimace />;
+    case "calm": return <HiOutlineFaceSmile />;
+    case "tired":
+    case "bored": return <BsEmojiExpressionless />;
+    case "confused":
+    case "surprised": return <BsEmojiDizzy />;
+    case "curious": return <HiOutlineLightBulb />;
+    case "fearful": return <BsEmojiFrown />;
+    case "proud": return <HiOutlineSparkles />;
+    case "lonely": return <HiOutlineUser />;
+    default: return <HiOutlineFaceSmile />;
+  }
+};
+
 const JournalEntry = () => {
   const { updateLayout } = useLayout();
   const navigate = useNavigate();
@@ -61,6 +101,7 @@ const JournalEntry = () => {
   const [result, setResult] = useState(null);
   const [isCrisisOpen, setIsCrisisOpen] = useState(false);
   const [helplines, setHelplines] = useState([]);
+  const [personalContacts, setPersonalContacts] = useState([]);
 
   useEffect(() => {
     updateLayout({
@@ -90,6 +131,7 @@ const JournalEntry = () => {
 
       if (response.data.crisisAlert) {
         setHelplines(response.data.helplines);
+        setPersonalContacts(response.data.personalContacts || []);
         setIsCrisisOpen(true);
       }
 
@@ -242,8 +284,9 @@ const JournalEntry = () => {
                   animate={{ rotate: 0, scale: 1 }}
                   transition={{ type: "spring", stiffness: 100, damping: 12 }}
                   className="text-7xl sm:text-9xl drop-shadow-2xl flex items-center justify-center bg-white/90 backdrop-blur-xl p-6 sm:p-10 rounded-[32px] sm:rounded-[48px] w-32 h-32 sm:w-48 sm:h-48 shadow-2xl ring-1 ring-[#506b4a]/10"
+                  style={{ color: C.primary }}
                 >
-                  {result.uiFeedback.emoji}
+                  <MoodIcon emotion={result.insights.emotion} />
                 </motion.div>
                 <div className="space-y-6 text-center lg:text-left flex-1">
                   <motion.div
@@ -253,11 +296,11 @@ const JournalEntry = () => {
                     className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#506b4a]/5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em]"
                     style={{ color: C.primary }}
                   >
-                    <HiHeart className="animate-pulse" /> {result.uiFeedback.name} Echoes
+                    <HiHeart className="animate-pulse" /> {result.uiFeedback.name || "Mindmetrics"} Echoes
                   </motion.div>
                   <h2 className="text-4xl md:text-7xl font-extrabold tracking-tight leading-[1.05] italic"
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                    "{result.uiFeedback.quote}"
+                    {result.uiFeedback.quote || "Your Reflection"}
                   </h2>
                 </div>
               </div>
@@ -347,10 +390,10 @@ const JournalEntry = () => {
                   </div>
 
                   <h4
-                    className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-[1.3] text-white tracking-tight"
+                    className="text-lg sm:text-xl font-medium leading-[1.6] text-white/90 tracking-tight"
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                   >
-                    {result.insights.suggestion}
+                    {result.insights.conversational_response || result.insights.suggestion}
                   </h4>
                 </div>
 
@@ -388,6 +431,7 @@ const JournalEntry = () => {
         isOpen={isCrisisOpen}
         onClose={() => setIsCrisisOpen(false)}
         helplines={helplines}
+        personalContacts={personalContacts}
       />
     </div>
   );

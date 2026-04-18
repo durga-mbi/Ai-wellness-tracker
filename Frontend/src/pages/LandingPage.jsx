@@ -105,8 +105,7 @@ const LandingPage = () => {
   const navLinks = [
     { label: "Features", href: "#features" },
     { label: "How it Works", href: "#how" },
-    { label: "Community", href: "#community" },
-    { label: "Resources", href: "#resources" },
+    { label: "Community", href: "#community" }
   ];
 
   const features = [

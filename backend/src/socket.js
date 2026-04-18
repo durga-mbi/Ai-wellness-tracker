@@ -17,6 +17,11 @@ export const initSocket = (server) => {
     io.on("connection", (socket) => {
         console.log("User connected:", socket.id);
 
+        socket.on("join_room", (userId) => {
+            socket.join(userId);
+            console.log(`User ${socket.id} joined room ${userId}`);
+        });
+
         socket.on("typing_start", (data) => {
             // data: { userId, name, isAnonymous }
             typingUsers.set(socket.id, data);

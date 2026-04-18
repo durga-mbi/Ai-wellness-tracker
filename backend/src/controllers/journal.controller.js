@@ -34,13 +34,23 @@ export const createEntry = async (req, res, next) => {
       }
     });
 
+    let personalContacts = [];
+    if (isHighRisk && user.emergencyContacts) {
+      try {
+        personalContacts = JSON.parse(user.emergencyContacts);
+      } catch (e) {
+        personalContacts = [];
+      }
+    }
+
     res.status(201).json({
       message: "Entry recorded",
       entry,
       insights: sentimentResult,
       uiFeedback,
       crisisAlert: isHighRisk,
-      helplines: isHighRisk ? HELPLINES : []
+      helplines: isHighRisk ? HELPLINES : [],
+      personalContacts: isHighRisk ? personalContacts : []
     });
 
   } catch (error) {

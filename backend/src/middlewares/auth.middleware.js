@@ -43,7 +43,12 @@ export const protect = async (req, res, next) => {
                 mobile: true,
                 ageGroup: true,
                 university: true,
-                isAnonymous: true
+                isAnonymous: true,
+                preferences: true,
+                apiKey: true,
+                wellnessGoals: true,
+                emergencyContacts: true,
+                createdAt: true
             }
         });
 

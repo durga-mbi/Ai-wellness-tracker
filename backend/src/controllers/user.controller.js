@@ -53,19 +53,20 @@ export const getPreference = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const { name, ageGroup, university, preferences, apiKey, wellnessGoals } = req.body;
-
-        const user = await prisma.user.update({
-            where: { id: userId },
-            data: { 
-                name, 
-                ageGroup, 
-                university,
-                apiKey,
-                preferences: preferences ? JSON.stringify(preferences) : undefined,
-                wellnessGoals: wellnessGoals ? JSON.stringify(wellnessGoals) : undefined
-            }
-        });
+        const { name, ageGroup, university, preferences, apiKey, wellnessGoals, emergencyContacts } = req.body;
+ 
+         const user = await prisma.user.update({
+             where: { id: userId },
+             data: { 
+                 name, 
+                 ageGroup, 
+                 university,
+                 apiKey,
+                 preferences: preferences ? JSON.stringify(preferences) : undefined,
+                 wellnessGoals: wellnessGoals ? JSON.stringify(wellnessGoals) : undefined,
+                 emergencyContacts: emergencyContacts ? JSON.stringify(emergencyContacts) : undefined
+             }
+         });
 
         res.json({
             message: "Profile updated successfully",

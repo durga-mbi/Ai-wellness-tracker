@@ -34,17 +34,19 @@ export const analyzeSentiment = async (userText, userPreferences = "None", userH
   const model = getAIModel(userApiKey);
   const prompt = `
 SYSTEM ROLE:
-You are an emotional intelligence engine designed for a mental wellness application used by university students.
+You are an advanced emotional intelligence engine. You respond like a world-class empathetic wellness coach (similar to the best conversational AIs).
 
 OBJECTIVE:
-Analyze the user's journal entry and return structured emotional insights.
+Analyze the user's journal entry (which may be in any language including English, Hindi, Odia, etc.) and return deep emotional insights plus a supportive conversational response.
 
 INSTRUCTIONS:
-- Be precise, not verbose.
-- Detect emotional tone, intensity, and possible causes.
-- Avoid medical diagnosis.
-- Keep output strictly in JSON format.
-${FAST_RESPONSE_OVERRIDE}
+1. Understand the language and cultural context of the user.
+2. Be highly empathetic and conversational.
+3. Use VERY SIMPLE and EASY words. Avoid complex or academic language. Imagine you are talking to a close friend.
+4. Provide a "conversational_response" that feels like a real dialogue (100-150 words).
+5. Acknowledge the user's feelings specifically based on their text.
+6. Provide actionable wellness advice in simple steps within the conversation.
+7. Keep technical output in the structured JSON format below.
 
 INPUT:
 User Preferences: ${userPreferences}
@@ -55,11 +57,11 @@ OUTPUT FORMAT (STRICT JSON):
 {
   "score": number (-1 to 1),
   "label": "positive" | "neutral" | "negative",
-  "emotion": "stress" | "anxiety" | "sadness" | "calm" | "happy" | "burnout",
-  "confidence": number (0 to 1),
+  "emotion": "happy" | "sad" | "angry" | "normal" | "excited" | "nervous" | "anxious" | "calm" | "relaxed" | "tired" | "bored" | "confused" | "curious" | "fearful" | "proud" | "lonely" | "hopeful" | "frustrated" | "surprised" | "disappointed",
   "keywords": ["keyword1", "keyword2"],
-  "insight": "short supportive sentence",
-  "suggestion": "very short actionable suggestion",
+  "conversational_response": "Deeply empathetic and conversational response in a warm, helpful tone. Acknowledge the user's situation and give gentle guidance.",
+  "insight": "One short powerful summary sentence",
+  "suggestion": "One short actionable ritual",
   "risk_level": "low" | "medium" | "high"
 }
 `;
@@ -218,5 +220,41 @@ OUTPUT (STRICT JSON):
       action_text: "Stay hydrated",
       action_type: "hydration"
     };
+  }
+};
+export const generateMorningMessage = async (moodTrends = [], userApiKey = null) => {
+  const model = getAIModel(userApiKey);
+  const trendStr = moodTrends.length > 0 ? moodTrends.join(", ") : "Stable";
+  
+  const prompt = `
+SYSTEM ROLE:
+You are a warm, morning-oriented wellness companion. You send the user a "Daily Thought" at 6 AM.
+
+TASK:
+Generate a high-impact, empathetic "Daily Thought" (SMS style) based on the user's recent mood trend.
+
+CONTEXT:
+Recent Mood Trend: ${trendStr}
+
+INSTRUCTIONS:
+- Keep it under 40 words.
+- Be extremely supportive and simple.
+- Do not use complex words or hashtags.
+- Use a tone that feels like a gentle wake-up message from a caring friend.
+- Language: English (Simple).
+
+OUTPUT:
+Plain text message only.
+`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    return response.text().trim();
+  } catch (e) {
+    if (e.status === 429 || (e.message && e.message.includes("429"))) {
+      throw new Error("QUOTA_EXCEEDED");
+    }
+    return "Remember, today is a fresh start. You are strong enough for whatever comes your way. 🌿";
   }
 };

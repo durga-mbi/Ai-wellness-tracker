@@ -8,7 +8,7 @@ import {
   HiOutlineHeart
 } from "react-icons/hi2";
 
-const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
+const CrisisModal = ({ isOpen, onClose, helplines = [], personalContacts = [] }) => {
   if (!isOpen) return null;
 
   return (
@@ -65,13 +65,47 @@ const CrisisModal = ({ isOpen, onClose, helplines = [] }) => {
           {/* Body */}
           <div className="p-5 sm:p-6 md:p-8 lg:p-10 space-y-6 sm:space-y-8">
 
-            {/* Title */}
-            <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
-              <HiOutlineHeart className="text-red-400 text-sm sm:text-base" />
-              <span className="text-[9px] sm:text-[10px] font-bold text-[#636745] uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-                Mindmetrics AI Support Lines
-              </span>
-            </div>
+            {/* Personal Emergency Contacts (If any) */}
+             {personalContacts.length > 0 && (
+               <div className="space-y-4">
+                 <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+                   <HiOutlineShieldCheck className="text-emerald-500 text-sm sm:text-base" />
+                   <span className="text-[9px] sm:text-[10px] font-bold text-[#636745] uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+                     Your Trusted Emergency Contacts
+                   </span>
+                 </div>
+                 <div className="grid gap-3 sm:gap-4">
+                   {personalContacts.map((pc, i) => (
+                     <motion.a
+                       key={`pc-${i}`}
+                       href={`tel:${pc.number}`}
+                       whileHover={{ x: 4, scale: 1.01 }}
+                       className="flex items-center justify-between p-4 sm:p-5 md:p-6 bg-emerald-50/50 rounded-2xl sm:rounded-[28px] border border-emerald-100 shadow-sm transition-all group active:scale-[0.98]"
+                     >
+                       <div className="flex flex-col">
+                         <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-600/60 mb-1">
+                           {pc.name}
+                         </span>
+                         <span className="text-base sm:text-lg md:text-xl font-extrabold tracking-tight text-[#373a1c]">
+                           {pc.number}
+                         </span>
+                       </div>
+                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-500 rounded-xl shadow flex items-center justify-center text-white group-hover:bg-emerald-600 transition-all">
+                         <HiOutlinePhone className="w-4 h-4 sm:w-5 sm:h-5" />
+                       </div>
+                     </motion.a>
+                   ))}
+                 </div>
+               </div>
+             )}
+ 
+             {/* Title */}
+             <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2">
+               <HiOutlineHeart className="text-red-400 text-sm sm:text-base" />
+               <span className="text-[9px] sm:text-[10px] font-bold text-[#636745] uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+                 Mindmetrics AI Support Lines
+               </span>
+             </div>
 
             {/* Helpline List */}
             <div className="grid gap-3 sm:gap-4">

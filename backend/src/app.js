@@ -14,6 +14,7 @@ import crisisRoutes from "./routes/crisis.route.js";
 import mindfulnessRoutes from "./routes/mindfulness.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
 import aiRoutes from "./routes/ai.routes.js";
+import dailyInsightRoutes from "./routes/dailyInsight.routes.js";
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/crisis", crisisRoutes);
 app.use("/api/mindfulness", mindfulnessRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/daily-insight", dailyInsightRoutes);
 
 // Health route (High-Availability Alias)
 app.get("/health", (req, res) => {

@@ -321,7 +321,7 @@ const Mindfulness = () => {
             </div>
 
             {/* Premium Resource Library */}
-            <div className="space-y-10 pt-10">
+            {/* <div className="space-y-10 pt-10">
                 <div className="flex items-center gap-8">
                     <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                         Curated <span style={{ color: C.primary }} className="italic">Fragments</span>
@@ -367,7 +367,7 @@ const Mindfulness = () => {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

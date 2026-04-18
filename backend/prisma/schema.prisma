@@ -20,12 +20,26 @@ model User {
   preferences String?        // JSON string for AI context
   apiKey      String?        // User-provided Gemini API key
   wellnessGoals String?      // JSON string for user-defined goals
+  emergencyContacts String?  // JSON string for personal safety contacts
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]
   userHabits     UserHabit[]
   forumPosts     ForumPost[]
   postLikes      PostLike[]
+  dailyInsights  DailyInsight[]
+}
+
+model DailyInsight {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  moodTrend String?  // Optional: "Happy", "Stable", etc.
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([userId, date])
 }
 
 model ForumPost {

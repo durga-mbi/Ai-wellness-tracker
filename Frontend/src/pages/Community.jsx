@@ -116,11 +116,21 @@ const Community = () => {
     }
   };
 
+  const lastLikeCall = useRef({});
+
   const handleLike = async (postId) => {
+    // Basic guard: if we are already "liking" this specific post instance
     if (likingPosts.has(postId)) return;
 
     const post = posts.find(p => p.id === postId);
     if (!post) return;
+
+    const now = Date.now();
+    const lastCall = lastLikeCall.current[postId] || 0;
+    
+    // 500ms Debounce/Throttle hybrid for UI safety
+    if (now - lastCall < 500) return;
+    lastLikeCall.current[postId] = now;
 
     setLikingPosts(prev => {
       const next = new Set(prev);
@@ -129,7 +139,7 @@ const Community = () => {
     });
 
     const isCurrentlyLiked = post.isLiked;
-    // Optimistic
+    // Optimistic UI Update
     setPosts(prev => prev.map(p =>
       p.id === postId ? {
         ...p,
@@ -141,15 +151,19 @@ const Community = () => {
     try {
       await api.post(`/forum/${postId}/like`);
     } catch (error) {
+      // Revert on error
       setPosts(prev => prev.map(p =>
         p.id === postId ? { ...p, isLiked: isCurrentlyLiked, likesCount: post.likesCount } : p
       ));
     } finally {
-      setLikingPosts(prev => {
-        const next = new Set(prev);
-        next.delete(postId);
-        return next;
-      });
+      // Add a small delay before allowing another like to ensure stability
+      setTimeout(() => {
+        setLikingPosts(prev => {
+          const next = new Set(prev);
+          next.delete(postId);
+          return next;
+        });
+      }, 300);
     }
   };
 

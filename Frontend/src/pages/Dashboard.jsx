@@ -15,6 +15,7 @@ import { useLayout } from "../context/LayoutContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
 import HabitTracker from "../components/HabitTracker";
+import { useSocket } from "../context/SocketContext";
 import {
   BarChart,
   Bar,
@@ -128,11 +129,34 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState("Week");
+  const [dailyInsight, setDailyInsight] = useState(null);
+  const [insightLoadingStatus, setInsightLoadingStatus] = useState("LOADING");
 
   useEffect(() => {
     fetchDashboardData();
     fetchCorrelationInsights();
+    fetchDailyInsight();
   }, []);
+
+  const fetchDailyInsight = async () => {
+    try {
+      const response = await api.get("/daily-insight/today");
+      setDailyInsight(response.data);
+      setInsightLoadingStatus(response.data.status);
+    } catch (error) {
+      console.error("Daily insight fetch failed", error);
+      setInsightLoadingStatus("ERROR");
+    }
+  };
+
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("DAILY_INSIGHT_READY", fetchDailyInsight);
+      return () => socket.off("DAILY_INSIGHT_READY");
+    }
+  }, [socket]);
 
   const fetchDashboardData = async () => {
     try {
@@ -302,53 +326,33 @@ const Dashboard = () => {
             </motion.div>
           )}
 
-          {/* Insight Card */}
+          {/* Daily Thought / Insight Card */}
           <AnimatePresence mode="wait">
-            {!insightLoading && correlationData?.insight && (
+            {insightLoadingStatus !== "LOADING" && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="
-              relative w-full
-              mt-2 sm:mt-4
-              p-4 sm:p-6 
-              rounded-2xl sm:rounded-3xl 
-              shadow-xl
-              group border
-              flex flex-col gap-2
-            "
+                className="relative w-full mt-2 sm:mt-4 p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl group border flex flex-col gap-2"
                 style={{ background: C.primary, borderColor: `${C.outline}20` }}
               >
-                <HiFire
-                  className="
-                absolute 
-                top-3 right-3 sm:top-4 sm:right-4 
-                text-2xl sm:text-3xl 
-                opacity-20 text-white animate-pulse
-              "
-                />
+                <HiFire className="absolute top-3 right-3 sm:top-4 sm:right-4 text-2xl sm:text-3xl opacity-20 text-white animate-pulse" />
 
                 <div className="flex flex-col relative z-10 gap-1 sm:gap-2">
-                  <span
-                    className="
-                  text-[9px] sm:text-[10px] 
-                  font-bold text-white/70 
-                  uppercase tracking-widest 
-                  flex items-center gap-1
-                "
-                  >
-                    A Daily Thought
+                  <span className="text-[9px] sm:text-[10px] font-bold text-white/70 uppercase tracking-widest flex items-center gap-1">
+                    Daily AI Reflection
                     <HiOutlineBolt className="text-yellow-300 text-xs sm:text-sm" />
                   </span>
 
-                  <p
-                    className="
-                  text-sm sm:text-base md:text-lg 
-                  font-semibold text-white 
-                  leading-relaxed sm:leading-snug
-                "
-                  >
-                    "{correlationData.insight}"
+                  <p className="text-sm sm:text-base md:text-lg font-semibold text-white leading-relaxed sm:leading-snug">
+                    {insightLoadingStatus === "WAITING" ? (
+                      "Gathering your daily patterns... Your morning message is blooming."
+                    ) : dailyInsight?.insight === "WAITING_FOR_AI_QUOTA" ? (
+                      <span className="opacity-80 italic italic">Waiting our AI to response for the SMS (Quota Refreshing...)</span>
+                    ) : dailyInsight?.insight ? (
+                      `"${dailyInsight.insight}"`
+                    ) : (
+                      "Each day is a new canvas. Take a deep breath and start your journey today. 🌿"
+                    )}
                   </p>
                 </div>
               </motion.div>

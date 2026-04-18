@@ -20,12 +20,18 @@ export const SocketProvider = ({ children }) => {
 
         setSocket(newSocket);
 
+        newSocket.on("connect", () => {
+            if (user?.id) {
+                newSocket.emit("join_room", user.id);
+            }
+        });
+
         newSocket.on("typing_update", (users) => {
             setTypingUsers(users);
         });
 
         return () => newSocket.close();
-    }, []);
+    }, [user]); // Re-run if user changes to ensure room joins
 
     const startTyping = (isAnonymous) => {
         if (socket && user) {
