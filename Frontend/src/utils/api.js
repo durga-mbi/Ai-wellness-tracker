@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const API_BASE_URL = "http://localhost:4000/api";
+export const API_BASE_URL = "https://ai-wellness-tracker.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
