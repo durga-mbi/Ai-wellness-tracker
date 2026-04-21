@@ -353,7 +353,7 @@ const Register = () => {
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs" style={{ color: C.textMut }}>
-            © 2024 Mindmetrics AI ·{" "}
+            © 2024 Mindmetrics AI {" "}
             {/* <a href="#" className="underline underline-offset-2">Privacy</a>
             {" · "}
             <a href="#" className="underline underline-offset-2">Terms</a> */}

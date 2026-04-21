@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { 
-  HiOutlineMoon, 
-  HiOutlineBeaker, 
-  HiOutlineHeart, 
+import {
+  HiOutlineMoon,
+  HiOutlineBeaker,
+  HiOutlineHeart,
   HiOutlineSparkles,
   HiCheckCircle,
   HiOutlineCheckCircle,
@@ -63,7 +63,35 @@ const HabitTracker = ({ user }) => {
     }
   };
 
+  // const handleSave = async (newData) => {
+  //   setSaving(true);
+  //   try {
+  //     const today = new Date().toISOString().split("T")[0];
+  //     await api.post("/habits", {
+  //       userId: user.id,
+  //       date: today,
+  //       ...newData
+  //     });
+  //     setHabitData(newData);
+  //   } catch (err) {
+  //     toast.error("Failed to save progress");
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // };
+
+
   const handleSave = async (newData) => {
+    if (
+      newData.sleep === "" ||
+      newData.water === "" ||
+      newData.exercise === "" ||
+      newData.mindfulness === ""
+    ) {
+      toast.error("All fields are required");
+      return;
+    }
+
     setSaving(true);
     try {
       const today = new Date().toISOString().split("T")[0];
@@ -73,6 +101,7 @@ const HabitTracker = ({ user }) => {
         ...newData
       });
       setHabitData(newData);
+      toast.success("Progress saved ");
     } catch (err) {
       toast.error("Failed to save progress");
     } finally {
@@ -85,7 +114,7 @@ const HabitTracker = ({ user }) => {
     const newCompleted = isNowCompleted
       ? [...habitData.completedGoals, goalKey]
       : habitData.completedGoals.filter(g => g !== goalKey);
-    
+
     // Auto-update the numeric value to target if marked as done and current value is less than target
     const newData = { ...habitData, completedGoals: newCompleted };
     if (isNowCompleted && targets[goalKey]) {
@@ -97,7 +126,7 @@ const HabitTracker = ({ user }) => {
 
   const updateNumeric = (key, val) => {
     const newData = { ...habitData, [key]: val === "" ? "" : parseFloat(val) || 0 };
-    setHabitData(newData); 
+    setHabitData(newData);
   };
 
   if (loading) return <div className="h-64 bg-white/20 animate-pulse rounded-[40px]" />;
@@ -125,7 +154,7 @@ const HabitTracker = ({ user }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Ritual Logging Panel */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="lg:col-span-8 bg-white/80 backdrop-blur-xl rounded-[48px] p-8 sm:p-10 border border-white shadow-xl"
@@ -136,7 +165,7 @@ const HabitTracker = ({ user }) => {
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50" style={{ color: C.textMut }}>Log your actual wellness data for today</p>
           </div>
           <div className="flex gap-3">
-             <motion.button
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleQuickSyncTargets}
@@ -178,7 +207,7 @@ const HabitTracker = ({ user }) => {
                 <span className="text-sm font-bold opacity-40 mb-2 uppercase">{r.unit}</span>
               </div>
               <p className="text-[10px] font-bold uppercase mt-3 tracking-widest flex items-center gap-2">
-                <span className="opacity-30">Goal:</span> 
+                <span className="opacity-30">Goal:</span>
                 <span style={{ color: C.primary }}>{r.target}{r.unit}</span>
               </p>
             </div>
@@ -187,7 +216,7 @@ const HabitTracker = ({ user }) => {
       </motion.div>
 
       {/* Checklist Panel */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
@@ -197,19 +226,26 @@ const HabitTracker = ({ user }) => {
           <h3 className="text-xl font-black italic tracking-tighter uppercase mb-6" style={{ color: C.text }}>Today's Intentions</h3>
           <div className="space-y-4">
             {rituals.map((r) => {
-              const isNumericDone = r.unit === "h" ? habitData.sleep >= targets.sleep : 
-                                   r.unit === "L" ? habitData.water >= targets.water :
-                                   r.unit === "m" && r.key === "exercise" ? habitData.exercise >= targets.exercise :
-                                   habitData.mindfulness >= targets.mindfulness;
-              
-              const isChecked = habitData.completedGoals.includes(r.key) || isNumericDone;
+              const value = habitData[r.key];
+
+              const isNumericDone =
+                value > 0 && (
+                  r.key === "sleep" ? value >= targets.sleep :
+                    r.key === "water" ? value >= targets.water :
+                      r.key === "exercise" ? value >= targets.exercise :
+                        value >= targets.mindfulness
+                );
+
+              const isChecked =
+                (habitData.completedGoals.includes(r.key) && value > 0) ||
+                isNumericDone;
 
               return (
-                <div 
-                  key={r.key} 
+                <div
+                  key={r.key}
                   onClick={() => toggleGoal(r.key)}
                   className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all border ${isChecked ? 'shadow-inner' : 'hover:bg-white'}`}
-                  style={{ 
+                  style={{
                     background: isChecked ? `${C.priCont}30` : 'transparent',
                     borderColor: isChecked ? `${C.primary}40` : `${C.outline}20`
                   }}

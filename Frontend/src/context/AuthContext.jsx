@@ -11,15 +11,25 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = useCallback(async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       const { data } = await api.get("/auth/me");
       setUser(data.user);
-    } catch {
-      setUser(null);
+    } catch (err) {
+      if (err.response?.status === 401) {
+        setUser(null);
+      } else {
+        console.error("Fetch user error:", err);
+      }
     } finally {
       setLoading(false);
     }
   }, []);
-
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
@@ -36,11 +46,11 @@ export const AuthProvider = ({ children }) => {
       const message = err.response?.data?.message;
       return {
         success: false,
-        message: message === "User not found" 
+        message: message === "User not found"
           ? "We couldn't find an account with those details. Please double-check or sign up."
           : message === "Invalid credentials"
-          ? "The password you entered doesn't seem quite right. Please try again."
-          : message || "We're having a bit of trouble connecting to the sanctuary. Please try again in a moment."
+            ? "The password you entered doesn't seem quite right. Please try again."
+            : message || "We're having a bit of trouble connecting to the sanctuary. Please try again in a moment."
       };
     }
   };
