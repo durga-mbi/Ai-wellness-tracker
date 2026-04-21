@@ -278,15 +278,15 @@ const Login = () => {
               label="Password"
               icon={HiLockClosed}
               error={fieldErrors.password}
-              rightLabel={
-                <button
-                  type="button"
-                  className="text-xs font-semibold transition-opacity hover:opacity-70"
-                  style={{ color: C.primary }}
-                >
-                  Forgot Password?
-                </button>
-              }
+            // rightLabel={
+            //   <button
+            //     type="button"
+            //     className="text-xs font-semibold transition-opacity hover:opacity-70"
+            //     style={{ color: C.primary }}
+            //   >
+            //     Forgot Password?
+            //   </button>
+            // }
             >
               <input
                 type={showPassword ? "text" : "password"}
