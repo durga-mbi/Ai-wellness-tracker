@@ -129,7 +129,7 @@ const Sidebar = ({ isOpen, onToggle, onLogoutClick }) => {
                     Mindmetrics AI
                   </span>
                   <span className="text-[10px] font-medium opacity-60" style={{ color: C.textMut }}>
-                    Find your calm
+                    Find Your Calm
                   </span>
                 </motion.div>
               )}
