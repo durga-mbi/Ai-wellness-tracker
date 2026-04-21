@@ -524,7 +524,7 @@ const LandingPage = () => {
                   { name: "Features", href: "#features" },
                   { name: "How it Works", href: "#how" },
                   { name: "Community", href: "#community" },
-                  { name: "Resources", href: "#features" }
+                  // { name: "Resources", href: "#features" }
                 ]
               },
               // { 
