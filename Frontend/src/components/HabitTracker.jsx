@@ -125,7 +125,24 @@ const HabitTracker = ({ user }) => {
   };
 
   const updateNumeric = (key, val) => {
-    const newData = { ...habitData, [key]: val === "" ? "" : parseFloat(val) || 0 };
+    const numericVal = val === "" ? "" : parseFloat(val) || 0;
+    const target = targets[key];
+    
+    let newCompletedGoals = [...habitData.completedGoals];
+    
+    // Auto-update completed state: If value is lowered below target, remove from completed list
+    if (numericVal !== "" && numericVal < target) {
+      newCompletedGoals = newCompletedGoals.filter(g => g !== key);
+    } else if (numericVal !== "" && numericVal >= target && !newCompletedGoals.includes(key)) {
+      // Also automatically add it if it reaches the target via manual input
+      newCompletedGoals.push(key);
+    }
+
+    const newData = { 
+      ...habitData, 
+      [key]: numericVal,
+      completedGoals: newCompletedGoals
+    };
     setHabitData(newData);
   };
 
@@ -271,7 +288,7 @@ const HabitTracker = ({ user }) => {
               <p className="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70">Daily Pulse</p>
               <h4 className="text-lg font-black italic uppercase leading-none mb-3">Goal Mastery</h4>
               <div className="flex items-end gap-2 text-2xl font-black italic">
-                {rituals.filter(r => habitData.completedGoals.includes(r.key) || (r.unit === "h" ? habitData.sleep >= targets.sleep : r.unit === "L" ? habitData.water >= targets.water : r.key === "exercise" ? habitData.exercise >= targets.exercise : habitData.mindfulness >= targets.mindfulness)).length}
+                {habitData.completedGoals.length}
                 <span className="text-xs font-bold opacity-50 mb-1">/ {rituals.length} Done</span>
               </div>
             </div>
