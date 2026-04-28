@@ -53,7 +53,7 @@ export const getPreference = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id;
-        const { name, ageGroup, university, preferences, apiKey, wellnessGoals, emergencyContacts } = req.body;
+        const { name, ageGroup, university, preferences, apiKey, wellnessGoals, emergencyContacts, location } = req.body;
  
          const user = await prisma.user.update({
              where: { id: userId },
@@ -62,6 +62,7 @@ export const updateProfile = async (req, res, next) => {
                  ageGroup, 
                  university,
                  apiKey,
+                 location,
                  preferences: preferences ? JSON.stringify(preferences) : undefined,
                  wellnessGoals: wellnessGoals ? JSON.stringify(wellnessGoals) : undefined,
                  emergencyContacts: emergencyContacts ? JSON.stringify(emergencyContacts) : undefined

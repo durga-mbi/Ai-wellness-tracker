@@ -21,6 +21,7 @@ model User {
   apiKey      String?        // User-provided Gemini API key
   wellnessGoals String?      // JSON string for user-defined goals
   emergencyContacts String?  // JSON string for personal safety contacts
+  location    String?        // user's location/language
   createdAt   DateTime       @default(now())
   journals    JournalEntry[]
   preferenceList Preference[]

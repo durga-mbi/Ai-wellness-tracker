@@ -15,7 +15,10 @@ import {
     HiOutlineMoon,
     HiOutlineSun,
     HiOutlineInformationCircle,
-    HiOutlinePlay
+    HiOutlinePlay,
+    HiOutlineMapPin,
+    HiOutlinePencilSquare,
+    HiCheck
 } from "react-icons/hi2";
 
 // ── Design tokens from "The Ethereal Sanctuary" ──────────────────────────────
@@ -32,15 +35,33 @@ const C = {
 };
 
 const Mindfulness = () => {
-    const { user } = useAuth();
+    const { user, updateAuthProfile } = useAuth();
     const [breathState, setBreathState] = useState("Inhale"); // Inhale, Hold, Exhale, Hold
     const [timer, setTimer] = useState(4);
     const [isActive, setIsActive] = useState(false);
+
+    // Location States
+    const [isEditingLocation, setIsEditingLocation] = useState(false);
+    const [tempLocation, setTempLocation] = useState(user?.location || "");
 
     // AI Video States
     const [video, setVideo] = useState(null);
     const [isLoadingVideo, setIsLoadingVideo] = useState(false);
     const [syncError, setSyncError] = useState("");
+
+    const handleUpdateLocation = async () => {
+        try {
+            const res = await updateAuthProfile({ location: tempLocation });
+            if (res.success) {
+                toast.success("Location updated. Your next sync will be localized.");
+                setIsEditingLocation(false);
+            } else {
+                toast.error(res.message);
+            }
+        } catch (error) {
+            toast.error("Failed to update location.");
+        }
+    };
 
     const syncMoodVideo = async () => {
         setIsLoadingVideo(true);
@@ -130,6 +151,48 @@ const Mindfulness = () => {
                             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
                             Mindmetrics <span style={{ color: C.primary }}>AI</span>
                         </h1>
+                    </div>
+
+                    {/* Location Context */}
+                    <div className="flex flex-col items-end gap-2">
+                        <div className="flex items-center gap-3 px-5 py-3 bg-white/60 backdrop-blur-md rounded-2xl border border-white/40 shadow-sm">
+                            <HiOutlineMapPin className="text-lg" style={{ color: C.primary }} />
+                            <div className="flex flex-col">
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400">Current Location</span>
+                                {isEditingLocation ? (
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <input
+                                            type="text"
+                                            value={tempLocation}
+                                            onChange={(e) => setTempLocation(e.target.value)}
+                                            className="bg-transparent border-b border-primary outline-none text-xs font-bold uppercase tracking-tight w-32"
+                                            autoFocus
+                                        />
+                                        <button onClick={handleUpdateLocation} className="p-1 hover:bg-primary/10 rounded-full transition-colors">
+                                            <HiCheck className="text-primary w-4 h-4" />
+                                        </button>
+                                        <button onClick={() => { setIsEditingLocation(false); setTempLocation(user?.location || ""); }} className="p-1 hover:bg-red-50 rounded-full transition-colors">
+                                            <HiXMark className="text-red-400 w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 group">
+                                        <span className="text-xs font-bold uppercase tracking-tight" style={{ color: C.text }}>
+                                            {user?.location || "Global sanctuary"}
+                                        </span>
+                                        <button 
+                                            onClick={() => setIsEditingLocation(true)}
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-primary/5 rounded-md"
+                                        >
+                                            <HiOutlinePencilSquare className="w-3 h-3 text-gray-400" />
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest italic" style={{ color: C.textMut }}>
+                            You are in your current location.
+                        </p>
                     </div>
                 </div>
             </section>

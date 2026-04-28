@@ -24,6 +24,7 @@ const OnboardingSurvey = () => {
   const [formData, setFormData] = useState({
     ageGroup: "",
     university: "",
+    location: "",
     goals: []
   });
 
@@ -44,12 +45,18 @@ const OnboardingSurvey = () => {
       return;
     }
 
-    if (step < 2) {
+    if (step === 2 && !formData.location.trim()) {
+      toast.error("Please enter your location.");
+      return;
+    }
+
+    if (step < 3) {
       setStep(step + 1);
     } else {
       await updateAuthProfile({
         ageGroup: formData.ageGroup,
         university: formData.university.trim(),
+        location: formData.location.trim(),
         preferences: { goals: formData.goals }
       });
       navigate("/dashboard");
@@ -123,6 +130,27 @@ const OnboardingSurvey = () => {
       )
     },
     {
+      title: "Your Location",
+      icon: <HiOutlineSparkles className="w-14 h-14" style={{ color: C.primary }} />,
+      content: (
+        <div className="space-y-8">
+          <p className="font-medium italic border-l-2 pl-6 px-4 py-2 bg-white/40 rounded-r-xl" style={{ color: C.textMut, borderColor: `${C.primary}30` }}>
+            Help us tailor the experience to your local language and culture.
+          </p>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="EX: MUMBAI, INDIA"
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              className="w-full p-8 rounded-[40px] bg-white border-2 outline-none transition-all font-bold placeholder:text-emerald-800/30 uppercase tracking-widest italic shadow-inner"
+              style={{ color: C.text, borderColor: `${C.outline}20`, focusBorderColor: C.primary }}
+            />
+          </div>
+        </div>
+      )
+    },
+    {
       title: "Your Goals",
       icon: <HiOutlineSparkles className="w-14 h-14" style={{ color: C.primary }} />,
       content: (
@@ -179,7 +207,7 @@ const OnboardingSurvey = () => {
       <div className="max-w-2xl w-full z-10 relative">
         {/* Synthetic Progress Interface */}
         <div className="flex gap-4 mb-16 px-4">
-          {[0, 1, 2].map(i => (
+          {[0, 1, 2, 3].map(i => (
             <div 
               key={i} 
               className={`h-1.5 rounded-full flex-1 transition-all duration-700`} 
@@ -225,11 +253,11 @@ const OnboardingSurvey = () => {
               )}
               <button
                 onClick={handleNext}
-                disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : formData.goals.length === 0}
+                disabled={step === 0 ? !formData.ageGroup : step === 1 ? !formData.university : step === 2 ? !formData.location : formData.goals.length === 0}
                 className="flex-1 py-6 text-white font-bold rounded-[32px] shadow-2xl hover:opacity-90 disabled:opacity-20 transition-all flex items-center justify-center gap-4 text-sm uppercase tracking-[0.4em] italic group/btn shadow-[#506b4a]/20"
                 style={{ background: C.primary }}
               >
-                {step === 2 ? "Finish Setup" : "Continue"}
+                {step === 3 ? "Finish Setup" : "Continue"}
                 <HiArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>

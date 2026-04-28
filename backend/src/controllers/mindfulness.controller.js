@@ -21,6 +21,7 @@ export const getMoodSyncVideo = async (req, res) => {
 
         const activeJournal = user.journals[0]?.content || "No recent journal entries.";
         const userPreferences = user.preferenceList.map(p => p.issue).join(", ") || "General wellness";
+        const userLocation = user.location || "Global";
 
         // Use helper to get model with potential custom key
         const model = getAIModel(user.apiKey);
@@ -30,10 +31,13 @@ export const getMoodSyncVideo = async (req, res) => {
             - User Mood: ${mood}
             - Latest Journal Insight: "${activeJournal}"
             - Known Challenges: ${userPreferences}
+            - User Location/Language: ${userLocation}
             
             TASK: 
-            Generate a unique, high-fidelity YouTube search query (max 6 words) for a 30s to 2m relaxation/mindfulness ritual.
-            Varied terms: "breathing ritual", "calm ocean", "forest zen", etc.
+            Generate a unique, high-fidelity YouTube search query (max 7 words) for a 30s to 2m relaxation/mindfulness ritual.
+            The query MUST be based on the user's location and language: ${userLocation}.
+            If the location suggests a specific language (e.g., India -> Hindi/English, Spain -> Spanish), the query should favor that cultural/linguistic context for a peaceful video.
+            Varied terms: "local guided meditation", "nature sounds from [region]", "traditional [culture] calm ritual", etc.
             
             OUTPUT: 
             Return ONLY the query string.
