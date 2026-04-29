@@ -39,6 +39,19 @@ const Mindfulness = () => {
     const [breathState, setBreathState] = useState("Inhale"); // Inhale, Hold, Exhale, Hold
     const [timer, setTimer] = useState(4);
     const [isActive, setIsActive] = useState(false);
+    const getDisplayLocation = () => {
+        if (user?.location) return user.location;
+        if (user?.preferences) {
+            try {
+                const prefs = typeof user.preferences === 'string' ? JSON.parse(user.preferences) : user.preferences;
+                if (prefs.location) return prefs.location;
+            } catch (e) {}
+        }
+        return "";
+    };
+
+    const displayLocation = getDisplayLocation();
+    
 
     // Location States
     const [isEditingLocation, setIsEditingLocation] = useState(false);
@@ -48,6 +61,19 @@ const Mindfulness = () => {
     const [video, setVideo] = useState(null);
     const [isLoadingVideo, setIsLoadingVideo] = useState(false);
     const [syncError, setSyncError] = useState("");
+
+    useEffect(() => {
+        let loc = user?.location;
+        if (!loc && user?.preferences) {
+            try {
+                const prefs = JSON.parse(user.preferences);
+                if (prefs.location) loc = prefs.location;
+            } catch (e) {}
+        }
+        if (loc) {
+            setTempLocation(loc);
+        }
+    }, [user]);
 
     const handleUpdateLocation = async () => {
         try {
@@ -147,10 +173,23 @@ const Mindfulness = () => {
                         >
                             <HiOutlineSparkles className="animate-pulse" /> Mindful Moment
                         </motion.div>
-                        <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
-                            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                            {user?.location ? `${user.location.split(',')[0]}'s ` : ""}Mindmetrics <span style={{ color: C.primary }}>AI</span>
-                        </h1>
+                        <div className="flex flex-col gap-1">
+                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
+                                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
+                                {displayLocation ? `${displayLocation.split(',')[0]}'s ` : ""}Mindmetrics <span style={{ color: C.primary }}>AI</span>
+                            </h1>
+                            {displayLocation && (
+                                <motion.div 
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="flex items-center gap-2 text-[10px] font-black italic uppercase tracking-[0.3em]"
+                                    style={{ color: C.primary }}
+                                >
+                                    <HiOutlineMapPin className="text-lg animate-bounce" />
+                                    {displayLocation} Sanctuary
+                                </motion.div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Location Context */}
@@ -171,14 +210,14 @@ const Mindfulness = () => {
                                         <button onClick={handleUpdateLocation} className="p-1 hover:bg-primary/10 rounded-full transition-colors">
                                             <HiCheck className="text-primary w-4 h-4" />
                                         </button>
-                                        <button onClick={() => { setIsEditingLocation(false); setTempLocation(user?.location || ""); }} className="p-1 hover:bg-red-50 rounded-full transition-colors">
+                                        <button onClick={() => { setIsEditingLocation(false); setTempLocation(displayLocation); }} className="p-1 hover:bg-red-50 rounded-full transition-colors">
                                             <HiXMark className="text-red-400 w-4 h-4" />
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2 group">
                                         <span className="text-xs font-bold uppercase tracking-tight" style={{ color: C.text }}>
-                                            {user?.location || "Global sanctuary"}
+                                            {displayLocation || "Global sanctuary"}
                                         </span>
                                         <button 
                                             onClick={() => setIsEditingLocation(true)}
@@ -191,7 +230,7 @@ const Mindfulness = () => {
                             </div>
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-widest italic" style={{ color: C.textMut }}>
-                            You are in {user?.location || "your personal sanctuary"}.
+                            You are in {displayLocation || "your personal sanctuary"}.
                         </p>
                     </div>
                 </div>

@@ -8,7 +8,8 @@ import {
   HiOutlineBookOpen,
   HiOutlineBolt,
   HiFire,
-  HiOutlineSparkles
+  HiOutlineSparkles,
+  HiOutlineMapPin
 } from "react-icons/hi2";
 import api from "../utils/api";
 import { useLayout } from "../context/LayoutContext";
@@ -194,7 +195,7 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col gap-4 sm:gap-8 px-2 sm:px-4 animate-pulse">
         {/* Skeleton Hero */}
         <div className="rounded-[40px] h-[350px] bg-white/40 border border-[#50664a]/10"></div>
-        
+
         {/* Skeleton Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
@@ -262,6 +263,18 @@ const Dashboard = () => {
             Wellness Journey Overview
           </motion.div>
 
+          {user?.location && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white rounded-full text-[9px] font-bold uppercase tracking-widest shadow-lg"
+            >
+              <HiOutlineMapPin className="text-xs" />
+              {user.location} Sanctuary
+            </motion.div>
+          )}
+
           {/* Title */}
           <div className="space-y-3 w-full">
             <h2
@@ -271,7 +284,7 @@ const Dashboard = () => {
           "
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              {isNewUser ? "Mindmetrics AI Awaits." : (data?.weeklyAnalysis?.result || "Finding Balance.")}
+              {isNewUser ? "Mindmetrics AI Awaits." : `${user?.location ? user.location.split(',')[0] + "'s " : ""}${data?.weeklyAnalysis?.result || "Finding Balance."}`}
             </h2>
 
             {!isNewUser && (
@@ -300,23 +313,23 @@ const Dashboard = () => {
             style={{ color: C.text }}
           >
             "
-            {isNewUser 
+            {isNewUser
               ? "We are gently waiting for your first mood to bloom. Mindmetrics AI is ready whenever you feel like sharing."
               : (data?.weeklyAnalysis?.result
-                  ? `You've shown a ${data.weeklyAnalysis.result.toLowerCase()} pattern this week.`
-                  : "Continuing to observe your patterns.")}
+                ? `You've shown a ${data.weeklyAnalysis.result.toLowerCase()} pattern this week.`
+                : "Continuing to observe your patterns.")}
             {" "}
             Remember to take small breaks for your mind today."
           </p>
 
           {isNewUser && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="pt-4"
             >
-              <button 
+              <button
                 onClick={() => navigate("/journal")}
                 className="px-8 py-4 rounded-full font-bold text-sm shadow-xl shadow-[#506b4a]/20 transition-all hover:scale-105 active:scale-95"
                 style={{ background: C.primary, color: C.onPri }}
@@ -443,7 +456,7 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Correlation Chart */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -461,28 +474,28 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex-1 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={correlationData.summary}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={`${C.outline}20`} />
-                    <XAxis 
-                      dataKey="date" 
-                      tick={{ fontSize: 9, fill: C.textMut, fontWeight: 'bold' }} 
-                      axisLine={false} 
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 9, fill: C.textMut, fontWeight: 'bold' }}
+                      axisLine={false}
                       tickLine={false}
                       tickFormatter={(str) => new Date(str).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                     />
                     <YAxis hide domain={[-1, 1]} />
-                    <Tooltip 
+                    <Tooltip
                       cursor={{ fill: `${C.primary}05` }}
                       contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', padding: '20px' }}
                       itemStyle={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase' }}
                     />
-                    <Bar 
-                      dataKey="avgMood" 
-                      fill={C.primary} 
-                      radius={[10, 10, 10, 10]} 
+                    <Bar
+                      dataKey="avgMood"
+                      fill={C.primary}
+                      radius={[10, 10, 10, 10]}
                       barSize={32}
                     />
                   </BarChart>
@@ -491,7 +504,7 @@ const Dashboard = () => {
             </motion.div>
 
             {/* Impact Breakdown */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}

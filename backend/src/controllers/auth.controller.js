@@ -23,11 +23,6 @@ export const signup = async (req, res, next) => {
         });
 
         if (existingUser) {
-            console.log("Signup conflict detected:", {
-                requestEmail: email,
-                requestMobile: mobile,
-                conflictId: existingUser.id
-            });
             return res.status(400).json({ message: "User already exists" });
         }
 
@@ -38,7 +33,8 @@ export const signup = async (req, res, next) => {
                 name,
                 email, 
                 mobile, 
-                password: hashed 
+                password: hashed,
+                location: "" 
             }
         });
 
@@ -80,7 +76,6 @@ export const login = async (req, res, next) => {
         });
 
         if (!user) {
-            console.log("Login failure: User not found for identifier", email);
             return res.status(400).json({ message: "User not found" });
         }
 
@@ -118,7 +113,8 @@ export const guestLogin = async (req, res, next) => {
         const user = await prisma.user.create({
             data: { 
                 name: "Guest User",
-                isAnonymous: true 
+                isAnonymous: true,
+                location: "" 
             }
         });
 

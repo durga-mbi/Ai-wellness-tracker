@@ -35,25 +35,18 @@ export const protect = async (req, res, next) => {
 
         // fetch user from DB
         const user = await prisma.user.findUnique({
-            where: { id: decoded.id },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                mobile: true,
-                ageGroup: true,
-                university: true,
-                isAnonymous: true,
-                preferences: true,
-                apiKey: true,
-                wellnessGoals: true,
-                emergencyContacts: true,
-                createdAt: true
-            }
+            where: { id: decoded.id }
         });
 
         if (!user) {
             return res.status(401).json({ message: "User not found" });
+        }
+
+        if (!user.location && user.preferences) {
+            try {
+                const prefs = JSON.parse(user.preferences);
+                if (prefs.location) user.location = prefs.location;
+            } catch (e) {}
         }
 
         // attach user to request

@@ -63,7 +63,8 @@ const Settings = () => {
       exercise: 30,
       mindfulness: 15
     },
-    emergencyContacts: user?.emergencyContacts ? JSON.parse(user.emergencyContacts) : []
+    emergencyContacts: user?.emergencyContacts ? JSON.parse(user.emergencyContacts) : [],
+    location: user?.location || ""
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -83,7 +84,8 @@ const Settings = () => {
           exercise: 30,
           mindfulness: 15
         },
-        emergencyContacts: user.emergencyContacts ? JSON.parse(user.emergencyContacts) : []
+        emergencyContacts: user.emergencyContacts ? JSON.parse(user.emergencyContacts) : [],
+        location: user.location || ""
       });
     }
   }, [user]);
@@ -207,6 +209,18 @@ const Settings = () => {
                     className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-2xl font-bold italic placeholder:text-gray-300 outline-none focus:bg-white transition-all shadow-inner"
                     style={{ color: C.text, fontFamily: "'Inter', sans-serif" }}
                     placeholder="Enter your name..."
+                  />
+                </div>
+
+                <div className="space-y-6">
+                  <label className="text-[11px] font-bold uppercase tracking-[0.4em] italic ml-1" style={{ color: C.textMut }}>Your Sanctuary Location</label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    className="w-full px-10 py-7 rounded-[32px] border border-white bg-white/50 text-2xl font-bold italic placeholder:text-gray-300 outline-none focus:bg-white transition-all shadow-inner"
+                    style={{ color: C.text, fontFamily: "'Inter', sans-serif" }}
+                    placeholder="Enter your location (e.g. Odisha, India)..."
                   />
                 </div>
               </div>

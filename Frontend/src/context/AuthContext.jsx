@@ -19,7 +19,17 @@ export const AuthProvider = ({ children }) => {
       }
 
       const { data } = await api.get("/auth/me");
-      setUser(data.user);
+      
+      // Manual Patch for Location
+      const fetchedUser = data.user;
+      if (fetchedUser && !fetchedUser.location && fetchedUser.preferences) {
+          try {
+              const prefs = JSON.parse(fetchedUser.preferences);
+              if (prefs.location) fetchedUser.location = prefs.location;
+          } catch (e) {}
+      }
+      
+      setUser(fetchedUser);
     } catch (err) {
       if (err.response?.status === 401) {
         setUser(null);
@@ -92,8 +102,31 @@ export const AuthProvider = ({ children }) => {
 
   const updateAuthProfile = async (profileData) => {
     try {
-      const { data } = await api.put("/user/profile", profileData);
-      setUser(data.user);
+      
+      // Force Merge Location into Preferences for absolute reliability
+      const currentPrefs = user?.preferences ? (typeof user.preferences === 'string' ? JSON.parse(user.preferences) : user.preferences) : {};
+      const newLocation = profileData.location || currentPrefs.location || user?.location;
+      
+      const mergedProfile = {
+        ...profileData,
+        preferences: {
+          ...(typeof profileData.preferences === 'object' ? profileData.preferences : (profileData.preferences ? JSON.parse(profileData.preferences) : {})),
+          ...currentPrefs,
+          location: newLocation
+        }
+      };
+
+      const { data } = await api.put("/user/profile", mergedProfile);
+      
+      const updatedUser = data.user;
+      if (updatedUser && !updatedUser.location && updatedUser.preferences) {
+          try {
+              const prefs = JSON.parse(updatedUser.preferences);
+              if (prefs.location) updatedUser.location = prefs.location;
+          } catch (e) {}
+      }
+
+      setUser(updatedUser);
       return { success: true };
     } catch (err) {
       return {

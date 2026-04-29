@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { HiArrowRight, HiOutlineSparkles, HiAcademicCap, HiUserGroup, HiHeart } from "react-icons/hi2";
@@ -58,6 +59,10 @@ const OnboardingSurvey = () => {
         university: formData.university.trim(),
         location: formData.location.trim(),
         preferences: { goals: formData.goals }
+      });
+      toast.success(`Welcome to your ${formData.location} Sanctuary!`, {
+        icon: '🌿',
+        duration: 5000
       });
       navigate("/dashboard");
     }

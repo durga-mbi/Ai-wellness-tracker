@@ -21,7 +21,14 @@ export const getMoodSyncVideo = async (req, res) => {
 
         const activeJournal = user.journals[0]?.content || "No recent journal entries.";
         const userPreferences = user.preferenceList.map(p => p.issue).join(", ") || "General wellness";
-        const userLocation = user.location || "Global";
+        let userLocation = user.location;
+        if (!userLocation && user.preferences) {
+            try {
+                const prefs = JSON.parse(user.preferences);
+                if (prefs.location) userLocation = prefs.location;
+            } catch (e) {}
+        }
+        userLocation = userLocation || "Global";
 
         // Use helper to get model with potential custom key
         const model = getAIModel(user.apiKey);
@@ -65,8 +72,34 @@ export const getMoodSyncVideo = async (req, res) => {
             searchQuery = `${userLocation} ${fallbackMap[mood] || mood} relaxation mindfulness ritual`;
         }
 
-        const searchResults = await YouTube.search(searchQuery + " short relaxation", {
-            limit: 10,
+        // Explicit Localization Enforcement - More Powerful Suffixes
+        let languageBoost = "";
+        const loc = userLocation.toLowerCase();
+        if (loc.includes("odisha") || loc.includes("orissa")) {
+            languageBoost = "Odia language peaceful meditation";
+        } else if (loc.includes("bengal")) {
+            languageBoost = "Bengali language relaxation";
+        } else if (loc.includes("tamil")) {
+            languageBoost = "Tamil language meditation";
+        } else if (loc.includes("kerala")) {
+            languageBoost = "Malayalam language relaxation";
+        } else if (loc.includes("karnataka")) {
+            languageBoost = "Kannada language mindfulness";
+        } else if (loc.includes("telangana") || loc.includes("andhra")) {
+            languageBoost = "Telugu language meditation";
+        } else if (loc.includes("maharashtra")) {
+            languageBoost = "Marathi language relaxation";
+        } else if (loc.includes("gujarat")) {
+            languageBoost = "Gujarati language meditation";
+        } else if (loc.includes("india")) {
+            languageBoost = "Hindi language peace ritual";
+        }
+
+        const finalQuery = `${languageBoost} ${searchQuery}`.trim();
+        console.log(`[Mindfulness Sync] Localized Search Query: "${finalQuery}" for Location: ${userLocation}`);
+
+        const searchResults = await YouTube.search(finalQuery, {
+            limit: 15, // Increase limit to find better matches
             type: "video"
         });
 
