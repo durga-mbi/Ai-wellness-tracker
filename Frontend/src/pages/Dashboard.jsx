@@ -279,12 +279,15 @@ const Dashboard = () => {
           <div className="space-y-3 w-full">
             <h2
               className="
-            text-2xl sm:text-3xl md:text-4xl lg:text-6xl 
-            font-extrabold leading-tight tracking-tight
-          "
+    text-2xl sm:text-3xl md:text-4xl lg:text-6xl 
+    font-extrabold leading-tight tracking-tight
+  "
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
             >
-              {isNewUser ? "Mindmetrics AI Awaits." : `${user?.location ? user.location.split(',')[0] + "'s " : ""}${data?.weeklyAnalysis?.result || "Finding Balance."}`}
+              {isNewUser
+                ? "Mindmetrics AI Awaits."
+                : `${""}${data?.weeklyAnalysis?.result || "Finding Balance."}`
+              }
             </h2>
 
             {!isNewUser && (
