@@ -45,13 +45,13 @@ const Mindfulness = () => {
             try {
                 const prefs = typeof user.preferences === 'string' ? JSON.parse(user.preferences) : user.preferences;
                 if (prefs.location) return prefs.location;
-            } catch (e) {}
+            } catch (e) { }
         }
         return "";
     };
 
     const displayLocation = getDisplayLocation();
-    
+
 
     // Location States
     const [isEditingLocation, setIsEditingLocation] = useState(false);
@@ -68,7 +68,7 @@ const Mindfulness = () => {
             try {
                 const prefs = JSON.parse(user.preferences);
                 if (prefs.location) loc = prefs.location;
-            } catch (e) {}
+            } catch (e) { }
         }
         if (loc) {
             setTempLocation(loc);
@@ -174,12 +174,14 @@ const Mindfulness = () => {
                             <HiOutlineSparkles className="animate-pulse" /> Mindful Moment
                         </motion.div>
                         <div className="flex flex-col gap-1">
-                            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
-                                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                                {displayLocation ? `${displayLocation.split(',')[0]}'s ` : ""}Mindmetrics <span style={{ color: C.primary }}>AI</span>
+                            <h1
+                                className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
+                                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}
+                            >
+                                Mindmetrics <span style={{ color: C.primary }}>AI</span>
                             </h1>
                             {displayLocation && (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     className="flex items-center gap-2 text-[10px] font-black italic uppercase tracking-[0.3em]"
@@ -219,7 +221,7 @@ const Mindfulness = () => {
                                         <span className="text-xs font-bold uppercase tracking-tight" style={{ color: C.text }}>
                                             {displayLocation || "Global sanctuary"}
                                         </span>
-                                        <button 
+                                        <button
                                             onClick={() => setIsEditingLocation(true)}
                                             className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-primary/5 rounded-md"
                                         >
@@ -458,7 +460,7 @@ const Mindfulness = () => {
                                 </p>
 
                                 <div className="pt-6">
-                                    <button 
+                                    <button
                                         onClick={() => toast.success("Mindful Fragment is preparing to bloom. Coming soon!", { icon: '🌱' })}
                                         className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.2em] rounded-2xl transition-all border group-hover:bg-primary group-hover:text-white border-transparent"
                                         style={{ background: `${C.primary}10`, color: C.primary }}>
