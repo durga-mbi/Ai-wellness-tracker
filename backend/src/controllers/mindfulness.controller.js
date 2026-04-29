@@ -35,9 +35,13 @@ export const getMoodSyncVideo = async (req, res) => {
             
             TASK: 
             Generate a unique, high-fidelity YouTube search query (max 7 words) for a 30s to 2m relaxation/mindfulness ritual.
-            The query MUST be based on the user's location and language: ${userLocation}.
-            If the location suggests a specific language (e.g., India -> Hindi/English, Spain -> Spanish), the query should favor that cultural/linguistic context for a peaceful video.
-            Varied terms: "local guided meditation", "nature sounds from [region]", "traditional [culture] calm ritual", etc.
+            The query MUST be based on the user's location and language context: ${userLocation}.
+            
+            LOCALIZATION RULES:
+            - If location is "Odisha" or contains "Odisha/Orissa", the query MUST be in Odia language or specifically search for "Odia peaceful mindfulness" or "Odia relaxation".
+            - If location is in India, detect the state and use the regional language (e.g., West Bengal -> Bengali, Tamil Nadu -> Tamil).
+            - For other global locations, use the primary local language.
+            - Focus on: "regional guided meditation", "nature sounds from [region]", "[language] peaceful ritual".
             
             OUTPUT: 
             Return ONLY the query string.
@@ -58,7 +62,7 @@ export const getMoodSyncVideo = async (req, res) => {
                 "Neutral": "balanced awareness meditation",
                 "Calm": "serene forest ambient ritual"
             };
-            searchQuery = fallbackMap[mood] || `${mood} relaxation mindfulness ritual`;
+            searchQuery = `${userLocation} ${fallbackMap[mood] || mood} relaxation mindfulness ritual`;
         }
 
         const searchResults = await YouTube.search(searchQuery + " short relaxation", {

@@ -149,7 +149,7 @@ const Mindfulness = () => {
                         </motion.div>
                         <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight"
                             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: C.text }}>
-                            Mindmetrics <span style={{ color: C.primary }}>AI</span>
+                            {user?.location ? `${user.location.split(',')[0]}'s ` : ""}Mindmetrics <span style={{ color: C.primary }}>AI</span>
                         </h1>
                     </div>
 
@@ -191,7 +191,7 @@ const Mindfulness = () => {
                             </div>
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-widest italic" style={{ color: C.textMut }}>
-                            You are in your current location.
+                            You are in {user?.location || "your personal sanctuary"}.
                         </p>
                     </div>
                 </div>
@@ -340,7 +340,7 @@ const Mindfulness = () => {
                                     style={{ background: C.primary }}
                                 >
                                     <HiOutlinePlay className="w-4 h-4" />
-                                    Analyze Current State
+                                    Sync {user?.location ? `${user.location.split(',')[0]} ` : ""}Neural Ritual
                                 </motion.button>
                             )}
                         </div>
@@ -384,7 +384,7 @@ const Mindfulness = () => {
             </div>
 
             {/* Premium Resource Library */}
-            {/* <div className="space-y-10 pt-10">
+            <div className="space-y-10 pt-10">
                 <div className="flex items-center gap-8">
                     <h2 className="text-3xl font-extrabold tracking-tight" style={{ color: C.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                         Curated <span style={{ color: C.primary }} className="italic">Fragments</span>
@@ -430,7 +430,7 @@ const Mindfulness = () => {
                         </motion.div>
                     ))}
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 };
