@@ -1,4 +1,8 @@
 import nodemailer from 'nodemailer';
+import dns from 'dns';
+
+// Force DNS resolution to IPv4 first, preventing ENETUNREACH on IPv6-broken servers (like Render)
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
