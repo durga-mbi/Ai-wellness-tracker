@@ -12,6 +12,12 @@ const transporter = nodemailer.createTransport({
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
+    // Add debugging and strict timeouts to prevent silent hangs in production
+    logger: true,
+    debug: true,
+    connectionTimeout: 10000, // Fail if cannot connect within 10 seconds
+    greetingTimeout: 10000,   // Fail if greeting takes longer than 10 seconds
+    socketTimeout: 10000,     // Fail if socket becomes idle
 });
 
 export const sendOTP = async (to, otp) => {
