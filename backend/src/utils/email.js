@@ -1,21 +1,12 @@
-import nodemailer from 'nodemailer';
-import dns from 'dns';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: "durgaprasad.d.mindbrain@gmail.com",
-        pass: "xswx acbv htek mtsn",
-    }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOTP = async (to, otp) => {
     try {
-        const mailOptions = {
-            from: process.env.SMTP_FROM || '"MindMetrics AI" <noreply@mindmetrics.ai>',
-            to,
+        const response = await resend.emails.send({
+            from: process.env.SMTP_FROM || 'MindMetrics AI <onboarding@resend.dev>',
+            to: [to],
             subject: 'Your MindMetrics Verification Code',
             html: `
                 <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: auto; padding: 20px; text-align: center; border: 1px solid #e0e0e0; border-radius: 12px; background-color: #f4f6d2;">
@@ -31,10 +22,9 @@ export const sendOTP = async (to, otp) => {
                     </p>
                 </div>
             `,
-        };
+        });
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent: %s", info.messageId);
+        console.log("Email sent:", response);
         return true;
     } catch (error) {
         console.error("Error sending email:", error);
