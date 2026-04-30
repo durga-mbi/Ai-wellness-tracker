@@ -52,17 +52,19 @@ const Field = ({ label, icon: Icon, error, children }) => (
 // ─────────────────────────────────────────────────────────────────────────────
 
 const Register = () => {
+  const [step, setStep] = useState("form"); // "form" | "otp"
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const { register } = useAuth();
+  const { register, verifyOtp } = useAuth();
   const navigate = useNavigate();
 
   const validate = () => {
@@ -88,11 +90,37 @@ const Register = () => {
     setIsSubmitting(true);
     const result = await register({ name, email, mobile, password });
     if (result.success) {
-      toast.success("Welcome to Mindmetrics AI!");
-      setSuccess(result.message || "Account created successfully!");
-      setTimeout(() => navigate("/survey"), 2000);
+      if (result.requireOtp) {
+        toast.success("OTP sent to your email!");
+        setStep("otp");
+      } else {
+        // Fallback if not using OTP
+        toast.success("Welcome to Mindmetrics AI!");
+        setSuccess(result.message || "Account created successfully!");
+        setTimeout(() => navigate("/survey"), 2000);
+      }
     } else {
       setError(result.message || "Failed to create account. Please try again.");
+    }
+    setIsSubmitting(false);
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    if (!otp.trim()) {
+      setError("Please enter the OTP.");
+      return;
+    }
+    setIsSubmitting(true);
+    const result = await verifyOtp(email, otp);
+    if (result.success) {
+      toast.success("Account verified successfully!");
+      setSuccess("Account verified! Redirecting...");
+      setTimeout(() => navigate("/survey"), 2000);
+    } else {
+      setError(result.message || "Invalid OTP. Please try again.");
     }
     setIsSubmitting(false);
   };
@@ -263,93 +291,120 @@ const Register = () => {
             </motion.div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Full Name */}
-            <Field label="Full Name" icon={HiUser} error={fieldErrors.name}>
-              <input
-                type="text"
-                placeholder="e.g. Alex Morgan"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: null });
-                }}
-                className={inputCls(true)}
-                style={{ color: C.text }}
-              />
-            </Field>
-
-            {/* Email + Mobile side by side */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Email Address" icon={HiEnvelope} error={fieldErrors.email}>
+          {step === "form" ? (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Full Name */}
+              <Field label="Full Name" icon={HiUser} error={fieldErrors.name}>
                 <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
+                  type="text"
+                  placeholder="e.g. Alex Morgan"
+                  value={name}
                   onChange={(e) => {
-                    setEmail(e.target.value.toLowerCase());
-                    if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: null });
+                    setName(e.target.value);
+                    if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: null });
                   }}
                   className={inputCls(true)}
                   style={{ color: C.text }}
                 />
               </Field>
 
-              <Field label="Mobile Number" icon={HiPhone} error={fieldErrors.mobile}>
+              {/* Email + Mobile side by side */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Email Address" icon={HiEnvelope} error={fieldErrors.email}>
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value.toLowerCase());
+                      if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: null });
+                    }}
+                    className={inputCls(true)}
+                    style={{ color: C.text }}
+                  />
+                </Field>
+
+                <Field label="Mobile Number" icon={HiPhone} error={fieldErrors.mobile}>
+                  <input
+                    type="tel"
+                    placeholder="10-digit number"
+                    value={mobile}
+                    maxLength={10}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "");
+                      setMobile(val);
+                      if (fieldErrors.mobile) setFieldErrors({ ...fieldErrors, mobile: null });
+                    }}
+                    className={inputCls(true)}
+                    style={{ color: C.text }}
+                  />
+                </Field>
+              </div>
+
+              {/* Password */}
+              <Field label="Password" icon={HiLockClosed} error={fieldErrors.password}>
                 <input
-                  type="tel"
-                  placeholder="10-digit number"
-                  value={mobile}
-                  maxLength={10}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="At least 6 characters"
+                  value={password}
                   onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "");
-                    setMobile(val);
-                    if (fieldErrors.mobile) setFieldErrors({ ...fieldErrors, mobile: null });
+                    setPassword(e.target.value);
+                    if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: null });
                   }}
-                  className={inputCls(true)}
+                  className={inputCls(true, "pr-12")}
                   style={{ color: C.text }}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 text-base transition-opacity hover:opacity-70"
+                  style={{ color: C.textMut }}
+                >
+                  {showPassword ? <HiEyeSlash /> : <HiEye />}
+                </button>
               </Field>
-            </div>
 
-            {/* Password */}
-            <Field label="Password" icon={HiLockClosed} error={fieldErrors.password}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: null });
-                }}
-                className={inputCls(true, "pr-12")}
-                style={{ color: C.text }}
-              />
+              {/* Submit */}
               <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 text-base transition-opacity hover:opacity-70"
-                style={{ color: C.textMut }}
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-full font-semibold text-sm transition-opacity hover:opacity-90 active:scale-[.98] shadow-md mt-2"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`,
+                  color: C.onPri,
+                  opacity: isSubmitting ? 0.7 : 1,
+                }}
               >
-                {showPassword ? <HiEyeSlash /> : <HiEye />}
+                {isSubmitting ? "Creating your space…" : "Create My Calm Space"}
               </button>
-            </Field>
-
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-4 rounded-full font-semibold text-sm transition-opacity hover:opacity-90 active:scale-[.98] shadow-md mt-2"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`,
-                color: C.onPri,
-                opacity: isSubmitting ? 0.7 : 1,
-              }}
-            >
-              {isSubmitting ? "Creating your space…" : "Create My Calm Space"}
-            </button>
-          </form>
+            </form>
+          ) : (
+            <form onSubmit={handleVerifyOtp} className="space-y-5">
+              <Field label={`Enter the OTP sent to ${email}`} icon={HiLockClosed}>
+                <input
+                  type="text"
+                  placeholder="6-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  maxLength={6}
+                  className={inputCls(true)}
+                  style={{ color: C.text }}
+                />
+              </Field>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-full font-semibold text-sm transition-opacity hover:opacity-90 active:scale-[.98] shadow-md mt-2"
+                style={{
+                  backgroundImage: `linear-gradient(135deg, ${C.primary}, ${C.priCont})`,
+                  color: C.onPri,
+                  opacity: isSubmitting ? 0.7 : 1,
+                }}
+              >
+                {isSubmitting ? "Verifying..." : "Verify OTP & Continue"}
+              </button>
+            </form>
+          )}
 
           {/* Footer */}
           <p className="mt-8 text-center text-xs" style={{ color: C.textMut }}>

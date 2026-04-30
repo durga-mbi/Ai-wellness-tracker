@@ -15,6 +15,7 @@ import AuthRoute from "./components/AuthRoute";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
 import JournalEntry from "./pages/JournalEntry";
 import Chat from "./pages/Chat";
@@ -52,6 +53,14 @@ function App() {
               element={
                 <AuthRoute>
                   <Register />
+                </AuthRoute>
+              } 
+            />
+            <Route 
+              path="/forgot-password" 
+              element={
+                <AuthRoute>
+                  <ForgotPassword />
                 </AuthRoute>
               } 
             />

@@ -1,7 +1,9 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const API_BASE_URL = "https://ai-wellness-tracker.onrender.com/api";
+export const MODE = import.meta.env.VITE_ENV_MODE || 'dev';
+export const BASE_URL = MODE === 'prod' ? import.meta.env.VITE_PROD_URL : import.meta.env.VITE_DEV_URL;
+export const API_BASE_URL = `${BASE_URL}/api`;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

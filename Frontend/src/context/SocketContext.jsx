@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 
+import { BASE_URL } from "../utils/api";
+
 const SocketContext = createContext();
 
 export const useSocket = () => useContext(SocketContext);
@@ -12,7 +14,7 @@ export const SocketProvider = ({ children }) => {
     const [typingUsers, setTypingUsers] = useState([]);
 
     useEffect(() => {
-        const socketUrl = "https://ai-wellness-tracker.onrender.com";
+        const socketUrl = BASE_URL;
 
         const newSocket = io(socketUrl, {
             withCredentials: true

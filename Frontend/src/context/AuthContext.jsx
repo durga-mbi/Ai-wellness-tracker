@@ -46,16 +46,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      setLoading(true);
       const { data } = await api.post("/auth/login", { email, password });
       if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
-      setLoading(false);
       const message = err.response?.data?.message;
       return {
         success: false,
+        unverified: err.response?.data?.unverified,
         message: message === "User not found"
           ? "We couldn't find an account with those details. Please double-check or sign up."
           : message === "Invalid credentials"
@@ -67,32 +66,71 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      setLoading(true);
       const { data } = await api.post("/auth/signup", userData);
+      
+      if (data.requireOtp) {
+          return { success: true, requireOtp: true, email: data.email };
+      }
+
       if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
-      setLoading(false);
       const message = err.response?.data?.message;
       return {
         success: false,
-        message: message === "User already exists"
+        message: message === "User already exists and is verified"
           ? "It looks like you've already started your journey with us! Try logging in instead."
           : message || "We encountered a small storm creating your space. Please check your details and try again."
       };
     }
   };
 
+  const verifyOtp = async (email, otp) => {
+    try {
+      const { data } = await api.post("/auth/verify-otp", { email, otp });
+      if (data.token) localStorage.setItem("token", data.token);
+      await fetchUser();
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || "Verification failed."
+      };
+    }
+  };
+
+  const forgotPassword = async (email) => {
+    try {
+      await api.post("/auth/forgot-password", { email });
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || "Failed to send reset email."
+      };
+    }
+  };
+
+  const resetPassword = async (email, otp, newPassword) => {
+    try {
+      await api.post("/auth/reset-password", { email, otp, newPassword });
+      return { success: true };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || "Failed to reset password."
+      };
+    }
+  };
+
   const guestLogin = async () => {
     try {
-      setLoading(true);
       const { data } = await api.post("/auth/guest-login");
       if (data.token) localStorage.setItem("token", data.token);
       await fetchUser();
       return { success: true };
     } catch (err) {
-      setLoading(false);
       return {
         success: false,
         message: "The guest entrance is currently closed for a moment of peace. Please try again shortly."
@@ -149,7 +187,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register, guestLogin, updateAuthProfile }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register, verifyOtp, forgotPassword, resetPassword, guestLogin, updateAuthProfile }}>
       {children}
     </AuthContext.Provider>
   );

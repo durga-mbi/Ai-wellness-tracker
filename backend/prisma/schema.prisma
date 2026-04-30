@@ -14,6 +14,9 @@ model User {
   email       String?        @unique // nullable for guest account
   mobile      String?        @unique // nullable for guest account
   password    String?        // nullable for guest account
+  isVerified  Boolean        @default(false)
+  otp         String?
+  otpExpiry   DateTime?
   ageGroup    String?        // e.g., "18-24"
   university  String?        // user's university
   isAnonymous Boolean        @default(false)

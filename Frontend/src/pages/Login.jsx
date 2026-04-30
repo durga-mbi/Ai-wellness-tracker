@@ -86,7 +86,16 @@ const Login = () => {
       toast.success("Welcome back to Mindmetrics AI!");
       navigate("/dashboard");
     } else {
-      setError(result.message || "Authentication failed");
+      if (result.unverified) {
+        setError(
+          <div className="flex flex-col">
+            <span>{result.message}</span>
+            <Link to="/register" className="underline mt-1">Click here to register again and resend OTP</Link>
+          </div>
+        );
+      } else {
+        setError(result.message || "Authentication failed");
+      }
     }
     setIsSubmitting(false);
   };
@@ -278,15 +287,15 @@ const Login = () => {
               label="Password"
               icon={HiLockClosed}
               error={fieldErrors.password}
-            // rightLabel={
-            //   <button
-            //     type="button"
-            //     className="text-xs font-semibold transition-opacity hover:opacity-70"
-            //     style={{ color: C.primary }}
-            //   >
-            //     Forgot Password?
-            //   </button>
-            // }
+            rightLabel={
+              <Link
+                to="/forgot-password"
+                className="text-xs font-semibold transition-opacity hover:opacity-70"
+                style={{ color: C.primary }}
+              >
+                Forgot Password?
+              </Link>
+            }
             >
               <input
                 type={showPassword ? "text" : "password"}
