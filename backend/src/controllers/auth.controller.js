@@ -16,49 +16,91 @@ export const signup = async (req, res, next) => {
             return res.status(400).json({ message: "Email is required for registration" });
         }
 
+        const config = await prisma.systemConfig.findFirst();
+        const authMode = config?.authMode || "standard";
+
         const existingUser = await prisma.user.findUnique({
             where: { email }
         });
 
         const hashed = await hashPassword(password);
-        const otp = generateRandomOtp();
-        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+        
+        if (authMode === "otp") {
+            const otp = generateRandomOtp();
+            const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
-        if (existingUser) {
-            if (existingUser.isVerified) {
-                return res.status(400).json({ message: "User already exists and is verified" });
+            if (existingUser) {
+                if (existingUser.isVerified) {
+                    return res.status(400).json({ message: "User already exists and is verified" });
+                }
+                // If exists but not verified, update OTP and resend
+                await prisma.user.update({
+                    where: { email },
+                    data: { password: hashed, name, mobile, otp, otpExpiry }
+                });
+            } else {
+                // Create new unverified user
+                await prisma.user.create({
+                    data: {
+                        name,
+                        email,
+                        mobile,
+                        password: hashed,
+                        location: "",
+                        otp,
+                        otpExpiry,
+                        isVerified: false
+                    }
+                });
             }
-            // If exists but not verified, update OTP and resend
-            await prisma.user.update({
-                where: { email },
-                data: { password: hashed, name, mobile, otp, otpExpiry }
+
+            const emailSent = await sendOTP(email, otp);
+            if (!emailSent) {
+                return res.status(500).json({ message: "Failed to send OTP email" });
+            }
+
+            return res.status(200).json({
+                message: "OTP sent to email",
+                requireOtp: true,
+                email
             });
         } else {
-            // Create new unverified user
-            await prisma.user.create({
-                data: {
-                    name,
-                    email,
-                    mobile,
-                    password: hashed,
-                    location: "",
-                    otp,
-                    otpExpiry,
-                    isVerified: false
-                }
+            // Standard registration (without OTP)
+            let user;
+            if (existingUser) {
+                user = await prisma.user.update({
+                    where: { email },
+                    data: { password: hashed, name, mobile, isVerified: true }
+                });
+            } else {
+                user = await prisma.user.create({
+                    data: {
+                        name,
+                        email,
+                        mobile,
+                        password: hashed,
+                        location: "",
+                        isVerified: true
+                    }
+                });
+            }
+
+            const token = generateToken({ id: user.id });
+
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "none",
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            });
+
+            return res.status(201).json({
+                message: "Registration successful",
+                requireOtp: false,
+                user,
+                token
             });
         }
-
-        const emailSent = await sendOTP(email, otp);
-        if (!emailSent) {
-            return res.status(500).json({ message: "Failed to send OTP email" });
-        }
-
-        res.status(200).json({
-            message: "OTP sent to email",
-            requireOtp: true,
-            email
-        });
 
     } catch (err) {
         next(err);
@@ -124,8 +166,21 @@ export const login = async (req, res, next) => {
             return res.status(400).json({ message: "User not found" });
         }
 
-        if (!user.isAnonymous && user.email && !user.isVerified) {
-            return res.status(403).json({ message: "Please verify your email first", unverified: true });
+        // Check auth mode — only block unverified users in OTP mode
+        const config = await prisma.systemConfig.findFirst();
+        const authMode = config?.authMode || "standard";
+
+        if (authMode === "otp" && !user.isAnonymous && user.email && !user.isVerified) {
+            return res.status(403).json({ message: "Please verify your email first", unverified: true, email: user.email });
+        }
+
+        // In standard mode, auto-verify any unverified user on login
+        if (authMode === "standard" && !user.isVerified && !user.isAnonymous) {
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { isVerified: true }
+            });
+            user.isVerified = true;
         }
 
         const isMatch = await comparePassword(password, user.password);
@@ -147,7 +202,7 @@ export const login = async (req, res, next) => {
         res.json({
             message: "Login success",
             user,
-            token // Include token for header-based auth
+            token
         });
 
     } catch (err) {
@@ -250,14 +305,24 @@ export const getMe = (req, res) => {
 
 
 // logout 
-export const logout = (req, res) => {
-    res.clearCookie("token", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none"
-    });
+export const logout = async (req, res) => {
+    try {
+        // Reset system setup on logout
+        await prisma.systemConfig.updateMany({
+            data: { setupCompleted: false }
+        });
 
-    res.json({
-        message: "Logged out successfully"
-    });
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        });
+
+        res.json({
+            message: "Logged out successfully and system reset"
+        });
+    } catch (error) {
+        console.error("Logout error:", error);
+        res.status(500).json({ message: "Logout failed" });
+    }
 };

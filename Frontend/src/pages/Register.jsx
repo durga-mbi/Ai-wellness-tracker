@@ -92,7 +92,7 @@ const Register = () => {
     if (result.success) {
       if (result.requireOtp) {
         toast.success("OTP sent to your email!");
-        setStep("otp");
+        navigate("/verify-otp", { state: { email } });
       } else {
         // Fallback if not using OTP
         toast.success("Welcome to Mindmetrics AI!");

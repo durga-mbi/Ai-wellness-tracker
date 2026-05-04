@@ -87,12 +87,9 @@ const Login = () => {
       navigate("/dashboard");
     } else {
       if (result.unverified) {
-        setError(
-          <div className="flex flex-col">
-            <span>{result.message}</span>
-            <Link to="/register" className="underline mt-1">Click here to register again and resend OTP</Link>
-          </div>
-        );
+        // Redirect straight to OTP page with the email prefilled
+        toast("Your account needs email verification. Redirecting...", { icon: "✉️" });
+        setTimeout(() => navigate("/verify-otp", { state: { email: result.email || email } }), 1500);
       } else {
         setError(result.message || "Authentication failed");
       }

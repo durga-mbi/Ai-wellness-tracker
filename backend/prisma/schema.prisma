@@ -119,3 +119,11 @@ model CrisisLog {
   @@index([userId])
   @@index([riskLevel])
 }
+
+// system configuration model
+model SystemConfig {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  authMode         String   @default("standard") // "otp" or "standard"
+  setupCompleted   Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+}

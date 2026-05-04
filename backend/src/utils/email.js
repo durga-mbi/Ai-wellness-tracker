@@ -1,18 +1,32 @@
-import { Resend } from 'resend';
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+/**
+ * Sends an OTP email using Nodemailer.
+ * Requires the following environment variables:
+ * - EMAIL_USER: The email address to send from (e.g., your-gmail@gmail.com)
+ * - EMAIL_PASS: The app-specific password for the email account
+ */
 export const sendOTP = async (to, otp) => {
     try {
-        const response = await resend.emails.send({
-            from: process.env.SMTP_FROM || 'MindMetrics AI <onboarding@resend.dev>',
-            to: [to],
+        // Create a transporter
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        // Email content
+        const mailOptions = {
+            from: `"MindMetrics AI" <${process.env.EMAIL_USER}>`,
+            to: to,
             subject: 'Your MindMetrics Verification Code',
             html: `
                 <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: auto; padding: 20px; text-align: center; border: 1px solid #e0e0e0; border-radius: 12px; background-color: #f4f6d2;">
                     <h2 style="color: #373a1c; margin-bottom: 20px;">Verification Required</h2>
                     <p style="color: #636745; font-size: 16px; margin-bottom: 30px;">
-                        Use the following One-Time Password (OTP) to verify your account or reset your password. The code is valid for 10 minutes.
+                        Use the following One-Time Password (OTP) to verify your account. The code is valid for 10 minutes.
                     </p>
                     <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; display: inline-block; border: 2px dashed #b9bc94; margin-bottom: 30px;">
                         <span style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #506b4a;">${otp}</span>
@@ -22,12 +36,14 @@ export const sendOTP = async (to, otp) => {
                     </p>
                 </div>
             `,
-        });
+        };
 
-        console.log("Email sent:", response);
+        // Send email
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully using Nodemailer:", info.messageId);
         return true;
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("Error sending email with Nodemailer:", error);
         return false;
     }
 };

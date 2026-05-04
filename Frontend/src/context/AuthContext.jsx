@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSystemSetupCompleted, setIsSystemSetupCompleted] = useState(true);
 
   const fetchUser = useCallback(async () => {
     try {
@@ -55,6 +56,7 @@ export const AuthProvider = ({ children }) => {
       return {
         success: false,
         unverified: err.response?.data?.unverified,
+        email: err.response?.data?.email,
         message: message === "User not found"
           ? "We couldn't find an account with those details. Please double-check or sign up."
           : message === "Invalid credentials"
@@ -182,12 +184,39 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Logout failed", err);
     } finally {
+      setIsSystemSetupCompleted(false);
       setLoading(false);
     }
   };
 
+  const checkSystemConfig = useCallback(async () => {
+    try {
+      const { data } = await api.get("/system/config");
+      setIsSystemSetupCompleted(data.setupCompleted);
+      return data;
+    } catch (err) {
+      console.error("System config check failed:", err);
+      setIsSystemSetupCompleted(true);
+      return { setupCompleted: true };
+    }
+  }, []);
+
+  const completeSystemSetup = useCallback(async (authMode) => {
+    try {
+      await api.post("/system/config", { authMode });
+      setIsSystemSetupCompleted(true);
+      return { success: true };
+    } catch (err) {
+      return { success: false, message: err.response?.data?.message || "Setup failed" };
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register, verifyOtp, forgotPassword, resetPassword, guestLogin, updateAuthProfile }}>
+    <AuthContext.Provider value={{ 
+      user, loading, login, logout, register, verifyOtp, 
+      forgotPassword, resetPassword, guestLogin, updateAuthProfile, 
+      checkSystemConfig, completeSystemSetup, isSystemSetupCompleted 
+    }}>
       {children}
     </AuthContext.Provider>
   );
