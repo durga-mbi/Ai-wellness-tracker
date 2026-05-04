@@ -62,7 +62,7 @@ app.get("/api/debug-routes", (req, res) => {
 
 // Health route (High-Availability Alias)
 app.get("/health", (req, res) => {
-    res.json({ status: "ok", mode: "For the testing purpose" });
+    res.json({ status: "ok", mode: "Verifying latest build" });
 });
 
 app.get("/api/health", (req, res) => {
