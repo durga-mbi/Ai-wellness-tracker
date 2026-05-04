@@ -56,6 +56,10 @@ app.use("/api/ai", aiRoutes);
 app.use("/api/daily-insight", dailyInsightRoutes);
 app.use("/api/system", systemRoutes);
 
+app.get("/api/debug-routes", (req, res) => {
+    res.json({ message: "debug route is live", time: new Date().toISOString() });
+});
+
 // Health route (High-Availability Alias)
 app.get("/health", (req, res) => {
     res.json({ status: "ok", mode: "For the testing purpose" });
